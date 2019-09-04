@@ -1,0 +1,4 @@
+file:///Users/spaceman/pds-tools-tests/dist/pds-tools-0.1.dev1.tar.gz 
+numpy==1.16.5
+Pillow==6.1.0
+pyparsing==2.4.2
