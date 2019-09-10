@@ -1,9 +1,12 @@
-.PHONY: clean
+.PHONY: clean test
 
 ACTIVATE = source venv/bin/activate
 
-dist : venv
+dist : test
 	$(ACTIVATE) && python setup.py sdist
+
+test  : venv
+	$(ACTIVATE) && pytest ./tests
 
 venv : requirements.txt
 	virtualenv --no-site-packages -p python2.7 $@
