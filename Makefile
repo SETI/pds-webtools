@@ -16,11 +16,12 @@ test  : venv tests/golden.db
 	PDS_WEBTOOLS_TEST_DIR=$(TEST_DIR) \
 	    PDS_WEBTOOLS_USE_PICKLES=1 pytest -k '_golden_' ./tests
 
-tests/golden.db : venv
+tests/golden.db :
 	# build the data without pickles, then the data with pickles.
 	$(ACTIVATE) && \
 	    PDS_WEBTOOLS_TEST_DIR=$(TEST_DIR) \
 		PDS_WEBTOOLS_USE_PICKLES=0 $(CMD)
+	$(ACTIVATE) && \
 	    PDS_WEBTOOLS_TEST_DIR=$(TEST_DIR) \
 		PDS_WEBTOOLS_USE_PICKLES=1 $(CMD)
 
