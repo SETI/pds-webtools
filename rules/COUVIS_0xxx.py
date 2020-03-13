@@ -25,7 +25,15 @@ description_and_icon_by_regex = translator.TranslatorByRegex([
 ####################################################################################################################################
 
 associations_to_volumes = translator.TranslatorByRegex([
-    (r'.*/(COUVIS_0xxx/COUVIS_0.../DATA/\w+/\w+[0-9])(|_\w+)\..*',  0, [r'volumes/\1.DAT', r'volumes/\1.LBL']),
+    (r'.*/((COUVIS_0xxx/COUVIS_0...)/DATA/(\w+)/([\w0-9\_]+))\..*', 0, [r'volumes/\1.DAT',
+                                                                        r'volumes/\1.LBL',
+                                                                        r'volumes/\2/CALIB/VERSION_*/\3/\4_CAL_*.DAT',
+                                                                        r'volumes/\2/CALIB/VERSION_*/\3/\4_CAL_*.LBL']),
+    (r'.*/((COUVIS_0xxx/COUVIS_0...)/CALIB/VERSION_\d+/(\w+)/([\w0-9\_]+)_CAL_\d+)\..*',
+                                                                    0, [r'volumes/\2/DATA/\3/\4.DAT',
+                                                                        r'volumes/\2/DATA/\3/\4.LBL',
+                                                                        r'volumes/\2/CALIB/VERSION_*/\3/\4_CAL_*.DAT',
+                                                                        r'volumes/\2/CALIB/VERSION_*/\3/\4_CAL_*.LBL']),
     (r'.*/(COUVIS_0xxx/COUVIS_0.../DATA)(|/\w+)$',                  0,  r'volumes/\1/\2'),
 ])
 
