@@ -107,7 +107,7 @@ sort_key = translator.TranslatorByRegex([
 
 opus_type = translator.TranslatorByRegex([
     (r'volumes/.*/DATA/.*\.DAT$',  0, ('Cassini UVIS', 10, 'couvis_raw', 'Raw Data')),
-    (r'volumes/.*/CALIB/.*\.DAT$', 0, ('Cassini UVIS', 20, 'uvis-calib', 'Calibration Data')),
+    (r'volumes/.*/CALIB/.*\.DAT$', 0, ('Cassini UVIS', 20, 'couvis_calib_corr', 'Calibration Data')),
 ])
 
 ####################################################################################################################################
