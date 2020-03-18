@@ -34,7 +34,10 @@ associations_to_volumes = translator.TranslatorByRegex([
                                                                         r'volumes/\2/DATA/\3/\4.LBL',
                                                                         r'volumes/\2/CALIB/VERSION_*/\3/\4_CAL_*.DAT',
                                                                         r'volumes/\2/CALIB/VERSION_*/\3/\4_CAL_*.LBL']),
-    (r'.*/(COUVIS_0xxx/COUVIS_0.../DATA)(|/\w+)$',                  0,  r'volumes/\1/\2'),
+    (r'.*/(COUVIS_0xxx/COUVIS_0...)/DATA(|/\w*/*)$',                0,  [r'volumes/\1/DATA\2',
+                                                                         r'volumes/\1/CALIB/VERSION_*\2']),
+    (r'.*/(COUVIS_0xxx/COUVIS_0...)/CALIB/VERSION_\d+(|/\w*/*)$',   0,  [r'volumes/\1/DATA\2',
+                                                                         r'volumes/\1/CALIB/VERSION_*\2']),
 ])
 
 associations_to_previews = translator.TranslatorByRegex([
