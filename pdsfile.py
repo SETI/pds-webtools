@@ -20,6 +20,9 @@ import rules                # Rules unique to each volume set
 import pdscache
 import pdsviewable
 import translator
+
+PDS_TOOLS_PATH = '/Users/yjchang/Desktop/seti/workspace/pds-tools'
+sys.path.insert(0, PDS_TOOLS_PATH)
 import pdstable
 
 try:
