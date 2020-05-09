@@ -292,3 +292,16 @@ Author: Dave Chang
         * VG_20xx
         * VG_28xx
     * Didn't pick any file from ASTROM_xxxx and VG_0xxx.
+
+### Possible issues:
+* exists:
+    * This paths won't be hit: when is_virtual is set to True, self.\_exists_filled is also True, and the function will return at the beginning of the function.
+    ```
+    if self.is_virtual:
+        self._exists_filled = True
+    ```
+    * Can't find a proper test case where self.abspath is None & self.virtual is True.
+
+* These are not used at all:
+    * filespec
+    * absolute_or_logical_path

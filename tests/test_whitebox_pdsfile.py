@@ -15,6 +15,7 @@ class TestWhiteBox:
         # Note: line 1015, the path will never be hit.
         target_pdsfile = pdsfile.PdsFile.new_virtual('volumes')
         assert target_pdsfile.exists == True
+
     def test_exists_2(self):
         # Note: line 1016, find the case where self.abspath is None &
         # self.is_virtual is False
@@ -23,3 +24,9 @@ class TestWhiteBox:
         target_pdsfile.abspath = None
         print(target_pdsfile.abspath)
         assert target_pdsfile.exists == False
+
+    def test_absolute_or_logical_path_2(self):
+        """absolute_or_logical_path: get logical path."""
+        target_pdsfile = pdsfile.PdsFile.new_virtual('volumes')
+        expected = 'volumes'
+        assert target_pdsfile.absolute_or_logical_path == expected
