@@ -33,7 +33,6 @@ Author: Dave Chang
                 * is_viewable
                 * alt
                 * viewset (need to check viewset_lookup('default'))
-                * \_info
             * The following require a directory for testing, ex: 'pdsdata/holdings/volumes/COUVIS_0xxx/COUVIS_0002'
                 * isdir
                 * childnames (need to use a directory, parent directory of .DAT file can be used)
@@ -186,6 +185,13 @@ Author: Dave Chang
     * holdings/volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31.lbl
     * holdings/previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31_thumb.png
     * holdings/metadata/COUVIS_0xxx/COUVIS_0001/COUVIS_0001_index.tab
+* COUVIS_0xxx_v1:
+    * holdings/volumes/COUVIS_0xxx_v1/COUVIS_0009/DATA/D2004_274/EUV2004_274_01_39.lbl
+    * holdings/volumes/COUVIS_0xxx_v1/COUVIS_0009/DATA/D2004_274/EUV2004_274_01_39.dat
+    * holdings/previews/COUVIS_0xxx_v1/COUVIS_0009/DATA/EUV2004_274_01_39_thumb.png
+    * holdings/previews/COUVIS_0xxx_v1/COUVIS_0009/DATA/EUV2004_274_02_25_med.png
+    * holdings/previews/COUVIS_0xxx_v1/COUVIS_0009/DATA/EUV2004_274_07_10_full.png
+    * holdings/previews/COUVIS_0xxx_v1/COUVIS_0009/DATA/EUV2004_274_09_50_small.png
 * COUVIS_8xxx:
     * holdings/volumes/COUVIS_8xxx/COUVIS_8001/data/UVIS_HSP_2017_228_BETORI_I_TAU10KM.lbl
     * holdings/volumes/COUVIS_8xxx/COUVIS_8001/data/UVIS_HSP_2017_228_BETORI_I_TAU10KM.tab
@@ -301,7 +307,13 @@ Author: Dave Chang
         self._exists_filled = True
     ```
     * Can't find a proper test case where self.abspath is None & self.virtual is True.
+* alt:
+    * None viewable object will also return basename as alt, not sure if this is expected behavior.
+* is_index:
+    * Only return true for index table file under metadata directory. If it's under
+    volume directory, it will return false
 
 * These are not used at all:
     * filespec
     * absolute_or_logical_path
+    * opus_id

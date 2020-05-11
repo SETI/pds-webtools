@@ -1,16 +1,14 @@
-import os
 import pdsfile
 import pytest
 import settings
-import sys
 
 PDS_DATA_DIR = settings.PDS_DATA_DIR
 TESTFILE_PATH = settings.TESTFILE_PATH
 
 ################################################################################
-# Whitebox test
+# PdsFile Whitebox test
 ################################################################################
-class TestWhiteBox:
+class TestPdsFileWhiteBox:
     def test_exists_1(self):
         # Note: line 1015, the path will never be hit.
         target_pdsfile = pdsfile.PdsFile.new_virtual('volumes')
