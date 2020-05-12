@@ -44,6 +44,12 @@ Author: Dave Chang
             * medium
             * full_size
     * Lists of targeted functions:
+        * **PdsFile:**
+            * Associations:
+                * \_associated_paths
+                * associated_logical_paths
+                * associated_abspaths
+                * associated_parallel
         * **TranslatorByRegex:**
             * all
             * first
@@ -185,6 +191,16 @@ Author: Dave Chang
     * holdings/volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31.lbl
     * holdings/previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31_thumb.png
     * holdings/metadata/COUVIS_0xxx/COUVIS_0001/COUVIS_0001_index.tab
+    * holdings/volumes/COUVIS_0xxx/COUVIS_0058/DATA/DATA/D2017_001/EUV2017_001_03_49.LBL
+    * holdings/volumes/COUVIS_0xxx/COUVIS_0058/DATA/DATA/D2017_001/EUV2017_001_03_49.DAT
+    * holdings/volumes/COUVIS_0xxx/COUVIS_0058/CALIB/VERSION_4/D2017_001/EUV2017_001_03_49_CAL_4.LBL
+    * holdings/volumes/COUVIS_0xxx/COUVIS_0058/CALIB/VERSION_4/D2017_001/EUV2017_001_03_49_CAL_4.DAT
+    * holdings/volumes/COUVIS_0xxx/COUVIS_0058/CALIB/VERSION_5/D2017_001/EUV2017_001_03_49_CAL_5.LBL
+    * holdings/volumes/COUVIS_0xxx/COUVIS_0058/CALIB/VERSION_5/D2017_001/EUV2017_001_03_49_CAL_5.DAT
+    * holdings/volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/FUV1999_007_16_57.DAT
+    * holdings/volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/FUV1999_007_16_57.LBL
+    * holdings/volumes/COUVIS_0xxx/COUVIS_0001/CALIB/VERSION_3/D1999_007/FUV1999_007_16_57_CAL_3.DAT
+    * holdings/volumes/COUVIS_0xxx/COUVIS_0001/CALIB/VERSION_3/D1999_007/FUV1999_007_16_57_CAL_3.LBL
 * COUVIS_0xxx_v1:
     * holdings/volumes/COUVIS_0xxx_v1/COUVIS_0009/DATA/D2004_274/EUV2004_274_01_39.lbl
     * holdings/volumes/COUVIS_0xxx_v1/COUVIS_0009/DATA/D2004_274/EUV2004_274_01_39.dat
@@ -261,6 +277,9 @@ Author: Dave Chang
     * holdings/volumes/VGISS_5xxx/VGISS_5101/DATA/C13854XX/C1385455_RAW.IMG
     * holdings/volumes/VGISS_5xxx/VGISS_5101/DATA/C13854XX/C1385455_RAW.lbl
     * holdings/previews/VGISS_5xxx/VGISS_5101/DATA/C13854XX/C1385455_small.jpg
+    * holdings/previews/VGISS_5xxx/VGISS_5101/DATA/C13854XX/C1385455_full.jpg
+    * holdings/previews/VGISS_5xxx/VGISS_5101/DATA/C13854XX/C1385455_med.jpg
+    * holdings/previews/VGISS_5xxx/VGISS_5101/DATA/C13854XX/C1385455_thumb.jpg
     * holdings/metadata/VGISS_5xxx/VGISS_5101/VGISS_5101_supplemental_index.tab
 * VGISS_6xxx:
     * holdings/volumes/VGISS_6xxx/VGISS_6101/DATA/C27830XX/C2783018_RAW.IMG
@@ -300,20 +319,32 @@ Author: Dave Chang
     * Didn't pick any file from ASTROM_xxxx and VG_0xxx.
 
 ### Possible issues:
-* exists:
+* PdsFile.exists:
     * This paths won't be hit: when is_virtual is set to True, self.\_exists_filled is also True, and the function will return at the beginning of the function.
     ```
     if self.is_virtual:
         self._exists_filled = True
     ```
     * Can't find a proper test case where self.abspath is None & self.virtual is True.
-* alt:
+* PdsFile.isdir:
+    * This paths won't be hit: when is_virtual is set to True, self.\_isdir_filled  is also True, and the function will return at the beginning of the function.
+    ```
+    if self.is_virtual:
+        self._isdir_filled = True
+    ```
+    * Can't find a proper test case where self.abspath is None & self.virtual is True.
+* PdsFile.alt:
     * None viewable object will also return basename as alt, not sure if this is expected behavior.
-* is_index:
+* PdsFile.is_index:
     * Only return true for index table file under metadata directory. If it's under
     volume directory, it will return false
 
-* These are not used at all:
-    * filespec
-    * absolute_or_logical_path
-    * opus_id
+* Note: these are not used at all in pds-webtools, might be used at other places:
+    * PdsFile.filespec
+    * PdsFile.absolute_or_logical_path
+    * PdsFile.opus_id
+    * PdsFile.associated_logical_paths
+    * PdsViewSet.thumbnail
+    * PdsViewSet.small
+    * PdsViewSet.medium
+    * PdsViewSet.full_size

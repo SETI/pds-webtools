@@ -1,6 +1,9 @@
 import pdsfile
+import pdsviewable
 import pytest
 import settings
+
+from tests.helper import instantiate_target_pdsfile
 
 PDS_DATA_DIR = settings.PDS_DATA_DIR
 TESTFILE_PATH = settings.TESTFILE_PATH
@@ -20,11 +23,39 @@ class TestPdsFileWhiteBox:
         target_pdsfile = pdsfile.PdsFile()
         assert target_pdsfile.is_virtual == False
         target_pdsfile.abspath = None
-        print(target_pdsfile.abspath)
         assert target_pdsfile.exists == False
 
-    def test_absolute_or_logical_path_2(self):
+    def test_isdir_1(self):
+        # Note: similar to test_exists_1
+        target_pdsfile = pdsfile.PdsFile.new_virtual('volumes')
+        expected = 'volumes'
+        assert target_pdsfile.isdir == True
+
+    def test_isdir_2(self):
+        # Note: similar to test_exists_2
+        target_pdsfile = pdsfile.PdsFile()
+        assert target_pdsfile.is_virtual == False
+        target_pdsfile.abspath = None
+        assert target_pdsfile.isdir == False
+
+    def test_absolute_or_logical_path(self):
         """absolute_or_logical_path: get logical path."""
         target_pdsfile = pdsfile.PdsFile.new_virtual('volumes')
         expected = 'volumes'
         assert target_pdsfile.absolute_or_logical_path == expected
+
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('previews/VGISS_5xxx/VGISS_5101/DATA/C13854XX/C1385455_small.jpg',
+            pdsviewable.PdsViewSet),
+            ('previews/VGISS_5xxx/VGISS_5101/DATA/C13854XX',
+            pdsviewable.PdsViewSet),
+            ('volumes/VGISS_5xxx/VGISS_5101/DATA/C13854XX',
+            pdsviewable.PdsViewSet),
+        ]
+    )
+    def test_viewset_lookup(self, input_path, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        if expected is not None:
+            assert isinstance(target_pdsfile.viewset_lookup(), expected)
