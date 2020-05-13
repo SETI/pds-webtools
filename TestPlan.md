@@ -69,7 +69,7 @@ Author: Dave Chang
             * date (return self.\_date_filled)
             * formatted_size (return self.\_formatted_size_filled)
             * \_volume_info (return self.\_volume_info_filled)
-            * description (return  part of self.\_description_and_icon_filled)
+            * description (return part of self.\_description_and_icon_filled)
             * icon_type (return  part of self.\_description_and_icon_filled)
             * mime_type (return self.\_mime_type_filled)
             * opus_id (return self.\_opus_id_filled)
@@ -80,11 +80,11 @@ Author: Dave Chang
             * label_basename (return self.\_label_basename_filled)
             * viewset (return self.\_viewset_filled)
             * local_viewset (return self.\_local_viewset_filled)
-            * \_iconset (return part of self.\_iconset_filled)
             * volume_publication_date (return self.\_volume_publication_date_filled)
             * volume_version_id (return self.\_volume_version_id_filled)
             * volume_data_set_ids (return self.\_volume_data_set_ids_filled)
             * version_ranks (return self.\_version_ranks_filled)
+            * \_iconset (return part of self.\_iconset_filled)
             * exact_archive_url (return self.\_exact_archive_url_filled)
             * exact_checksum_url (return self.\_exact_checksum_url_filled)
             * filename_keylen (return self.\_filename_keylen_filled)
@@ -154,22 +154,25 @@ Author: Dave Chang
 ### List of files for testing: (continuously updating the list)
 * COCIRS_0xxx:
     * holdings/volumes/COCIRS_0xxx/COCIRS_0012/DATA/NAV_DATA/GEO00120100.DAT
-    * holdings/volumes/COCIRS_0xxx/COCIRS_0012/DATA/NAV_DATA/GEO00120100.lbl
+    * holdings/volumes/COCIRS_0xxx/COCIRS_0012/DATA/NAV_DATA/GEO00120100.LBL
+* COCIRS_0xxx_v3:
+    * holdings/volumes/COCIRS_0xxx_v3/COCIRS_0401/DATA/TSDR/NAV_DATA/TAR04012400.DAT
+    * holdings/volumes/COCIRS_0xxx_v3/COCIRS_0401/DATA/TSDR/NAV_DATA/TAR04012400.LBL
 * COCIRS_1xxx:
     * holdings/volumes/COCIRS_1xxx/COCIRS_1001/DATA/TSDR/NAV_DATA/TAR10013100.DAT
-    * holdings/volumes/COCIRS_1xxx/COCIRS_1001/DATA/TSDR/NAV_DATA/TAR10013100.lbl
+    * holdings/volumes/COCIRS_1xxx/COCIRS_1001/DATA/TSDR/NAV_DATA/TAR10013100.LBL
     * holdings/previews/COCIRS_1xxx/COCIRS_1001/DATA/CUBE/EQUIRECTANGULAR/123RI_EQLBS002_____CI____699_F1_039E_thumb.jpg
 * COCIRS_5xxx:
     * holdings/volumes/COCIRS_5xxx/COCIRS_5401/DATA/GEODATA/GEO0401130240_699.TAB
-    * holdings/volumes/COCIRS_5xxx/COCIRS_5401/DATA/GEODATA/GEO0401130240_699.lbl
+    * holdings/volumes/COCIRS_5xxx/COCIRS_5401/DATA/GEODATA/GEO0401130240_699.LBL
     * holdings/diagrams/COCIRS_5xxx/COCIRS_5401/BROWSE/TARGETS/IMG0401130240_FP1_thumb.jpg
 * COCIRS_6xxx:
     * holdings/volumes/COCIRS_6xxx/COCIRS_6004/DATA/GEODATA/GEO1004021018_699.TAB
-    * holdings/volumes/COCIRS_6xxx/COCIRS_6004/DATA/GEODATA/GEO1004021018_699.lbl
+    * holdings/volumes/COCIRS_6xxx/COCIRS_6004/DATA/GEODATA/GEO1004021018_699.LBL
     * holdings/diagrams/COCIRS_6xxx/COCIRS_6004/BROWSE/SATURN/POI1004010000_FP1_small.jpg
 * COISS_0xxx:
     * holdings/volumes/COISS_0xxx/COISS_0001/data/wacfm/bit_wght/13302/133020.img
-    * holdings/volumes/COISS_0xxx/COISS_0001/data/wacfm/bit_wght/13302/133020.lbl
+    * holdings/volumes/COISS_0xxx/COISS_0001/data/wacfm/bit_wght/13302/133020.LBL
 * COISS_1xxx:
     * holdings/volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.lbl
     * holdings/volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.IMG
@@ -298,10 +301,10 @@ Author: Dave Chang
     * holdings/metadata/VGISS_8xxx/VGISS_8201/VGISS_8201_inventory.tab
 * VG_20xx:
     * holdings/volumes/VG_20xx/VG_2001/JUPITER/CALIB/VG1PREJT.DAT
-    * holdings/volumes/VG_20xx/VG_2001/JUPITER/CALIB/VG1PREJT.lbl
+    * holdings/volumes/VG_20xx/VG_2001/JUPITER/CALIB/VG1PREJT.LBL
 * VG_28xx:
-    * holdings/volumes/VG_28xx/VG_2801/EDITDATA/PN1D01.dat
-    * holdings/volumes/VG_28xx/VG_2801/EDITDATA/PN1D01.lbl
+    * holdings/volumes/VG_28xx/VG_2801/EDITDATA/PN1D01.DAT
+    * holdings/volumes/VG_28xx/VG_2801/EDITDATA/PN1D01.LBL
 
 * Note:
     * these volumes don't have any preview images (no preview folder) or .\*\_index.tab files (no metadata folder):
@@ -339,12 +342,24 @@ Author: Dave Chang
     * Only return true for index table file under metadata directory. If it's under
     volume directory, it will return false
 
-* Note: these are not used at all in pds-webtools, might be used at other places:
-    * PdsFile.filespec
-    * PdsFile.absolute_or_logical_path
-    * PdsFile.opus_id
-    * PdsFile.associated_logical_paths
-    * PdsViewSet.thumbnail
-    * PdsViewSet.small
-    * PdsViewSet.medium
-    * PdsViewSet.full_size
+* PdsFile.associated_abspaths: (use COUVISE_0xxx.py associations_to_volumes as an example)
+    * The matching patterns has extension in upper case like .DAT  or .LBL, so the actual files need to have extension in upper case as well. If actual files have extension like .dat or .lbl, they won't be recognized in glob.glob (in \_clean_glob) and returned. We have to fix the regex so that both upper and lower case extensions can be returned.
+
+* Note:
+    * these are not used at all in pds-webtools, might be used at other places:
+        * PdsFile.filespec
+        * PdsFile.absolute_or_logical_path
+        * PdsFile.opus_id
+        * PdsFile.associated_logical_paths
+        * PdsViewSet.thumbnail
+        * PdsViewSet.small
+        * PdsViewSet.medium
+        * PdsViewSet.full_size
+
+### Note:
+* Need to find a proper case for these:
+    * \_iconset (return part of self.\_iconset_filled)
+        * Need to find a proper test case to init ICON_SET_BY_TYPE first
+* Need to create archives-volumes test folder
+    * exact_archive_url (return self.\_exact_archive_url_filled)
+    * exact_checksum_url (return self.\_exact_checksum_url_filled)
