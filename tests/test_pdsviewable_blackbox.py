@@ -1,12 +1,11 @@
+import os
 import pdsfile
 import pdsviewable
 import pytest
-import settings
 
 from tests.helper import instantiate_target_pdsfile
 
-PDS_DATA_DIR = settings.PDS_DATA_DIR
-TESTFILE_PATH = settings.TESTFILE_PATH
+PDS_DATA_DIR = os.environ['PDS_DATA_DIR']
 
 ################################################################################
 # PdsViewSet Blackbox test
@@ -15,9 +14,8 @@ class TestPdsViewSetBlackBox:
     @pytest.mark.parametrize(
         'input_path,expected',
         [
-            ('previews/COUVIS_0xxx_v1/COUVIS_0009/DATA/D2004_274/' \
-            'EUV2004_274_01_39_thumb.png', 'EUV2004_274_01_39_thumb.png'),
-
+            ('previews/COUVIS_0xxx_v1/COUVIS_0009/DATA/D2004_274/EUV2004_274_01_39_thumb.png',
+             'EUV2004_274_01_39_thumb.png')
         ]
     )
     def test_thumbnail(self, input_path, expected):
@@ -29,9 +27,8 @@ class TestPdsViewSetBlackBox:
     @pytest.mark.parametrize(
         'input_path,expected',
         [
-            ('previews/COUVIS_0xxx_v1/COUVIS_0009/DATA/D2004_274/' \
-            'EUV2004_274_09_50_small.png', 'EUV2004_274_09_50_small.png'),
-
+            ('previews/COUVIS_0xxx_v1/COUVIS_0009/DATA/D2004_274/EUV2004_274_09_50_small.png',
+             'EUV2004_274_09_50_small.png')
         ]
     )
     def test_small(self, input_path, expected):
@@ -42,9 +39,8 @@ class TestPdsViewSetBlackBox:
     @pytest.mark.parametrize(
         'input_path,expected',
         [
-            ('previews/COUVIS_0xxx_v1/COUVIS_0009/DATA/D2004_274/' \
-            'EUV2004_274_02_25_med.png', 'EUV2004_274_02_25_med.png'),
-
+            ('previews/COUVIS_0xxx_v1/COUVIS_0009/DATA/D2004_274/EUV2004_274_02_25_med.png',
+             'EUV2004_274_02_25_med.png')
         ]
     )
     def test_medium(self, input_path, expected):
@@ -55,9 +51,8 @@ class TestPdsViewSetBlackBox:
     @pytest.mark.parametrize(
         'input_path,expected',
         [
-            ('previews/COUVIS_0xxx_v1/COUVIS_0009/DATA/D2004_274/' \
-            'EUV2004_274_07_10_full.png', 'EUV2004_274_07_10_full.png'),
-
+            ('previews/COUVIS_0xxx_v1/COUVIS_0009/DATA/D2004_274/EUV2004_274_07_10_full.png',
+             'EUV2004_274_07_10_full.png')
         ]
     )
     def test_full_size(self, input_path, expected):

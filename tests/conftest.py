@@ -1,9 +1,8 @@
+import os
 import pdsfile
 import pytest
-import settings
 
-PDS_DATA_DIR = settings.PDS_DATA_DIR
-TESTFILE_PATH = settings.TESTFILE_PATH
+PDS_DATA_DIR = os.environ['PDS_DATA_DIR']
 ################################################################################
 # Setup before all tests
 ################################################################################

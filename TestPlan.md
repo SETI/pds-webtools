@@ -45,6 +45,34 @@ Author: Dave Chang
             * full_size
     * Lists of targeted functions:
         * **PdsFile:**
+            * viewset_lookup
+            * volume_abspath
+            * volset_abspath
+            * checksum_path_and_lskip
+            * archive_path_and_lskip
+            * shelf_path_and_lskip
+            * split_basename
+            * sort_basenames
+            * sort_logical_paths
+            * is_logical_path
+            * logical_path_from_abspath
+            * from_logical_path
+            * from_abspath
+            * from_relative_path
+            * from_path
+            * opus_products
+            * These need to be tested with a index file:
+                * find_selected_row_number
+                * find_row_number_at_or_below
+                * cache_child_row_pdsfiles
+                * row_pdsfile
+                * nearest_row_pdsfile
+                * data_pdsfile_for_index_and_selection
+            * This needs to be tested with a directory:
+                * group_children
+            * Constructors:
+                * parent
+                * child
             * Associations:
                 * \_associated_paths
                 * associated_logical_paths
@@ -250,11 +278,13 @@ Author: Dave Chang
     * holdings/volumes/HSTOx_xxxx/HSTO0_7308/DATA/VISIT_05/O43B05C1Q.lbl
     * holdings/previews/HSTOx_xxxx/HSTO0_7308/DATA/VISIT_05/O43B05C1Q_small.jpg
     * holdings/metadata/HSTOx_xxxx/HSTO0_7308/HSTO0_7308_index.tab
+    * holdings/metadata/HSTOx_xxxx/HSTO0_7308/HSTO0_7308_index.lbl
 * HSTUx_xxxx:
     * holdings/volumes/HSTUx_xxxx/HSTU0_5167/DATA/VISIT_04/U2NO0404T.asc
     * holdings/volumes/HSTUx_xxxx/HSTU0_5167/DATA/VISIT_04/U2NO0404T.lbl
     * holdings/previews/HSTUx_xxxx/HSTU0_5167/DATA/VISIT_04/U2NO0401T_thumb.jpg
     * holdings/metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab
+    * holdings/metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.lbl
 * NHSP_xxxx:
     * holdings/volumes/NHSP_xxxx/NHSP_1000/DATA/CK/MERGED_NHPC_2006_V011.LBL
 * NHxxLO_xxxx:
@@ -344,22 +374,16 @@ Author: Dave Chang
 
 * PdsFile.associated_abspaths: (use COUVISE_0xxx.py associations_to_volumes as an example)
     * The matching patterns has extension in upper case like .DAT  or .LBL, so the actual files need to have extension in upper case as well. If actual files have extension like .dat or .lbl, they won't be recognized in glob.glob (in \_clean_glob) and returned. We have to fix the regex so that both upper and lower case extensions can be returned.
-
-* Note:
-    * these are not used at all in pds-webtools, might be used at other places:
-        * PdsFile.filespec
-        * PdsFile.absolute_or_logical_path
-        * PdsFile.opus_id
-        * PdsFile.associated_logical_paths
-        * PdsViewSet.thumbnail
-        * PdsViewSet.small
-        * PdsViewSet.medium
-        * PdsViewSet.full_size
+* pdsfile.logical_path_from_abspath:
+    * If the input path is a logical path, It will raise a ValueError complaining about it's not an abspath, not sure if this is expected behavior.
+* PdsFile.from_logical_path:
+    * If the input path is an abspath, it will raise an IO error complaining about file not exists (even though the file exists)
 
 ### Note:
 * Need to find a proper case for these:
-    * \_iconset (return part of self.\_iconset_filled)
+    * PdsFile.\_iconset (return part of self.\_iconset_filled)
         * Need to find a proper test case to init ICON_SET_BY_TYPE first
+    * PdsFile.opus_products
 * Need to create archives-volumes test folder
     * exact_archive_url (return self.\_exact_archive_url_filled)
     * exact_checksum_url (return self.\_exact_checksum_url_filled)

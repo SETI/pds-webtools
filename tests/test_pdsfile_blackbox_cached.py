@@ -1,13 +1,12 @@
 import datetime
+import os
 import pdsfile
 import pdsviewable
 import pytest
-import settings
 
 from tests.helper import instantiate_target_pdsfile
 
-PDS_DATA_DIR = settings.PDS_DATA_DIR
-TESTFILE_PATH = settings.TESTFILE_PATH
+PDS_DATA_DIR = os.environ['PDS_DATA_DIR']
 
 ################################################################################
 # PdsFile Blackbox test for internal cached
@@ -17,7 +16,7 @@ class TestPdsFileBlackBox:
         'input_path,expected',
         [
             ('volumes/VGISS_6xxx/VGISS_6101/DATA/C27830XX/C2783018_RAW.IMG',
-            False),
+             False),
             ('volumes/VGISS_6xxx/VGISS_6101/DATA/C27830XX', True),
             ('volumes/RES_xxxx_prelim/RES_0001/data/601_cas.tab', False)
         ]
@@ -35,9 +34,9 @@ class TestPdsFileBlackBox:
         [
             ('volumes/RES_xxxx_prelim/RES_0001/data/601_cas.lbl', True),
             ('volumes/VGISS_7xxx/VGISS_7201/DATA/C24476XX/C2447654_RAW.lbl',
-            True),
+             True),
             ('previews/VGISS_6xxx/VGISS_6101/DATA/C27830XX/C2783018_med.jpg',
-            False)
+             False)
         ]
     )
     def test_islabel(self, input_path, expected):
@@ -51,10 +50,10 @@ class TestPdsFileBlackBox:
     @pytest.mark.parametrize(
         'input_path,expected',
         [
-            ('previews/NHxxLO_xxxx/NHLALO_1001/data/20060224_000310/' \
-            'lor_0003103486_0x630_eng_thumb.jpg', True),
-            ('volumes/NHxxLO_xxxx/NHLALO_1001/data/20060224_000310/' \
-            'lor_0003103486_0x630_eng.fit', False),
+            ('previews/NHxxLO_xxxx/NHLALO_1001/data/20060224_000310/'
+             + 'lor_0003103486_0x630_eng_thumb.jpg', True),
+            ('volumes/NHxxLO_xxxx/NHLALO_1001/data/20060224_000310/'
+             + 'lor_0003103486_0x630_eng.fit', False),
             ('volumes/HSTUx_xxxx/HSTU0_5167/DATA/VISIT_04/U2NO0404T.asc', False)
         ]
     )
@@ -70,12 +69,11 @@ class TestPdsFileBlackBox:
         'input_path,expected',
         [
             ('metadata/VGISS_7xxx/VGISS_7201/VGISS_7201_inventory.tab',
-            ('VGISS_7201_inventory', '', '.tab')),
-            ('previews/NHxxMV_xxxx/NHLAMV_1001/data/20060321_000526/' \
-            'mc1_0005261846_0x536_eng_1_thumb.jpg',
-            ('mc1_0005261846_0x536_eng_1', '_thumb', '.jpg')),
+             ('VGISS_7201_inventory', '', '.tab')),
+            ('previews/NHxxMV_xxxx/NHLAMV_1001/data/20060321_000526/mc1_0005261846_0x536_eng_1_thumb.jpg',
+             ('mc1_0005261846_0x536_eng_1', '_thumb', '.jpg')),
             ('previews/VGISS_7xxx/VGISS_7201/DATA/C24476XX/C2447654_small.jpg',
-            ('C2447654', '_small', '.jpg')),
+             ('C2447654', '_small', '.jpg')),
         ]
     )
     def test_split(self, input_path, expected):
@@ -90,11 +88,9 @@ class TestPdsFileBlackBox:
         'input_path,expected',
         [
             ('volumes/RPX_xxxx/RPX_0001/CALIB/F130LP.lbl',
-            'volumes-RPX_xxxx-RPX_0001-CALIB-F130LP'),
-            ('volumes/VGIRIS_xxxx_peer_review/VGIRIS_0001/DATA/' \
-            'JUPITER_VG1/C1547XXX.tab',
-            'volumes-VGIRIS_xxxx_peer_review-VGIRIS_0001-DATA-JUPITER_VG1-' \
-            'C1547XXX'),
+             'volumes-RPX_xxxx-RPX_0001-CALIB-F130LP'),
+            ('volumes/VGIRIS_xxxx_peer_review/VGIRIS_0001/DATA/JUPITER_VG1/C1547XXX.tab',
+             'volumes-VGIRIS_xxxx_peer_review-VGIRIS_0001-DATA-JUPITER_VG1-C1547XXX'),
         ]
     )
     def test_global_anchor(self, input_path, expected):
@@ -110,10 +106,10 @@ class TestPdsFileBlackBox:
         [
             ('volumes/RPX_xxxx/RPX_0001/CALIB/F130LP.lbl', []),
             ('previews/VGISS_5xxx/VGISS_5101/DATA/C13854XX',
-            [
+             [
                 'C1385455_full.jpg', 'C1385455_med.jpg',
                 'C1385455_small.jpg', 'C1385455_thumb.jpg'
-            ])
+             ])
         ]
     )
     def test_childnames(self, input_path, expected):
@@ -130,13 +126,13 @@ class TestPdsFileBlackBox:
         'input_path,expected',
         [
             ('volumes/VGISS_8xxx/VGISS_8201/DATA/C08966XX',
-            (
+             (
                 # (bytes, child_count, modtime, checksum, size)
                 24139122, 70, datetime.datetime(2013, 10, 24, 22, 36, 22),
                 '', (0, 0)
-            )),
+             )),
             ('volumes/VGISS_8xxx/VGISS_8201/DATA/C08966XXx',
-            (0, 0, None, '', (0,0))),
+             (0, 0, None, '', (0,0))),
         ]
     )
     def test__info(self, input_path, expected):
@@ -151,7 +147,7 @@ class TestPdsFileBlackBox:
         'input_path,expected',
         [
             ('volumes/VG_20xx/VG_2001/JUPITER/CALIB/VG1PREJT.DAT',
-            '2011-05-05 10:43:33')
+             '2011-05-05 10:43:33')
         ]
     )
     def test_date(self, input_path, expected):
@@ -180,19 +176,16 @@ class TestPdsFileBlackBox:
     @pytest.mark.parametrize(
         'input_path,expected',
         [
-            ('volumes/COISS_2xxx/COISS_2002/data/1460960653_1461048959/' \
-            'N1460960868_1.lbl',
-            (
-                'Cassini ISS Saturn images 2004-04-18 to 2004-05-18 ' \
-                '(SC clock 1460960653-1463538454)',
+            ('volumes/COISS_2xxx/COISS_2002/data/1460960653_1461048959/N1460960868_1.lbl',
+             (
+                'Cassini ISS Saturn images 2004-04-18 to 2004-05-18 (SC clock 1460960653-1463538454)',
                 'VOLUME', '1.0', '2005-07-01', ['CO-S-ISSNA/ISSWA-2-EDR-V1.0']
-            )),
+             )),
             ('metadata/COVIMS_0xxx/COVIMS_0001',
-            (
-                'Cassini VIMS near IR image cubes 1999-01-10 to 2000-09-18' \
-                ' (SC clock 1294638283-1347975444)',
+             (
+                'Cassini VIMS near IR image cubes 1999-01-10 to 2000-09-18 (SC clock 1294638283-1347975444)',
                 'VOLUME', '1.0', '2005-07-01', ['CO-E/V/J/S-VIMS-2-QUBE-V1.0']
-            )),
+             )),
         ]
     )
     def test__volume_info(self, input_path, expected):
@@ -206,10 +199,8 @@ class TestPdsFileBlackBox:
     @pytest.mark.parametrize(
         'input_path,expected',
         [
-            ('volumes/VGIRIS_xxxx_peer_review/VGIRIS_0001/DATA/JUPITER_VG1/' \
-            'C1547XXX.lbl', 'PDS3 label'),
-            ('previews/NHxxMV_xxxx/NHLAMV_1001/data/20060321_000526/' \
-            'mc1_0005261846_0x536_eng_1_thumb.jpg', 'Thumbnail preview image'),
+            ('volumes/VGIRIS_xxxx_peer_review/VGIRIS_0001/DATA/JUPITER_VG1/C1547XXX.lbl', 'PDS3 label'),
+            ('previews/NHxxMV_xxxx/NHLAMV_1001/data/20060321_000526/mc1_0005261846_0x536_eng_1_thumb.jpg', 'Thumbnail preview image'),
         ]
     )
     def test_description(self, input_path, expected):
@@ -224,7 +215,7 @@ class TestPdsFileBlackBox:
         'input_path,expected',
         [
             ('metadata/VGISS_5xxx/VGISS_5101/VGISS_5101_supplemental_index.tab',
-            'INDEX')
+             'INDEX')
         ]
     )
     def test_icon_type(self, input_path, expected):
@@ -238,11 +229,10 @@ class TestPdsFileBlackBox:
     @pytest.mark.parametrize(
         'input_path,expected',
         [
-            ('volumes/NHxxMV_xxxx/NHLAMV_1001/data/20060321_000526/' \
-            'mc0_0005261846_0x536_eng_1.fit', 'image/fits'),
+            ('volumes/NHxxMV_xxxx/NHLAMV_1001/data/20060321_000526/mc0_0005261846_0x536_eng_1.fit', 'image/fits'),
             ('volumes/RPX_xxxx/RPX_0001/CALIB/F130LP.tab', 'text/plain'),
             ('previews/HSTUx_xxxx/HSTU0_5167/DATA/VISIT_04/U2NO0401T_thumb.jpg',
-            'image/jpg')
+             'image/jpg')
         ]
     )
     def test_mime_type(self, input_path, expected):
@@ -256,9 +246,8 @@ class TestPdsFileBlackBox:
     @pytest.mark.parametrize(
         'input_path,expected',
         [
-            ('volumes/COVIMS_0xxx/COVIMS_0001/data/' \
-            '1999010T054026_1999010T060958/v1294638283_1.qub',
-            'co-vims-v1294638283')
+            ('volumes/COVIMS_0xxx/COVIMS_0001/data/1999010T054026_1999010T060958/v1294638283_1.qub',
+             'co-vims-v1294638283')
         ]
     )
     def test_opus_id(self, input_path, expected):
@@ -273,13 +262,11 @@ class TestPdsFileBlackBox:
         'input_path,expected',
         [
             ('metadata/COUVIS_0xxx/COUVIS_0001/COUVIS_0001_index.tab',
-            ('ASCII', 'Table')),
-            ('volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/' \
-            'HDAC1999_007_16_31.lbl',
-            ('ASCII', 'PDS3 Label')),
-            ('previews/COISS_2xxx/COISS_2002/data/1460960653_1461048959/' \
-            'N1460960908_1_thumb.jpg',
-            ('Binary', 'JPEG')),
+             ('ASCII', 'Table')),
+            ('volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31.lbl',
+             ('ASCII', 'PDS3 Label')),
+            ('previews/COISS_2xxx/COISS_2002/data/1460960653_1461048959/N1460960908_1_thumb.jpg',
+             ('Binary', 'JPEG')),
         ]
     )
     def test_opus_format(self, input_path, expected):
@@ -294,9 +281,9 @@ class TestPdsFileBlackBox:
         'input_path,expected',
         [
             ('volumes/COCIRS_6xxx/COCIRS_6004/DATA/GEODATA/GEO1004021018_699.TAB',
-            ('Cassini CIRS', 110, 'cocirs_geo',  'System Geometry')),
+             ('Cassini CIRS', 110, 'cocirs_geo',  'System Geometry')),
             ('previews/VGISS_8xxx/VGISS_8201/DATA/C08966XX/C0896631_thumb.jpg',
-            ('browse', 10, 'browse_thumb', 'Browse Image (thumbnail)')),
+             ('browse', 10, 'browse_thumb', 'Browse Image (thumbnail)')),
         ]
     )
     def test_opus_type(self, input_path, expected):
@@ -325,21 +312,15 @@ class TestPdsFileBlackBox:
     @pytest.mark.parametrize(
         'input_path,expected',
         [
-            ('volumes/COUVIS_0xxx_v1/COUVIS_0009/DATA/D2004_274/' \
-            'EUV2004_274_01_39.lbl', ()),
+            ('volumes/COUVIS_0xxx_v1/COUVIS_0009/DATA/D2004_274/EUV2004_274_01_39.lbl', ()),
             ('volumes/COCIRS_0xxx/COCIRS_0012/DATA', []),
-            ('previews/COISS_1xxx/COISS_1001/data/1294561143_1295221348/' \
-            'W1294561261_1_thumb.jpg', []),
-            ('volumes/COCIRS_0xxx/COCIRS_0012/DATA/NAV_DATA/' \
-            'GEO00120100.LBL',
-            [
-                (24, 'GEO00120100.DAT', PDS_DATA_DIR + 'volumes/COCIRS_0xxx/' \
-                'COCIRS_0012/DATA/NAV_DATA/GEO00120100.DAT'),
-                (25, 'GEO00120100.DAT', PDS_DATA_DIR + 'volumes/COCIRS_0xxx/' \
-                'COCIRS_0012/DATA/NAV_DATA/GEO00120100.DAT'),
-                (32, 'GEO.FMT', PDS_DATA_DIR + 'volumes/COCIRS_0xxx/' \
-                'COCIRS_0012/DATA/NAV_DATA/GEO.FMT')
-            ])
+            ('previews/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561261_1_thumb.jpg', []),
+            ('volumes/COCIRS_0xxx/COCIRS_0012/DATA/NAV_DATA/GEO00120100.LBL',
+             [
+                (24, 'GEO00120100.DAT', PDS_DATA_DIR + 'volumes/COCIRS_0xxx/COCIRS_0012/DATA/NAV_DATA/GEO00120100.DAT'),
+                (25, 'GEO00120100.DAT', PDS_DATA_DIR + 'volumes/COCIRS_0xxx/COCIRS_0012/DATA/NAV_DATA/GEO00120100.DAT'),
+                (32, 'GEO.FMT', PDS_DATA_DIR + 'volumes/COCIRS_0xxx/COCIRS_0012/DATA/NAV_DATA/GEO.FMT')
+             ])
         ]
     )
     def test_internal_link_info(self, input_path, expected):
@@ -353,9 +334,8 @@ class TestPdsFileBlackBox:
     @pytest.mark.parametrize(
         'input_path,expected',
         [
-            ('volumes/COUVIS_8xxx/COUVIS_8001/data/' \
-            'UVIS_HSP_2017_228_BETORI_I_TAU10KM.tab',
-            'UVIS_HSP_2017_228_BETORI_I_TAU10KM.lbl')
+            ('volumes/COUVIS_8xxx/COUVIS_8001/data/UVIS_HSP_2017_228_BETORI_I_TAU10KM.tab',
+             'UVIS_HSP_2017_228_BETORI_I_TAU10KM.lbl')
         ]
     )
     def test_label_basename(self, input_path, expected):
@@ -369,9 +349,8 @@ class TestPdsFileBlackBox:
     @pytest.mark.parametrize(
         'input_path,expected',
         [
-            ('previews/COCIRS_1xxx/COCIRS_1001/DATA/CUBE/EQUIRECTANGULAR/' \
-            '123RI_EQLBS002_____CI____699_F1_039E_thumb.jpg',
-            pdsviewable.PdsViewSet)
+            ('previews/COCIRS_1xxx/COCIRS_1001/DATA/CUBE/EQUIRECTANGULAR/123RI_EQLBS002_____CI____699_F1_039E_thumb.jpg',
+             pdsviewable.PdsViewSet)
         ]
     )
     def test_viewset(self, input_path, expected):
@@ -386,7 +365,7 @@ class TestPdsFileBlackBox:
         'input_path,expected',
         [
             ('previews/HSTIx_xxxx/HSTI1_1556/DATA/VISIT_01/IB4W01I5Q_thumb.jpg',
-            True),
+             True),
             ('volumes/HSTIx_xxxx/HSTI1_1556/DATA/VISIT_01/IB4W01I5Q.asc', False)
         ]
     )
@@ -415,13 +394,10 @@ class TestPdsFileBlackBox:
     @pytest.mark.parametrize(
         'input_path,expected',
         [
-            ('volumes/COUVIS_0xxx_v1/COUVIS_0009/DATA/D2004_274/' \
-            'EUV2004_274_01_39.lbl', '1.0'),
+            ('volumes/COUVIS_0xxx_v1/COUVIS_0009/DATA/D2004_274/EUV2004_274_01_39.lbl', '1.0'),
             ('volumes/COCIRS_1xxx/COCIRS_1001/DATA/TSDR/NAV_DATA/TAR10013100.DAT'
-            , '4.0'),
-            ('volumes/COCIRS_0xxx_v3/COCIRS_0401/DATA/TSDR/NAV_DATA/' \
-            'TAR04012400.DAT'
-            , '3.0'),
+             , '4.0'),
+            ('volumes/COCIRS_0xxx_v3/COCIRS_0401/DATA/TSDR/NAV_DATA/TAR04012400.DAT', '3.0'),
         ]
     )
     def test_volume_version_id(self, input_path, expected):
@@ -436,7 +412,7 @@ class TestPdsFileBlackBox:
         'input_path,expected',
         [
             ('volumes/VGISS_7xxx/VGISS_7201/DATA/C24476XX/C2447654_RAW.IMG',
-            ['VG2-U-ISS-2/3/4/6-PROCESSED-V1.0']),
+             ['VG2-U-ISS-2/3/4/6-PROCESSED-V1.0']),
         ]
     )
     def test_volume_data_set_ids(self, input_path, expected):
