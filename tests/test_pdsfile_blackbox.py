@@ -375,6 +375,18 @@ class TestPdsFileBlackBox:
     @pytest.mark.parametrize(
         'input_path,expected',
         [
+            ('volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/FUV1999_007_16_57.DAT',
+             'volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/FUV1999_007_16_57.DAT'),
+        ]
+    )
+    def test_associated_parallel(self, input_path, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        target_associated_parallel = target_pdsfile.associated_parallel()
+        assert target_associated_parallel.logical_path == expected
+
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
             ('previews/VGISS_5xxx/VGISS_5101/DATA/C13854XX/C1385455_small.jpg',
              pdsviewable.PdsViewSet),
             ('previews/VGISS_5xxx/VGISS_5101/DATA/C13854XX',
@@ -684,11 +696,11 @@ class TestPdsFileBlackBox:
         [
             # ['O43B05C1Q', 'O43B05C3Q', 'O43B06BTQ', 'O43B06BVQ', 'O43B09B3Q', 'O43B09B5Q', 'O43B11D7Q', 'O43B11D8Q', 'O43B12XAQ', 'O43B13S4Q', 'O43B13S6Q', 'O43B13S8Q', 'O43B13SAQ', 'O43B14SFQ', 'O43B14SIQ', 'O43B15XEQ', 'O43B20010', 'O43B20X9Q', 'O43B21010', 'O43B21020', 'O43B22010', 'O43B22LXQ', 'O43B22MBQ', 'O43B2AXBQ', 'O43B2AXCQ', 'O43B2QXCQ', 'O43B2RXEQ', 'O43B2SXGQ', 'O43B2SXIQ', 'O43B2TXKQ', 'O43B2TXMQ', 'O43B2XCLQ', 'O43B2XCMQ', 'O43B4ASKQ', 'O43B5HXGQ', 'O43B5HXIQ', 'O43BA1BNQ', 'O43BA1BPQ', 'O43BA2H4Q', 'O43BA2H6Q', 'O43BA3M4Q', 'O43BA3M6Q', 'O43BA4DUQ', 'O43BA4DWQ', 'O43BA5C5Q', 'O43BA5C7Q', 'O43BA6BXQ', 'O43BA6BZQ', 'O43BA9B7Q', 'O43BA9B9Q', 'O43BB9BBQ', 'O43BC9BDQ', 'O43BD9BFQ', 'O43BD9BHQ', 'O43BE9BJQ']
             ('metadata/HSTOx_xxxx/HSTO0_7308/HSTO0_7308_index.tab',
-             'O43BA4DUQ', None),
+             'O43BA4DUQ', 'O43BA4DUQ'),
             ('metadata/HSTOx_xxxx/HSTO0_7308/HSTO0_7308_index.tab',
-             'O43BA2H4Q', None),
+             'O43BA2H4Q', 'O43BA2H4Q'),
             ('metadata/HSTOx_xxxx/HSTO0_7308/HSTO0_7308_index.tab',
-             'XXX/YYY/ZZZ', ''),
+             'XXX/YYY/ZZZ', None),
         ]
     )
     # Need to find a better way to test this one.
@@ -696,7 +708,89 @@ class TestPdsFileBlackBox:
         target_pdsfile = instantiate_target_pdsfile(input_path)
         try:
             res = target_pdsfile.row_pdsfile(selection=selection)
-            assert res.exists == True
+            assert res.basename == expected
             assert isinstance(res, pdsfile.PdsFile)
         except IOError:
             assert True # Index row is not found
+
+    @pytest.mark.parametrize(
+        'input_path,selection,expected',
+        [
+            # childnames: ['U2NO0401T', 'U2NO0402T', 'U2NO0403T', 'U2NO0404T']
+            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
+             'U2NO0403T', 'U2NO0403T'),
+            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
+             'U2NO0401T', 'U2NO0401T'),
+            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
+             'XXX/YYY/ZZZ', 'U2NO0404T'),
+        ]
+    )
+    def test_nearest_row_pdsfile(self, input_path, selection, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        res = target_pdsfile.nearest_row_pdsfile(selection=selection)
+        assert isinstance(res, pdsfile.PdsFile)
+        assert res.basename == expected
+
+    @pytest.mark.parametrize(
+        'input_path,selection,expected',
+        [
+            # selections will be ones we have in test directory
+            ('metadata/HSTOx_xxxx/HSTO0_7308/HSTO0_7308_index.tab', 'O43B05C1Q',
+             PDS_DATA_DIR + 'volumes/HSTOx_xxxx/HSTO0_7308/DATA/VISIT_05/O43B05C1Q.lbl'),
+            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab', 'U2NO0404T',
+             PDS_DATA_DIR + 'volumes/HSTUx_xxxx/HSTU0_5167/DATA/VISIT_04/U2NO0404T.lbl'),
+        ]
+    )
+    def test_data_pdsfile_for_index_and_selection(
+            self, input_path, selection, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        res = target_pdsfile.data_pdsfile_for_index_and_selection(
+            selection=selection)
+        assert isinstance(res, pdsfile.PdsFile)
+        assert res.exists == True
+        assert res.abspath == expected
+
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('volumes/COISS_0xxx/COISS_0001/data', None),
+            ('previews/COUVIS_0xxx_v1/COUVIS_0009/DATA/D2004_274', None),
+        ]
+    )
+    def test_group_children(self, input_path, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        res = target_pdsfile.group_children()
+        for group in res:
+            assert isinstance(group, pdsfile.PdsGroup)
+
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('volumes/COCIRS_0xxx_v3/COCIRS_0401/DATA/TSDR/NAV_DATA/TAR04012400.LBL',
+             PDS_DATA_DIR + 'volumes/COCIRS_0xxx_v3/COCIRS_0401/DATA/TSDR/NAV_DATA'),
+            ('volumes/COCIRS_1xxx/COCIRS_1001/DATA/TSDR/NAV_DATA/TAR10013100.DAT',
+             PDS_DATA_DIR + 'volumes/COCIRS_1xxx/COCIRS_1001/DATA/TSDR/NAV_DATA'),
+        ]
+    )
+    def test_parent(self, input_path, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        res = target_pdsfile.parent()
+        assert isinstance(res, pdsfile.PdsFile)
+        assert res.abspath == expected
+
+    @pytest.mark.parametrize(
+        'input_path,basename,expected',
+        [
+            ('volumes/COCIRS_6xxx/COCIRS_6004/DATA/GEODATA/',
+             'GEO1004021018_699.lbl',
+             PDS_DATA_DIR + 'volumes/COCIRS_6xxx/COCIRS_6004/DATA/GEODATA/GEO1004021018_699.lbl'),
+            ('metadata/COISS_1xxx/COISS_1001',
+             'COISS_1001_inventory.tab',
+             PDS_DATA_DIR + 'metadata/COISS_1xxx/COISS_1001/COISS_1001_inventory.tab'),
+        ]
+    )
+    def test_child(self, input_path, basename, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        res = target_pdsfile.child(basename=basename)
+        assert isinstance(res, pdsfile.PdsFile)
+        assert res.abspath == expected
