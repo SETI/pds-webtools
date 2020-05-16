@@ -45,6 +45,14 @@ Author: Dave Chang
             * full_size
     * Lists of targeted functions:
         * **PdsFile:**
+            * static methods:
+                * load_opus_ids_for_volume_interiors
+                * version_info
+                * from_logical_path
+                * from_abspath
+                * \_from_absolute_or_logical_path
+                * from_path
+                * from_filespec
             * viewset_lookup
             * volume_abspath
             * volset_abspath
@@ -56,10 +64,7 @@ Author: Dave Chang
             * sort_logical_paths
             * is_logical_path
             * logical_path_from_abspath
-            * from_logical_path
-            * from_abspath
             * from_relative_path
-            * from_path
             * opus_products
             * These need to be tested with a index file:
                 * find_selected_row_number
@@ -218,8 +223,8 @@ Author: Dave Chang
     * holdings/volumes/CORSS_8xxx/CORSS_8001/data/Rev007/Rev007E/Rev007E_RSS_2005_123_K34_E/RSS_2005_123_K34_E_CAL.lbl
     * holdings/volumes/CORSS_8xxx/CORSS_8001/data/Rev007/Rev007E/Rev007E_RSS_2005_123_K34_E/RSS_2005_123_K34_E_CAL.tab
 * COUVIS_0xxx:
-    * holdings/volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31.dat
-    * holdings/volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31.lbl
+    * holdings/volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31.DAT
+    * holdings/volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31.LBL
     * holdings/previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31_thumb.png
     * holdings/metadata/COUVIS_0xxx/COUVIS_0001/COUVIS_0001_index.tab
     * holdings/volumes/COUVIS_0xxx/COUVIS_0058/DATA/DATA/D2017_001/EUV2017_001_03_49.LBL
@@ -297,6 +302,7 @@ Author: Dave Chang
     * holdings/volumes/NHxxMV_xxxx/NHLAMV_1001/data/20060321_000526/mc0_0005261846_0x536_eng_1.lbl
     * holdings/previews/NHxxMV_xxxx/NHLAMV_1001/data/20060321_000526/mc1_0005261846_0x536_eng_1_thumb.jpg
     * holdings/metadata/NHxxMV_xxxx/NHLAMV_1001/NHLAMV_1001_index.tab
+    * holdings/metadata/NHxxMV_xxxx/NHLAMV_1001/NHLAMV_1001_index.lbl
 * RES_xxxx_prelim:
     * holdings/volumes/RES_xxxx_prelim/RES_0001/data/601_cas.lbl
     * holdings/volumes/RES_xxxx_prelim/RES_0001/data/601_cas.tab
@@ -378,6 +384,9 @@ Author: Dave Chang
     * If the input path is a logical path, It will raise a ValueError complaining about it's not an abspath, not sure if this is expected behavior.
 * PdsFile.from_logical_path:
     * If the input path is an abspath, it will raise an IO error complaining about file not exists (even though the file exists)
+* Regex patterns in pdsfile_rules.py need to support both DAT/LBL & dat/lbl.
+* pdsfile_rules.FILESPEC_TO_LOGICAL_PATH:
+    * pattern mapping doesn't support images from /diagrams, for exmaple: diagrams/COCIRS_6xxx/COCIRS_6004/BROWSE/SATURN/POI1004010000_FP1_small.jpg
 
 ### Note:
 * Need to find a proper case for these:

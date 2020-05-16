@@ -794,3 +794,79 @@ class TestPdsFileBlackBox:
         res = target_pdsfile.child(basename=basename)
         assert isinstance(res, pdsfile.PdsFile)
         assert res.abspath == expected
+
+    @pytest.mark.parametrize(
+        'input_path,interiors,expected',
+        [
+            (PDS_DATA_DIR + 'volumes/COISS_1xxx/COISS_1001',
+             ['data/1294561143_1295221348/W1294561202_1.lbl'],
+             PDS_DATA_DIR + 'volumes/COISS_1xxx/COISS_1001'),
+            (PDS_DATA_DIR + 'volumes/COUVIS_0xxx/COUVIS_0001',
+             ['DATA/D1999_007/HDAC1999_007_16_31.DAT'],
+             PDS_DATA_DIR + 'volumes/COUVIS_0xxx/COUVIS_0001'),
+        ]
+    )
+    def test_load_opus_ids_for_volume_interiors(
+            self, input_path, interiors, expected):
+        pdsfile.PdsFile.load_opus_ids_for_volume_interiors(
+            volume_abspath=input_path, interiors=interiors)
+
+        abspath = input_path + '/' + interiors[0]
+        print(abspath)
+        target_pdsfile = pdsfile.PdsFile.from_abspath(abspath)
+        opus_id = target_pdsfile.opus_id
+        print(target_pdsfile.abspath)
+        assert opus_id in pdsfile.PdsFile.OPUS_ID_ABSPATHS
+        assert abspath in pdsfile.PdsFile.OPUS_ID_ABSPATHS[opus_id]
+        assert expected in pdsfile.PdsFile.OPUS_ID_VOLUMES_LOADED
+
+    @pytest.mark.parametrize(
+        'input_suffix,expected',
+        [
+            ('_v2.1.3', (20103, 'Version 2.1.3 (superseded)', '2.1.3')),
+        ]
+    )
+    def test_version_info(self, input_suffix, expected):
+        res = pdsfile.PdsFile.version_info(suffix=input_suffix)
+        assert res == expected
+
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('volumes/CORSS_8xxx/CORSS_8001/data/Rev007/Rev007E/Rev007E_RSS_2005_123_K34_E/RSS_2005_123_K34_E_CAL.lbl',
+             True),
+            (PDS_DATA_DIR + 'volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.lbl',
+             True),
+        ]
+    )
+    def test__from_absolute_or_logical_path(self, input_path, expected):
+        res = pdsfile.PdsFile._from_absolute_or_logical_path(path=input_path)
+        assert isinstance(res, pdsfile.PdsFile)
+        assert res.exists == expected
+
+    @pytest.mark.parametrize(
+        'filespec,expected',
+        [
+            ('COISS_0001', True),
+            ('COISS_1001/data/1294561143_1295221348/W1294561261_1_thumb.jpg',
+             True),
+        ]
+    )
+    def test_from_filespec(self, filespec, expected):
+        res = pdsfile.PdsFile.from_filespec(filespec=filespec)
+        print(res.abspath)
+        assert isinstance(res, pdsfile.PdsFile)
+        assert res.exists == expected
+
+    @pytest.mark.parametrize(
+        'opus_id,expected',
+        [
+            ('hst-07176-nicmos-n4bi01l4q',
+             'volumes/HSTNx_xxxx/HSTN0_7176/DATA/VISIT_01/N4BI01L4Q.LBL'),
+        ]
+    )
+    def test_from_opus_id(self, opus_id, expected):
+        res = pdsfile.PdsFile.from_opus_id(opus_id=opus_id)
+        print(res.logical_path)
+        assert isinstance(res, pdsfile.PdsFile)
+        assert res.logical_path == expected
