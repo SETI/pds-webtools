@@ -29,6 +29,7 @@ Author: Dave Chang
                 * label_abspath
                 * \_volume_info
                 * opus_id
+                * data_abspaths
             * The following require a viewable file for testing (jpegs, tiffs, pngs), ex: 'pdsdata/holdings/previews/COUVIS_0xxx/COUVIS_0002/DATA/D2001_090/HDAC2001_090_23_55_thumb.png'
                 * is_viewable
                 * alt
@@ -36,8 +37,12 @@ Author: Dave Chang
             * The following require a directory for testing, ex: 'pdsdata/holdings/volumes/COUVIS_0xxx/COUVIS_0002'
                 * isdir
                 * childnames (need to use a directory, parent directory of .DAT file can be used)
+                * grid_view_allowed
             * The following require a index file under /metadata, ex: 'pdsdata/holdings/metadata/COUVIS_0xxx/COUVIS_0002/COUVIS_0002_index.tab'
                 * is_index
+            * Testing using archive files:
+                * exact_archive_url
+                * exact_checksum_url
         * **PdsViewSet**
             * thumbnail
             * small
@@ -45,14 +50,6 @@ Author: Dave Chang
             * full_size
     * Lists of targeted functions:
         * **PdsFile:**
-            * static methods:
-                * load_opus_ids_for_volume_interiors
-                * version_info
-                * from_logical_path
-                * from_abspath
-                * \_from_absolute_or_logical_path
-                * from_path
-                * from_filespec
             * viewset_lookup
             * volume_abspath
             * volset_abspath
@@ -83,6 +80,30 @@ Author: Dave Chang
                 * associated_logical_paths
                 * associated_abspaths
                 * associated_parallel
+            * static methods:
+                * load_opus_ids_for_volume_interiors
+                * version_info
+                * from_logical_path
+                * from_abspath
+                * \_from_absolute_or_logical_path
+                * from_path
+                * from_filespec
+                * from_opus_id
+                * Transformations
+                    * abspaths_for_pdsfiles
+                    * logicals_for_pdsfiles
+                    * basenames_for_pdsfiles
+                    * basenames_for_abspaths
+                    * pdsfiles_for_logicals
+                    * basenames_for_logicals
+            * abspaths_for_basenames
+            * logicals_for_basenames
+            * Associated volumes and volsets
+                * volume_pdsfile
+                * volume_pdsdir
+                * volset_pdsfile
+            * is_category_dir
+            * checksum_path_if_exact
         * **TranslatorByRegex:**
             * all
             * first
@@ -387,6 +408,8 @@ Author: Dave Chang
 * Regex patterns in pdsfile_rules.py need to support both DAT/LBL & dat/lbl.
 * pdsfile_rules.FILESPEC_TO_LOGICAL_PATH:
     * pattern mapping doesn't support images from /diagrams, for exmaple: diagrams/COCIRS_6xxx/COCIRS_6004/BROWSE/SATURN/POI1004010000_FP1_small.jpg
+* NameError:
+    * In abspaths_for_pdsfiles (line 3900), 'pdsfilesf' is not defined.
 
 ### Note:
 * Need to find a proper case for these:
@@ -396,3 +419,4 @@ Author: Dave Chang
 * Need to create archives-volumes test folder
     * exact_archive_url (return self.\_exact_archive_url_filled)
     * exact_checksum_url (return self.\_exact_checksum_url_filled)
+* Need to revisit archive_path_if_exact

@@ -8,7 +8,7 @@ from tests.helper import instantiate_target_pdsfile
 PDS_DATA_DIR = os.environ['PDS_DATA_DIR']
 
 ################################################################################
-# PdsViewSet Blackbox test
+# Blackbox test for functions & properties in PdsViewSet class
 ################################################################################
 class TestPdsViewSetBlackBox:
     @pytest.mark.parametrize(

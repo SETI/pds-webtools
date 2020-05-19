@@ -9,7 +9,7 @@ from tests.helper import instantiate_target_pdsfile
 PDS_DATA_DIR = os.environ['PDS_DATA_DIR']
 
 ################################################################################
-# PdsFile Blackbox test for internal cached
+# Blackbox test for internal cached in PdsFile class
 ################################################################################
 class TestPdsFileBlackBox:
     @pytest.mark.parametrize(

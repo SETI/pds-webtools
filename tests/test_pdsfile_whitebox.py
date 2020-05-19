@@ -8,7 +8,7 @@ from tests.helper import instantiate_target_pdsfile
 PDS_DATA_DIR = os.environ['PDS_DATA_DIR']
 
 ################################################################################
-# PdsFile Whitebox test
+# Whitebox test for functions & properties in PdsFile class
 ################################################################################
 class TestPdsFileWhiteBox:
     def test_exists_1(self):
