@@ -79,7 +79,6 @@ Author: Dave Chang
                 * associated_abspaths
                 * associated_parallel
             * static methods:
-                * load_opus_ids_for_volume_interiors
                 * version_info
                 * from_logical_path
                 * from_abspath
@@ -96,6 +95,8 @@ Author: Dave Chang
                     * basenames_for_logicals
             * abspaths_for_basenames
             * logicals_for_basenames
+            * OPUS_ID support:
+                * load_opus_ids_for_volume_interiors
             * Associated volumes and volsets:
                 * volume_pdsfile
                 * volume_pdsdir
@@ -117,6 +118,8 @@ Author: Dave Chang
             * copy
             * parent_logical_path
             * isdir
+            * viewset
+            * global_anchor
         * **TranslatorByRegex:**
             * all
             * first

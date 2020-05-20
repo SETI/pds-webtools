@@ -12,6 +12,9 @@ PDS_PDSDATA_PATH = PDS_DATA_DIR[:PDS_DATA_DIR.index('holdings')]
 # Blackbox test for functions & properties in PdsFile class
 ################################################################################
 class TestPdsFileBlackBox:
+    ############################################################################
+    # Test for properties
+    ############################################################################
     @pytest.mark.parametrize(
         'input_path,expected',
         [
@@ -324,439 +327,6 @@ class TestPdsFileBlackBox:
     @pytest.mark.parametrize(
         'input_path,expected',
         [
-            ('previews/VGISS_5xxx/VGISS_5101/DATA/C13854XX/C1385455_small.jpg',
-             pdsviewable.PdsViewSet),
-            ('previews/VGISS_5xxx/VGISS_5101/DATA/C13854XX',
-             pdsviewable.PdsViewSet),
-            ('volumes/VGISS_5xxx/VGISS_5101/DATA/C13854XX',
-             pdsviewable.PdsViewSet),
-        ]
-    )
-    def test_viewset_lookup(self, input_path, expected):
-        target_pdsfile = instantiate_target_pdsfile(input_path)
-        if expected is not None:
-            assert isinstance(target_pdsfile.viewset_lookup(), expected)
-
-    @pytest.mark.parametrize(
-        'input_path,expected',
-        [
-            ('metadata/VGISS_8xxx/VGISS_8201/VGISS_8201_inventory.tab',
-             PDS_DATA_DIR + 'metadata/VGISS_8xxx/VGISS_8201'),
-            ('metadata/VGISS_6xxx/VGISS_6101',
-             PDS_DATA_DIR + 'metadata/VGISS_6xxx/VGISS_6101'),
-            ('volumes/VGISS_7xxx/VGISS_7201/DATA/C24476XX/C2447654_RAW.lbl',
-             PDS_DATA_DIR + 'volumes/VGISS_7xxx/VGISS_7201')
-        ]
-    )
-    def test_volume_abspath(self, input_path, expected):
-        target_pdsfile = instantiate_target_pdsfile(input_path)
-        assert target_pdsfile.volume_abspath() == expected
-
-    @pytest.mark.parametrize(
-        'input_path,expected',
-        [
-            ('volumes/HSTOx_xxxx/HSTO0_7308/DATA/VISIT_05/O43B05C1Q.asc',
-             PDS_DATA_DIR + 'volumes/HSTOx_xxxx'),
-            ('previews/HSTNx_xxxx/HSTN0_7176/DATA/VISIT_01/N4BI01L4Q_thumb.jpg',
-             PDS_DATA_DIR + 'previews/HSTNx_xxxx')
-        ]
-    )
-    def test_volset_abspath(self, input_path, expected):
-        target_pdsfile = instantiate_target_pdsfile(input_path)
-        assert target_pdsfile.volset_abspath() == expected
-
-    @pytest.mark.parametrize(
-        'input_path,expected',
-        [
-            ('volumes/COUVIS_0xxx_v1/COUVIS_0009/DATA/D2004_274/EUV2004_274_01_39.lbl',
-             (PDS_DATA_DIR + 'checksums-volumes/COUVIS_0xxx_v1/COUVIS_0009_md5.txt', 81)),
-            ('metadata/VGISS_5xxx/VGISS_5101/VGISS_5101_supplemental_index.tab',
-             (PDS_DATA_DIR + 'checksums-metadata/VGISS_5xxx/VGISS_5101_metadata_md5.txt', 78))
-        ]
-    )
-    def test_checksum_path_and_lskip(self, input_path, expected):
-        target_pdsfile = instantiate_target_pdsfile(input_path)
-        assert target_pdsfile.checksum_path_and_lskip() == expected
-
-    @pytest.mark.parametrize(
-        'input_path,expected',
-        [
-            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
-             (PDS_DATA_DIR + 'archives-metadata/HSTUx_xxxx/HSTU0_5167_metadata.tar.gz', 68)),
-            ('volumes/EBROCC_xxxx/EBROCC_0001/DATA/ESO1M/ES1_EPD.lbl',
-             (PDS_DATA_DIR + 'archives-volumes/EBROCC_xxxx/EBROCC_0001.tar.gz', 68))
-        ]
-    )
-    def test_archive_path_and_lskip(self, input_path, expected):
-        target_pdsfile = instantiate_target_pdsfile(input_path)
-        assert target_pdsfile.archive_path_and_lskip() == expected
-
-    @pytest.mark.parametrize(
-        'input_path,expected',
-        [
-            ('volumes/VGISS_5xxx/VGISS_5101/DATA/C13854XX/C1385455_RAW.lbl',
-             (PDS_PDSDATA_PATH + 'shelves/info/volumes/VGISS_5xxx/VGISS_5101_info.shelf', 78)),
-            ('metadata/NHxxLO_xxxx/NHLALO_1001/NHLALO_1001_inventory.tab',
-             (PDS_PDSDATA_PATH + 'shelves/info/metadata/NHxxLO_xxxx/NHLALO_1001_info.shelf', 81))
-        ]
-    )
-    def test_shelf_path_and_lskip(self, input_path, expected):
-        target_pdsfile = instantiate_target_pdsfile(input_path)
-        assert target_pdsfile.shelf_path_and_lskip() == expected
-
-    @pytest.mark.parametrize(
-        'input_path,expected',
-        [
-            ('volumes/COISS_0xxx/COISS_0001/data/wacfm/bit_wght/13302/133020.lbl',
-             True)
-        ]
-    )
-    def test_from_logical_path(self, input_path, expected):
-        res = pdsfile.PdsFile.from_logical_path(path=input_path)
-        assert isinstance(res, pdsfile.PdsFile)
-        assert res.exists == expected
-
-    @pytest.mark.parametrize(
-        'input_path,expected',
-        [
-            ('volumes/COISS_0xxx/COISS_0001/data/wacfm/bit_wght/13302/133020.lbl',
-             True),
-            (PDS_DATA_DIR + 'volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.lbl',
-             True),
-        ]
-    )
-    def test_from_abspath(self, input_path, expected):
-        try:
-            res = pdsfile.PdsFile.from_abspath(abspath=input_path)
-            assert isinstance(res, pdsfile.PdsFile)
-            assert res.exists == expected
-        except ValueError as err:
-            assert True # Not an absolute path
-
-    @pytest.mark.parametrize(
-        'input_path,relative_path,expected',
-        [
-            ('previews/COUVIS_0xxx_v1/COUVIS_0009/DATA',
-             '/D2004_274/EUV2004_274_01_39_thumb.png',
-             True),
-            ('volumes/COUVIS_0xxx/COUVIS_0001',
-             '/DATA/D1999_007/FUV1999_007_16_57.LBL',
-             True),
-            ('volumes/COUVIS_0xxx/COUVIS_0001',
-             '/DATAx/D1999_007/FUV1999_007_16_57.LBL',
-             False),
-        ]
-    )
-    def test_from_relative_path(self, input_path, relative_path, expected):
-        target_pdsfile = instantiate_target_pdsfile(input_path)
-        res = target_pdsfile.from_relative_path(path=relative_path)
-        assert isinstance(res, pdsfile.PdsFile)
-        assert res.exists == expected
-
-    @pytest.mark.parametrize(
-        'input_path,expected',
-        [
-            ('holdings/volumes/COUVIS_0xxx_v1/COUVIS_0009/DATA/D2004_274/EUV2004_274_01_39.dat',
-             True),
-            ('COVIMS_0xxx/COVIMS_0001/data/1999010T054026_1999010T060958', True),
-            ('metadata/HSTOx_xxxx/HSTO0_7308', True),
-            ('HSTOx_xxxx', True),
-        ]
-    )
-    def test_from_path(self, input_path, expected):
-        res = pdsfile.PdsFile.from_path(path=input_path)
-        print(res.volname)
-        print(res.volset)
-        assert isinstance(res, pdsfile.PdsFile)
-        assert res.exists == expected
-
-    @pytest.mark.parametrize(
-        'input_path,expected',
-        [
-            ('volumes/COVIMS_0xxx/COVIMS_0001/data/1999010T054026_1999010T060958/v1294638283_1.lbl',
-             ''),
-            ('volumes/HSTOx_xxxx/HSTO0_7308/DATA/VISIT_05/O43B05C1Q.lbl',
-             ''),
-        ]
-    )
-    # Need to find a better way to test this one.
-    def test_opus_products(self, input_path, expected):
-        target_pdsfile = instantiate_target_pdsfile(input_path)
-        res = target_pdsfile.opus_products()
-        for key in res:
-            for files in res[key]:
-                for pdsf in files:
-                    assert pdsf.exists == True
-
-    @pytest.mark.parametrize(
-        'input_path,selection,expected',
-        [
-            # ['O43B05C1Q', 'O43B05C3Q', 'O43B06BTQ', 'O43B06BVQ', 'O43B09B3Q', 'O43B09B5Q', 'O43B11D7Q', 'O43B11D8Q', 'O43B12XAQ', 'O43B13S4Q', 'O43B13S6Q', 'O43B13S8Q', 'O43B13SAQ', 'O43B14SFQ', 'O43B14SIQ', 'O43B15XEQ', 'O43B20010', 'O43B20X9Q', 'O43B21010', 'O43B21020', 'O43B22010', 'O43B22LXQ', 'O43B22MBQ', 'O43B2AXBQ', 'O43B2AXCQ', 'O43B2QXCQ', 'O43B2RXEQ', 'O43B2SXGQ', 'O43B2SXIQ', 'O43B2TXKQ', 'O43B2TXMQ', 'O43B2XCLQ', 'O43B2XCMQ', 'O43B4ASKQ', 'O43B5HXGQ', 'O43B5HXIQ', 'O43BA1BNQ', 'O43BA1BPQ', 'O43BA2H4Q', 'O43BA2H6Q', 'O43BA3M4Q', 'O43BA3M6Q', 'O43BA4DUQ', 'O43BA4DWQ', 'O43BA5C5Q', 'O43BA5C7Q', 'O43BA6BXQ', 'O43BA6BZQ', 'O43BA9B7Q', 'O43BA9B9Q', 'O43BB9BBQ', 'O43BC9BDQ', 'O43BD9BFQ', 'O43BD9BHQ', 'O43BE9BJQ']
-            ('metadata/HSTOx_xxxx/HSTO0_7308/HSTO0_7308_index.tab',
-             'O43B06BTQ', 2),
-            ('metadata/HSTOx_xxxx/HSTO0_7308/HSTO0_7308_index.tab',
-             'O43BB9BBQ', 50),
-            ('metadata/HSTOx_xxxx/HSTO0_7308/HSTO0_7308_index.tab',
-             'XXX/YYY/ZZZ', ''),
-        ]
-    )
-    # Need to find a better way to test this one.
-    def test_find_selected_row_number(self, input_path, selection, expected):
-        target_pdsfile = instantiate_target_pdsfile(input_path)
-        try:
-            res = target_pdsfile.find_selected_row_number(selection=selection)
-            assert res == expected
-        except IOError:
-            assert True # Index row is not found
-
-    @pytest.mark.parametrize(
-        'input_path,selection,expected',
-        [
-            # childnames: ['U2NO0401T', 'U2NO0402T', 'U2NO0403T', 'U2NO0404T']
-            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
-             'U2NO0404T', 3),
-            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
-             '', -1),
-            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
-             'AAAAAAA', -1),
-
-        ]
-    )
-    # Need to find a better way to test this one.
-    def test_find_row_number_at_or_below(self, input_path, selection, expected):
-        target_pdsfile = instantiate_target_pdsfile(input_path)
-        res = target_pdsfile.find_row_number_at_or_below(selection=selection)
-        assert res == expected
-
-
-    @pytest.mark.parametrize(
-        'input_path,selection,expected',
-        [
-            # childnames: ['U2NO0401T', 'U2NO0402T', 'U2NO0403T', 'U2NO0404T']
-            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
-             None, None),
-            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
-             'U2NO0401T', 'U2NO0401T'),
-        ]
-    )
-    # Need to find a better way to test this one.
-    def test_cache_child_row_pdsfiles(self, input_path, selection, expected):
-        target_pdsfile = instantiate_target_pdsfile(input_path)
-        res = target_pdsfile.cache_child_row_pdsfiles(selection=selection)
-        if expected is None:
-            assert res == expected
-        else:
-            assert res.basename == expected
-
-    @pytest.mark.parametrize(
-        'input_path,selection,expected',
-        [
-            # ['O43B05C1Q', 'O43B05C3Q', 'O43B06BTQ', 'O43B06BVQ', 'O43B09B3Q', 'O43B09B5Q', 'O43B11D7Q', 'O43B11D8Q', 'O43B12XAQ', 'O43B13S4Q', 'O43B13S6Q', 'O43B13S8Q', 'O43B13SAQ', 'O43B14SFQ', 'O43B14SIQ', 'O43B15XEQ', 'O43B20010', 'O43B20X9Q', 'O43B21010', 'O43B21020', 'O43B22010', 'O43B22LXQ', 'O43B22MBQ', 'O43B2AXBQ', 'O43B2AXCQ', 'O43B2QXCQ', 'O43B2RXEQ', 'O43B2SXGQ', 'O43B2SXIQ', 'O43B2TXKQ', 'O43B2TXMQ', 'O43B2XCLQ', 'O43B2XCMQ', 'O43B4ASKQ', 'O43B5HXGQ', 'O43B5HXIQ', 'O43BA1BNQ', 'O43BA1BPQ', 'O43BA2H4Q', 'O43BA2H6Q', 'O43BA3M4Q', 'O43BA3M6Q', 'O43BA4DUQ', 'O43BA4DWQ', 'O43BA5C5Q', 'O43BA5C7Q', 'O43BA6BXQ', 'O43BA6BZQ', 'O43BA9B7Q', 'O43BA9B9Q', 'O43BB9BBQ', 'O43BC9BDQ', 'O43BD9BFQ', 'O43BD9BHQ', 'O43BE9BJQ']
-            ('metadata/HSTOx_xxxx/HSTO0_7308/HSTO0_7308_index.tab',
-             'O43BA4DUQ', 'O43BA4DUQ'),
-            ('metadata/HSTOx_xxxx/HSTO0_7308/HSTO0_7308_index.tab',
-             'O43BA2H4Q', 'O43BA2H4Q'),
-            ('metadata/HSTOx_xxxx/HSTO0_7308/HSTO0_7308_index.tab',
-             'XXX/YYY/ZZZ', None),
-        ]
-    )
-    # Need to find a better way to test this one.
-    def test_row_pdsfile(self, input_path, selection, expected):
-        target_pdsfile = instantiate_target_pdsfile(input_path)
-        try:
-            res = target_pdsfile.row_pdsfile(selection=selection)
-            assert res.basename == expected
-            assert isinstance(res, pdsfile.PdsFile)
-        except IOError:
-            assert True # Index row is not found
-
-    @pytest.mark.parametrize(
-        'input_path,selection,expected',
-        [
-            # childnames: ['U2NO0401T', 'U2NO0402T', 'U2NO0403T', 'U2NO0404T']
-            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
-             'U2NO0403T', 'U2NO0403T'),
-            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
-             'U2NO0401T', 'U2NO0401T'),
-            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
-             'XXX/YYY/ZZZ', 'U2NO0404T'),
-        ]
-    )
-    def test_nearest_row_pdsfile(self, input_path, selection, expected):
-        target_pdsfile = instantiate_target_pdsfile(input_path)
-        res = target_pdsfile.nearest_row_pdsfile(selection=selection)
-        assert isinstance(res, pdsfile.PdsFile)
-        assert res.basename == expected
-
-    @pytest.mark.parametrize(
-        'input_path,selection,expected',
-        [
-            # selections will be ones we have in test directory
-            ('metadata/HSTOx_xxxx/HSTO0_7308/HSTO0_7308_index.tab', 'O43B05C1Q',
-             PDS_DATA_DIR + 'volumes/HSTOx_xxxx/HSTO0_7308/DATA/VISIT_05/O43B05C1Q.lbl'),
-            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab', 'U2NO0404T',
-             PDS_DATA_DIR + 'volumes/HSTUx_xxxx/HSTU0_5167/DATA/VISIT_04/U2NO0404T.lbl'),
-        ]
-    )
-    def test_data_pdsfile_for_index_and_selection(
-            self, input_path, selection, expected):
-        target_pdsfile = instantiate_target_pdsfile(input_path)
-        res = target_pdsfile.data_pdsfile_for_index_and_selection(
-            selection=selection)
-        assert isinstance(res, pdsfile.PdsFile)
-        assert res.exists == True
-        assert res.abspath == expected
-
-    @pytest.mark.parametrize(
-        'input_path,expected',
-        [
-            ('volumes/COCIRS_0xxx_v3/COCIRS_0401/DATA/TSDR/NAV_DATA/TAR04012400.LBL',
-             PDS_DATA_DIR + 'volumes/COCIRS_0xxx_v3/COCIRS_0401/DATA/TSDR/NAV_DATA'),
-            ('volumes/COCIRS_1xxx/COCIRS_1001/DATA/TSDR/NAV_DATA/TAR10013100.DAT',
-             PDS_DATA_DIR + 'volumes/COCIRS_1xxx/COCIRS_1001/DATA/TSDR/NAV_DATA'),
-        ]
-    )
-    def test_parent(self, input_path, expected):
-        target_pdsfile = instantiate_target_pdsfile(input_path)
-        res = target_pdsfile.parent()
-        assert isinstance(res, pdsfile.PdsFile)
-        assert res.abspath == expected
-
-    @pytest.mark.parametrize(
-        'input_path,basename,expected',
-        [
-            ('volumes/COCIRS_6xxx/COCIRS_6004/DATA/GEODATA/',
-             'GEO1004021018_699.lbl',
-             PDS_DATA_DIR + 'volumes/COCIRS_6xxx/COCIRS_6004/DATA/GEODATA/GEO1004021018_699.lbl'),
-            ('metadata/COISS_1xxx/COISS_1001',
-             'COISS_1001_inventory.tab',
-             PDS_DATA_DIR + 'metadata/COISS_1xxx/COISS_1001/COISS_1001_inventory.tab'),
-        ]
-    )
-    def test_child(self, input_path, basename, expected):
-        target_pdsfile = instantiate_target_pdsfile(input_path)
-        res = target_pdsfile.child(basename=basename)
-        assert isinstance(res, pdsfile.PdsFile)
-        assert res.abspath == expected
-
-    @pytest.mark.parametrize(
-        'input_path,interiors,expected',
-        [
-            (PDS_DATA_DIR + 'volumes/COISS_1xxx/COISS_1001',
-             ['data/1294561143_1295221348/W1294561202_1.lbl'],
-             PDS_DATA_DIR + 'volumes/COISS_1xxx/COISS_1001'),
-            (PDS_DATA_DIR + 'volumes/COUVIS_0xxx/COUVIS_0001',
-             ['DATA/D1999_007/HDAC1999_007_16_31.DAT'],
-             PDS_DATA_DIR + 'volumes/COUVIS_0xxx/COUVIS_0001'),
-        ]
-    )
-    def test_load_opus_ids_for_volume_interiors(
-            self, input_path, interiors, expected):
-        pdsfile.PdsFile.load_opus_ids_for_volume_interiors(
-            volume_abspath=input_path, interiors=interiors)
-
-        abspath = input_path + '/' + interiors[0]
-        target_pdsfile = pdsfile.PdsFile.from_abspath(abspath)
-        opus_id = target_pdsfile.opus_id
-
-        assert opus_id in pdsfile.PdsFile.OPUS_ID_ABSPATHS
-        assert abspath in pdsfile.PdsFile.OPUS_ID_ABSPATHS[opus_id]
-        assert expected in pdsfile.PdsFile.OPUS_ID_VOLUMES_LOADED
-
-    @pytest.mark.parametrize(
-        'input_suffix,expected',
-        [
-            ('_v2.1.3', (20103, 'Version 2.1.3 (superseded)', '2.1.3')),
-        ]
-    )
-    def test_version_info(self, input_suffix, expected):
-        res = pdsfile.PdsFile.version_info(suffix=input_suffix)
-        assert res == expected
-
-    @pytest.mark.parametrize(
-        'input_path,expected',
-        [
-            ('volumes/CORSS_8xxx/CORSS_8001/data/Rev007/Rev007E/Rev007E_RSS_2005_123_K34_E/RSS_2005_123_K34_E_CAL.lbl',
-             True),
-            (PDS_DATA_DIR + 'volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.lbl',
-             True),
-        ]
-    )
-    def test__from_absolute_or_logical_path(self, input_path, expected):
-        res = pdsfile.PdsFile._from_absolute_or_logical_path(path=input_path)
-        assert isinstance(res, pdsfile.PdsFile)
-        assert res.exists == expected
-
-    @pytest.mark.parametrize(
-        'filespec,expected',
-        [
-            ('COISS_0001', True),
-            ('COISS_1001/data/1294561143_1295221348/W1294561261_1_thumb.jpg',
-             True),
-             # this could bne moved to white box
-            ('COISS_0001*', True),
-        ]
-    )
-    def test_from_filespec(self, filespec, expected):
-        res = pdsfile.PdsFile.from_filespec(filespec=filespec)
-        print(res.abspath)
-        assert isinstance(res, pdsfile.PdsFile)
-        assert res.exists == expected
-
-    @pytest.mark.parametrize(
-        'input_path,interiors,expected',
-        [
-            (PDS_DATA_DIR + 'volumes/HSTNx_xxxx/HSTN0_7176/',
-             ['DATA/VISIT_01/N4BI01L4Q.LBL'],
-             PDS_DATA_DIR + 'volumes/HSTNx_xxxx/HSTN0_7176/DATA/VISIT_01/N4BI01L4Q.LBL')
-        ]
-    )
-    def test_from_opus_id(self, input_path, interiors, expected):
-        pdsfile.PdsFile.load_opus_ids_for_volume_interiors(
-            volume_abspath=input_path, interiors=interiors)
-        abspath = input_path + '/' + interiors[0]
-        target_pdsfile = pdsfile.PdsFile.from_abspath(abspath)
-        opus_id = target_pdsfile.opus_id
-
-        res = pdsfile.PdsFile.from_opus_id(opus_id=opus_id)
-        print(res.abspath)
-        assert isinstance(res, pdsfile.PdsFile)
-        assert res.exists == True
-        assert res.abspath == expected
-
-    @pytest.mark.parametrize(
-        'input_path,basenames,expected',
-        [
-            ('volumes/COISS_0xxx/COISS_0001/data/wacfm/bit_wght/13302',
-             ['133020.lbl'],
-             [PDS_DATA_DIR + 'volumes/COISS_0xxx/COISS_0001/data/wacfm/bit_wght/13302/133020.lbl'])
-        ]
-    )
-    def test_abspaths_for_basenames(self, input_path, basenames, expected):
-        target_pdsfile = instantiate_target_pdsfile(input_path)
-        res = target_pdsfile.abspaths_for_basenames(basenames=basenames)
-
-        for path in res:
-            assert path in expected
-
-    @pytest.mark.parametrize(
-        'input_path,basenames,expected',
-        [
-            ('volumes/COCIRS_6xxx/COCIRS_6004/DATA/GEODATA/',
-             ['GEO1004021018_699.lbl'],
-             ['volumes/COCIRS_6xxx/COCIRS_6004/DATA/GEODATA/GEO1004021018_699.lbl'])
-        ]
-    )
-    def test_logicals_for_basenames(self, input_path, basenames, expected):
-        target_pdsfile = instantiate_target_pdsfile(input_path, is_abspath=False)
-        res = target_pdsfile.logicals_for_basenames(basenames=basenames)
-
-        for path in res:
-            assert path in expected
-
-    @pytest.mark.parametrize(
-        'input_path,expected',
-        [
             ('volumes/COCIRS_6xxx/COCIRS_6004/DATA/GEODATA/GEO1004021018_699.LBL',
              [
                 PDS_DATA_DIR + 'volumes/COCIRS_6xxx/COCIRS_6004/DATA/GEODATA/GEO1004021018_699.TAB'
@@ -769,18 +339,6 @@ class TestPdsFileBlackBox:
 
         for path in res:
             assert path in expected
-
-    @pytest.mark.parametrize(
-        'input_path,expected',
-        [
-            ('archives-volumes/COCIRS_0xxx/COCIRS_0010.tar.gz',
-             '')
-        ]
-    )
-    def test_exact_archive_url(self, input_path, expected):
-        target_pdsfile = instantiate_target_pdsfile(input_path)
-        res = target_pdsfile.exact_archive_url()
-        assert res == expected
 
     @pytest.mark.parametrize(
         'input_path,expected',
@@ -877,6 +435,211 @@ class TestPdsFileBlackBox:
         res = target_pdsfile.has_neighbor_rule
         assert res == expected
 
+    ############################################################################
+    # Test for functions
+    ############################################################################
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('previews/VGISS_5xxx/VGISS_5101/DATA/C13854XX/C1385455_small.jpg',
+             pdsviewable.PdsViewSet),
+            ('previews/VGISS_5xxx/VGISS_5101/DATA/C13854XX',
+             pdsviewable.PdsViewSet),
+            ('volumes/VGISS_5xxx/VGISS_5101/DATA/C13854XX',
+             pdsviewable.PdsViewSet),
+        ]
+    )
+    def test_viewset_lookup(self, input_path, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        if expected is not None:
+            assert isinstance(target_pdsfile.viewset_lookup(), expected)
+
+    @pytest.mark.parametrize(
+        'input_suffix,expected',
+        [
+            ('_v2.1.3', (20103, 'Version 2.1.3 (superseded)', '2.1.3')),
+        ]
+    )
+    def test_version_info(self, input_suffix, expected):
+        res = pdsfile.PdsFile.version_info(suffix=input_suffix)
+        assert res == expected
+
+    ############################################################################
+    # Test for alternative constructors
+    ############################################################################
+    @pytest.mark.parametrize(
+        'input_path,basename,expected',
+        [
+            ('volumes/COCIRS_6xxx/COCIRS_6004/DATA/GEODATA/',
+             'GEO1004021018_699.lbl',
+             PDS_DATA_DIR + 'volumes/COCIRS_6xxx/COCIRS_6004/DATA/GEODATA/GEO1004021018_699.lbl'),
+            ('metadata/COISS_1xxx/COISS_1001',
+             'COISS_1001_inventory.tab',
+             PDS_DATA_DIR + 'metadata/COISS_1xxx/COISS_1001/COISS_1001_inventory.tab'),
+        ]
+    )
+    def test_child(self, input_path, basename, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        res = target_pdsfile.child(basename=basename)
+        assert isinstance(res, pdsfile.PdsFile)
+        assert res.abspath == expected
+
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('volumes/COCIRS_0xxx_v3/COCIRS_0401/DATA/TSDR/NAV_DATA/TAR04012400.LBL',
+             PDS_DATA_DIR + 'volumes/COCIRS_0xxx_v3/COCIRS_0401/DATA/TSDR/NAV_DATA'),
+            ('volumes/COCIRS_1xxx/COCIRS_1001/DATA/TSDR/NAV_DATA/TAR10013100.DAT',
+             PDS_DATA_DIR + 'volumes/COCIRS_1xxx/COCIRS_1001/DATA/TSDR/NAV_DATA'),
+        ]
+    )
+    def test_parent(self, input_path, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        res = target_pdsfile.parent()
+        assert isinstance(res, pdsfile.PdsFile)
+        assert res.abspath == expected
+
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('volumes/COISS_0xxx/COISS_0001/data/wacfm/bit_wght/13302/133020.lbl',
+             True)
+        ]
+    )
+    def test_from_logical_path(self, input_path, expected):
+        res = pdsfile.PdsFile.from_logical_path(path=input_path)
+        assert isinstance(res, pdsfile.PdsFile)
+        assert res.exists == expected
+
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('volumes/COISS_0xxx/COISS_0001/data/wacfm/bit_wght/13302/133020.lbl',
+             True),
+            (PDS_DATA_DIR + 'volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.lbl',
+             True),
+        ]
+    )
+    def test_from_abspath(self, input_path, expected):
+        try:
+            res = pdsfile.PdsFile.from_abspath(abspath=input_path)
+            assert isinstance(res, pdsfile.PdsFile)
+            assert res.exists == expected
+        except ValueError as err:
+            assert True # Not an absolute path
+
+    @pytest.mark.parametrize(
+        'input_path,relative_path,expected',
+        [
+            ('previews/COUVIS_0xxx_v1/COUVIS_0009/DATA',
+             '/D2004_274/EUV2004_274_01_39_thumb.png',
+             True),
+            ('volumes/COUVIS_0xxx/COUVIS_0001',
+             '/DATA/D1999_007/FUV1999_007_16_57.LBL',
+             True),
+            ('volumes/COUVIS_0xxx/COUVIS_0001',
+             '/DATAx/D1999_007/FUV1999_007_16_57.LBL',
+             False),
+        ]
+    )
+    def test_from_relative_path(self, input_path, relative_path, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        res = target_pdsfile.from_relative_path(path=relative_path)
+        assert isinstance(res, pdsfile.PdsFile)
+        assert res.exists == expected
+
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('volumes/CORSS_8xxx/CORSS_8001/data/Rev007/Rev007E/Rev007E_RSS_2005_123_K34_E/RSS_2005_123_K34_E_CAL.lbl',
+             True),
+            (PDS_DATA_DIR + 'volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.lbl',
+             True),
+        ]
+    )
+    def test__from_absolute_or_logical_path(self, input_path, expected):
+        res = pdsfile.PdsFile._from_absolute_or_logical_path(path=input_path)
+        assert isinstance(res, pdsfile.PdsFile)
+        assert res.exists == expected
+
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('holdings/volumes/COUVIS_0xxx_v1/COUVIS_0009/DATA/D2004_274/EUV2004_274_01_39.dat',
+             True),
+            ('COVIMS_0xxx/COVIMS_0001/data/1999010T054026_1999010T060958', True),
+            ('metadata/HSTOx_xxxx/HSTO0_7308', True),
+            ('HSTOx_xxxx', True),
+        ]
+    )
+    def test_from_path(self, input_path, expected):
+        res = pdsfile.PdsFile.from_path(path=input_path)
+        print(res.volname)
+        print(res.volset)
+        assert isinstance(res, pdsfile.PdsFile)
+        assert res.exists == expected
+
+    ############################################################################
+    # Test for OPUS support methods
+    ############################################################################
+    @pytest.mark.parametrize(
+        'filespec,expected',
+        [
+            ('COISS_0001', True),
+            ('COISS_1001/data/1294561143_1295221348/W1294561261_1_thumb.jpg',
+             True),
+             # this could bne moved to white box
+            ('COISS_0001*', True),
+        ]
+    )
+    def test_from_filespec(self, filespec, expected):
+        res = pdsfile.PdsFile.from_filespec(filespec=filespec)
+        print(res.abspath)
+        assert isinstance(res, pdsfile.PdsFile)
+        assert res.exists == expected
+
+    @pytest.mark.parametrize(
+        'input_path,interiors,expected',
+        [
+            (PDS_DATA_DIR + 'volumes/HSTNx_xxxx/HSTN0_7176/',
+             ['DATA/VISIT_01/N4BI01L4Q.LBL'],
+             PDS_DATA_DIR + 'volumes/HSTNx_xxxx/HSTN0_7176/DATA/VISIT_01/N4BI01L4Q.LBL')
+        ]
+    )
+    def test_from_opus_id(self, input_path, interiors, expected):
+        pdsfile.PdsFile.load_opus_ids_for_volume_interiors(
+            volume_abspath=input_path, interiors=interiors)
+        abspath = input_path + '/' + interiors[0]
+        target_pdsfile = pdsfile.PdsFile.from_abspath(abspath)
+        opus_id = target_pdsfile.opus_id
+
+        res = pdsfile.PdsFile.from_opus_id(opus_id=opus_id)
+        print(res.abspath)
+        assert isinstance(res, pdsfile.PdsFile)
+        assert res.exists == True
+        assert res.abspath == expected
+
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('volumes/COVIMS_0xxx/COVIMS_0001/data/1999010T054026_1999010T060958/v1294638283_1.lbl',
+             ''),
+            ('volumes/HSTOx_xxxx/HSTO0_7308/DATA/VISIT_05/O43B05C1Q.lbl',
+             ''),
+        ]
+    )
+    # Need to find a better way to test this one.
+    def test_opus_products(self, input_path, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        res = target_pdsfile.opus_products()
+        for key in res:
+            for files in res[key]:
+                for pdsf in files:
+                    assert pdsf.exists == True
+
+    ############################################################################
+    # Test for associated volumes and volsets
+    ############################################################################
     @pytest.mark.parametrize(
         'input_path,expected',
         [
@@ -921,19 +684,6 @@ class TestPdsFileBlackBox:
         'input_path,expected',
         [
             ('volumes/NHSP_xxxx/NHSP_1000/DATA/CK/MERGED_NHPC_2006_V011.LBL',
-             'volumes/NHSP_xxxx'),
-        ]
-    )
-    def test_volset_pdsfile(self, input_path, expected):
-        target_pdsfile = instantiate_target_pdsfile(input_path)
-        res = target_pdsfile.volset_pdsfile()
-        assert isinstance(res, pdsfile.PdsFile)
-        assert res.logical_path == expected
-
-    @pytest.mark.parametrize(
-        'input_path,expected',
-        [
-            ('volumes/NHSP_xxxx/NHSP_1000/DATA/CK/MERGED_NHPC_2006_V011.LBL',
              False),
             ('volumes', True)
         ]
@@ -942,6 +692,171 @@ class TestPdsFileBlackBox:
         target_pdsfile = instantiate_target_pdsfile(input_path)
         res = target_pdsfile.is_category_dir()
         assert res == expected
+
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('metadata/VGISS_8xxx/VGISS_8201/VGISS_8201_inventory.tab',
+             PDS_DATA_DIR + 'metadata/VGISS_8xxx/VGISS_8201'),
+            ('metadata/VGISS_6xxx/VGISS_6101',
+             PDS_DATA_DIR + 'metadata/VGISS_6xxx/VGISS_6101'),
+            ('volumes/VGISS_7xxx/VGISS_7201/DATA/C24476XX/C2447654_RAW.lbl',
+             PDS_DATA_DIR + 'volumes/VGISS_7xxx/VGISS_7201')
+        ]
+    )
+    def test_volume_abspath(self, input_path, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        assert target_pdsfile.volume_abspath() == expected
+
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('volumes/HSTOx_xxxx/HSTO0_7308/DATA/VISIT_05/O43B05C1Q.asc',
+             PDS_DATA_DIR + 'volumes/HSTOx_xxxx'),
+            ('previews/HSTNx_xxxx/HSTN0_7176/DATA/VISIT_01/N4BI01L4Q_thumb.jpg',
+             PDS_DATA_DIR + 'previews/HSTNx_xxxx')
+        ]
+    )
+    def test_volset_abspath(self, input_path, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        assert target_pdsfile.volset_abspath() == expected
+
+    ############################################################################
+    # Test for support for PdsFile objects representing index rows
+    ############################################################################
+    @pytest.mark.parametrize(
+        'input_path,selection,expected',
+        [
+            # ['O43B05C1Q', 'O43B05C3Q', 'O43B06BTQ', 'O43B06BVQ', 'O43B09B3Q', 'O43B09B5Q', 'O43B11D7Q', 'O43B11D8Q', 'O43B12XAQ', 'O43B13S4Q', 'O43B13S6Q', 'O43B13S8Q', 'O43B13SAQ', 'O43B14SFQ', 'O43B14SIQ', 'O43B15XEQ', 'O43B20010', 'O43B20X9Q', 'O43B21010', 'O43B21020', 'O43B22010', 'O43B22LXQ', 'O43B22MBQ', 'O43B2AXBQ', 'O43B2AXCQ', 'O43B2QXCQ', 'O43B2RXEQ', 'O43B2SXGQ', 'O43B2SXIQ', 'O43B2TXKQ', 'O43B2TXMQ', 'O43B2XCLQ', 'O43B2XCMQ', 'O43B4ASKQ', 'O43B5HXGQ', 'O43B5HXIQ', 'O43BA1BNQ', 'O43BA1BPQ', 'O43BA2H4Q', 'O43BA2H6Q', 'O43BA3M4Q', 'O43BA3M6Q', 'O43BA4DUQ', 'O43BA4DWQ', 'O43BA5C5Q', 'O43BA5C7Q', 'O43BA6BXQ', 'O43BA6BZQ', 'O43BA9B7Q', 'O43BA9B9Q', 'O43BB9BBQ', 'O43BC9BDQ', 'O43BD9BFQ', 'O43BD9BHQ', 'O43BE9BJQ']
+            ('metadata/HSTOx_xxxx/HSTO0_7308/HSTO0_7308_index.tab',
+             'O43B06BTQ', 2),
+            ('metadata/HSTOx_xxxx/HSTO0_7308/HSTO0_7308_index.tab',
+             'O43BB9BBQ', 50),
+            ('metadata/HSTOx_xxxx/HSTO0_7308/HSTO0_7308_index.tab',
+             'XXX/YYY/ZZZ', ''),
+        ]
+    )
+    # Need to find a better way to test this one.
+    def test_find_selected_row_number(self, input_path, selection, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        try:
+            res = target_pdsfile.find_selected_row_number(selection=selection)
+            assert res == expected
+        except IOError:
+            assert True # Index row is not found
+
+    @pytest.mark.parametrize(
+        'input_path,selection,expected',
+        [
+            # childnames: ['U2NO0401T', 'U2NO0402T', 'U2NO0403T', 'U2NO0404T']
+            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
+             'U2NO0404T', 3),
+            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
+             '', -1),
+            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
+             'AAAAAAA', -1),
+
+        ]
+    )
+    # Need to find a better way to test this one.
+    def test_find_row_number_at_or_below(self, input_path, selection, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        res = target_pdsfile.find_row_number_at_or_below(selection=selection)
+        assert res == expected
+
+    @pytest.mark.parametrize(
+        'input_path,selection,expected',
+        [
+            # childnames: ['U2NO0401T', 'U2NO0402T', 'U2NO0403T', 'U2NO0404T']
+            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
+             None, None),
+            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
+             'U2NO0401T', 'U2NO0401T'),
+        ]
+    )
+    # Need to find a better way to test this one.
+    def test_cache_child_row_pdsfiles(self, input_path, selection, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        res = target_pdsfile.cache_child_row_pdsfiles(selection=selection)
+        if expected is None:
+            assert res == expected
+        else:
+            assert res.basename == expected
+
+    @pytest.mark.parametrize(
+        'input_path,selection,expected',
+        [
+            # ['O43B05C1Q', 'O43B05C3Q', 'O43B06BTQ', 'O43B06BVQ', 'O43B09B3Q', 'O43B09B5Q', 'O43B11D7Q', 'O43B11D8Q', 'O43B12XAQ', 'O43B13S4Q', 'O43B13S6Q', 'O43B13S8Q', 'O43B13SAQ', 'O43B14SFQ', 'O43B14SIQ', 'O43B15XEQ', 'O43B20010', 'O43B20X9Q', 'O43B21010', 'O43B21020', 'O43B22010', 'O43B22LXQ', 'O43B22MBQ', 'O43B2AXBQ', 'O43B2AXCQ', 'O43B2QXCQ', 'O43B2RXEQ', 'O43B2SXGQ', 'O43B2SXIQ', 'O43B2TXKQ', 'O43B2TXMQ', 'O43B2XCLQ', 'O43B2XCMQ', 'O43B4ASKQ', 'O43B5HXGQ', 'O43B5HXIQ', 'O43BA1BNQ', 'O43BA1BPQ', 'O43BA2H4Q', 'O43BA2H6Q', 'O43BA3M4Q', 'O43BA3M6Q', 'O43BA4DUQ', 'O43BA4DWQ', 'O43BA5C5Q', 'O43BA5C7Q', 'O43BA6BXQ', 'O43BA6BZQ', 'O43BA9B7Q', 'O43BA9B9Q', 'O43BB9BBQ', 'O43BC9BDQ', 'O43BD9BFQ', 'O43BD9BHQ', 'O43BE9BJQ']
+            ('metadata/HSTOx_xxxx/HSTO0_7308/HSTO0_7308_index.tab',
+             'O43BA4DUQ', 'O43BA4DUQ'),
+            ('metadata/HSTOx_xxxx/HSTO0_7308/HSTO0_7308_index.tab',
+             'O43BA2H4Q', 'O43BA2H4Q'),
+            ('metadata/HSTOx_xxxx/HSTO0_7308/HSTO0_7308_index.tab',
+             'XXX/YYY/ZZZ', None),
+        ]
+    )
+    # Need to find a better way to test this one.
+    def test_row_pdsfile(self, input_path, selection, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        try:
+            res = target_pdsfile.row_pdsfile(selection=selection)
+            assert res.basename == expected
+            assert isinstance(res, pdsfile.PdsFile)
+        except IOError:
+            assert True # Index row is not found
+
+    @pytest.mark.parametrize(
+        'input_path,selection,expected',
+        [
+            # childnames: ['U2NO0401T', 'U2NO0402T', 'U2NO0403T', 'U2NO0404T']
+            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
+             'U2NO0403T', 'U2NO0403T'),
+            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
+             'U2NO0401T', 'U2NO0401T'),
+            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
+             'XXX/YYY/ZZZ', 'U2NO0404T'),
+        ]
+    )
+    def test_nearest_row_pdsfile(self, input_path, selection, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        res = target_pdsfile.nearest_row_pdsfile(selection=selection)
+        assert isinstance(res, pdsfile.PdsFile)
+        assert res.basename == expected
+
+    @pytest.mark.parametrize(
+        'input_path,selection,expected',
+        [
+            # selections will be ones we have in test directory
+            ('metadata/HSTOx_xxxx/HSTO0_7308/HSTO0_7308_index.tab', 'O43B05C1Q',
+             PDS_DATA_DIR + 'volumes/HSTOx_xxxx/HSTO0_7308/DATA/VISIT_05/O43B05C1Q.lbl'),
+            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab', 'U2NO0404T',
+             PDS_DATA_DIR + 'volumes/HSTUx_xxxx/HSTU0_5167/DATA/VISIT_04/U2NO0404T.lbl'),
+        ]
+    )
+    def test_data_pdsfile_for_index_and_selection(
+            self, input_path, selection, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        res = target_pdsfile.data_pdsfile_for_index_and_selection(
+            selection=selection)
+        assert isinstance(res, pdsfile.PdsFile)
+        assert res.exists == True
+        assert res.abspath == expected
+
+    ############################################################################
+    # Test for checksum path associations
+    ############################################################################
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('volumes/COUVIS_0xxx_v1/COUVIS_0009/DATA/D2004_274/EUV2004_274_01_39.lbl',
+             (PDS_DATA_DIR + 'checksums-volumes/COUVIS_0xxx_v1/COUVIS_0009_md5.txt', 81)),
+            ('metadata/VGISS_5xxx/VGISS_5101/VGISS_5101_supplemental_index.tab',
+             (PDS_DATA_DIR + 'checksums-metadata/VGISS_5xxx/VGISS_5101_metadata_md5.txt', 78))
+        ]
+    )
+    def test_checksum_path_and_lskip(self, input_path, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        assert target_pdsfile.checksum_path_and_lskip() == expected
 
     @pytest.mark.parametrize(
         'input_path,expected',
@@ -974,6 +889,22 @@ class TestPdsFileBlackBox:
         res = target_pdsfile.dirpath_and_prefix_for_checksum()
         assert res == expected
 
+    ############################################################################
+    # Test for archive path associations
+    ############################################################################
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
+             (PDS_DATA_DIR + 'archives-metadata/HSTUx_xxxx/HSTU0_5167_metadata.tar.gz', 68)),
+            ('volumes/EBROCC_xxxx/EBROCC_0001/DATA/ESO1M/ES1_EPD.lbl',
+             (PDS_DATA_DIR + 'archives-volumes/EBROCC_xxxx/EBROCC_0001.tar.gz', 68))
+        ]
+    )
+    def test_archive_path_and_lskip(self, input_path, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        assert target_pdsfile.archive_path_and_lskip() == expected
+
     @pytest.mark.parametrize(
         'input_path,task,expected',
         [
@@ -987,7 +918,7 @@ class TestPdsFileBlackBox:
         assert re.match(expected, res)
 
     ############################################################################
-    # Tests for log path associations
+    # Test for log path associations
     ############################################################################
     @pytest.mark.parametrize(
         'root,expected',
@@ -1023,6 +954,33 @@ class TestPdsFileBlackBox:
         target_pdsfile = instantiate_target_pdsfile(input_path)
         res = target_pdsfile.log_path_for_volset(id='', task='', dir='')
         assert re.match(expected, res)
+
+    ############################################################################
+    # Test for OPUS_ID support
+    ############################################################################
+    @pytest.mark.parametrize(
+        'input_path,interiors,expected',
+        [
+            (PDS_DATA_DIR + 'volumes/COISS_1xxx/COISS_1001',
+             ['data/1294561143_1295221348/W1294561202_1.lbl'],
+             PDS_DATA_DIR + 'volumes/COISS_1xxx/COISS_1001'),
+            (PDS_DATA_DIR + 'volumes/COUVIS_0xxx/COUVIS_0001',
+             ['DATA/D1999_007/HDAC1999_007_16_31.DAT'],
+             PDS_DATA_DIR + 'volumes/COUVIS_0xxx/COUVIS_0001'),
+        ]
+    )
+    def test_load_opus_ids_for_volume_interiors(
+            self, input_path, interiors, expected):
+        pdsfile.PdsFile.load_opus_ids_for_volume_interiors(
+            volume_abspath=input_path, interiors=interiors)
+
+        abspath = input_path + '/' + interiors[0]
+        target_pdsfile = pdsfile.PdsFile.from_abspath(abspath)
+        opus_id = target_pdsfile.opus_id
+
+        assert opus_id in pdsfile.PdsFile.OPUS_ID_ABSPATHS
+        assert abspath in pdsfile.PdsFile.OPUS_ID_ABSPATHS[opus_id]
+        assert expected in pdsfile.PdsFile.OPUS_ID_VOLUMES_LOADED
 
     ############################################################################
     # Test for split and sort filenames
@@ -1145,7 +1103,7 @@ class TestPdsFileBlackBox:
             assert res[idx] == expected[idx]
 
     ############################################################################
-    # Transformations
+    # Test for transformations
     ############################################################################
     @pytest.mark.parametrize(
         'input_path,expected',
@@ -1262,8 +1220,38 @@ class TestPdsFileBlackBox:
         for basename in res:
             assert basename in expected
 
+    @pytest.mark.parametrize(
+        'input_path,basenames,expected',
+        [
+            ('volumes/COISS_0xxx/COISS_0001/data/wacfm/bit_wght/13302',
+             ['133020.lbl'],
+             [PDS_DATA_DIR + 'volumes/COISS_0xxx/COISS_0001/data/wacfm/bit_wght/13302/133020.lbl'])
+        ]
+    )
+    def test_abspaths_for_basenames(self, input_path, basenames, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        res = target_pdsfile.abspaths_for_basenames(basenames=basenames)
+
+        for path in res:
+            assert path in expected
+
+    @pytest.mark.parametrize(
+        'input_path,basenames,expected',
+        [
+            ('volumes/COCIRS_6xxx/COCIRS_6004/DATA/GEODATA/',
+             ['GEO1004021018_699.lbl'],
+             ['volumes/COCIRS_6xxx/COCIRS_6004/DATA/GEODATA/GEO1004021018_699.lbl'])
+        ]
+    )
+    def test_logicals_for_basenames(self, input_path, basenames, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path, is_abspath=False)
+        res = target_pdsfile.logicals_for_basenames(basenames=basenames)
+
+        for path in res:
+            assert path in expected
+
     ############################################################################
-    # Associations
+    # Test for associations
     ############################################################################
     @pytest.mark.parametrize(
         'input_path,expected',
@@ -1354,7 +1342,23 @@ class TestPdsFileBlackBox:
             assert path in expected
 
     ############################################################################
-    # File grouping
+    # Shelf support
+    ############################################################################
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('volumes/VGISS_5xxx/VGISS_5101/DATA/C13854XX/C1385455_RAW.lbl',
+             (PDS_PDSDATA_PATH + 'shelves/info/volumes/VGISS_5xxx/VGISS_5101_info.shelf', 78)),
+            ('metadata/NHxxLO_xxxx/NHLALO_1001/NHLALO_1001_inventory.tab',
+             (PDS_PDSDATA_PATH + 'shelves/info/metadata/NHxxLO_xxxx/NHLALO_1001_info.shelf', 81))
+        ]
+    )
+    def test_shelf_path_and_lskip(self, input_path, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        assert target_pdsfile.shelf_path_and_lskip() == expected
+
+    ############################################################################
+    # Test for file grouping
     ############################################################################
     @pytest.mark.parametrize(
         'input_path,expected',
