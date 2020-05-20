@@ -56,9 +56,6 @@ Author: Dave Chang
             * checksum_path_and_lskip
             * archive_path_and_lskip
             * shelf_path_and_lskip
-            * split_basename
-            * sort_basenames
-            * sort_logical_paths
             * is_logical_path
             * logical_path_from_abspath
             * from_relative_path
@@ -71,7 +68,8 @@ Author: Dave Chang
                 * nearest_row_pdsfile
                 * data_pdsfile_for_index_and_selection
             * This needs to be tested with a directory:
-                * group_children
+                * File group:
+                    * group_children
             * Constructors:
                 * parent
                 * child
@@ -89,7 +87,7 @@ Author: Dave Chang
                 * from_path
                 * from_filespec
                 * from_opus_id
-                * Transformations
+                * Transformations:
                     * abspaths_for_pdsfiles
                     * logicals_for_pdsfiles
                     * basenames_for_pdsfiles
@@ -98,12 +96,27 @@ Author: Dave Chang
                     * basenames_for_logicals
             * abspaths_for_basenames
             * logicals_for_basenames
-            * Associated volumes and volsets
+            * Associated volumes and volsets:
                 * volume_pdsfile
                 * volume_pdsdir
                 * volset_pdsfile
             * is_category_dir
             * checksum_path_if_exact
+            * archive_logpath
+            * Log path associations:
+                * set_log_root
+                * log_path_for_volume
+                * log_path_for_volset
+            * Split and sort filenames:
+                * split_basename
+                * sort_basenames
+                * sort_logical_paths
+                * sort_by_logical_path
+                * sort_childnames
+        * **PdsGroup:**
+            * copy
+            * parent_logical_path
+            * isdir
         * **TranslatorByRegex:**
             * all
             * first
@@ -247,6 +260,13 @@ Author: Dave Chang
     * holdings/volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31.DAT
     * holdings/volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31.LBL
     * holdings/previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31_thumb.png
+    * holdings/previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31_med.png
+    * holdings/previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31_small.png
+    * holdings/previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31_full.png
+    * holdings/previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_33_thumb.png
+    * holdings/previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_33_med.png
+    * holdings/previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_33_small.png
+    * holdings/previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_33_full.png
     * holdings/metadata/COUVIS_0xxx/COUVIS_0001/COUVIS_0001_index.tab
     * holdings/volumes/COUVIS_0xxx/COUVIS_0058/DATA/DATA/D2017_001/EUV2017_001_03_49.LBL
     * holdings/volumes/COUVIS_0xxx/COUVIS_0058/DATA/DATA/D2017_001/EUV2017_001_03_49.DAT
@@ -410,6 +430,7 @@ Author: Dave Chang
     * pattern mapping doesn't support images from /diagrams, for exmaple: diagrams/COCIRS_6xxx/COCIRS_6004/BROWSE/SATURN/POI1004010000_FP1_small.jpg
 * NameError:
     * In abspaths_for_pdsfiles (line 3900), 'pdsfilesf' is not defined.
+* What's the path & url for pdsviewable.load_icons
 
 ### Note:
 * Need to find a proper case for these:
