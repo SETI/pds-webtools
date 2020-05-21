@@ -120,9 +120,46 @@ Author: Dave Chang
             * isdir
             * viewset
             * global_anchor
+            * sort
+            * remove
+            * hide
+            * hide_all
+            * unhide
+            * unhide_all
+            * iterator
+            * iterator_for_all
+            * iterator_for_hidden
+        * **PdsGroupTable:**
+            * copy
+            * parent_logical_path
+            * levels
+            * levels_plus_one
+            * iterator
+            * iterator_for_all
+            * iterator_for_hidden
+            * pdsfile_iterator
+            * pdsfile_iterator_for_all
+            * pdsfile_iterator_for_hidden
+            * \_\_len__
+            * insert_file
+            * insert_group
+            * insert
+            * sort_in_groups
+            * sort_groups
+            * hide_pdsfile
+            * remove_pdsfile
+            * filter
+            * tables_from_pdsfiles
+            * remove_hidden
+            * merge_index_row_tables
         * **TranslatorByRegex:**
             * all
             * first
+        * **Helper in pdsfile.py:**
+            * is_logical_path
+            * logical_path_from_abspath
+            * repair_case
+
 
 * Test for CACHE:
     * Test method: call the target property twice and check if both results match, and also check if the result is the correct value.
@@ -260,6 +297,7 @@ Author: Dave Chang
     * holdings/volumes/CORSS_8xxx/CORSS_8001/data/Rev007/Rev007E/Rev007E_RSS_2005_123_K34_E/RSS_2005_123_K34_E_CAL.lbl
     * holdings/volumes/CORSS_8xxx/CORSS_8001/data/Rev007/Rev007E/Rev007E_RSS_2005_123_K34_E/RSS_2005_123_K34_E_CAL.tab
 * COUVIS_0xxx:
+    * holdings/previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_010_05_01_full.png
     * holdings/volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31.DAT
     * holdings/volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31.LBL
     * holdings/previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31_thumb.png
@@ -347,6 +385,8 @@ Author: Dave Chang
     * holdings/previews/NHxxMV_xxxx/NHLAMV_1001/data/20060321_000526/mc1_0005261846_0x536_eng_1_thumb.jpg
     * holdings/metadata/NHxxMV_xxxx/NHLAMV_1001/NHLAMV_1001_index.tab
     * holdings/metadata/NHxxMV_xxxx/NHLAMV_1001/NHLAMV_1001_index.lbl
+    * holdings/metadata/NHxxMV_xxxx/NHLAMV_1001/NHLAMV_1001_supplemental_index.tab
+    * holdings/metadata/NHxxMV_xxxx/NHLAMV_1001/NHLAMV_1001_supplemental_index.lbl
 * RES_xxxx_prelim:
     * holdings/volumes/RES_xxxx_prelim/RES_0001/data/601_cas.lbl
     * holdings/volumes/RES_xxxx_prelim/RES_0001/data/601_cas.tab
@@ -431,9 +471,14 @@ Author: Dave Chang
 * Regex patterns in pdsfile_rules.py need to support both DAT/LBL & dat/lbl.
 * pdsfile_rules.FILESPEC_TO_LOGICAL_PATH:
     * pattern mapping doesn't support images from /diagrams, for exmaple: diagrams/COCIRS_6xxx/COCIRS_6004/BROWSE/SATURN/POI1004010000_FP1_small.jpg
+* What's the path & url for pdsviewable.load_icons
 * NameError:
     * In abspaths_for_pdsfiles (line 3900), 'pdsfilesf' is not defined.
-* What's the path & url for pdsviewable.load_icons
+    * In unhide (line 4516), 'pdf' is not defined.
+* Redundant argument error:
+    * In unhide_all (line 4522), there is a redundant argument 'pdsf' for the function.
+* Missing argument error:
+    * In remove_pdsfile (line 4732), the function is missing pdsf argument to pass in to group.remove(pdsf)
 
 ### Note:
 * Need to find a proper case for these:
@@ -444,3 +489,4 @@ Author: Dave Chang
     * exact_archive_url (return self.\_exact_archive_url_filled)
     * exact_checksum_url (return self.\_exact_checksum_url_filled)
 * Need to revisit archive_path_if_exact
+* Need to find a test case for repair_case

@@ -25,3 +25,11 @@ def get_pdsfiles(paths, is_abspath=True):
             target_pdsfile = pdsfile.PdsFile.from_logical_path(TESTFILE_PATH)
             pdsfiles_arr.append(target_pdsfile)
     return pdsfiles_arr
+
+def get_pdsgroups(paths_group, is_abspath=True):
+    pdsgroups_arr = []
+    for paths in paths_group:
+        pdsfiles = get_pdsfiles(paths, is_abspath)
+        pdsgroup = pdsfile.PdsGroup(pdsfiles=pdsfiles)
+        pdsgroups_arr.append(pdsgroup)
+    return pdsgroups_arr
