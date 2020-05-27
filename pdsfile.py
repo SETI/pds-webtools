@@ -166,7 +166,7 @@ def use_pickles(status=True):
 SHELVES_ONLY = False
 
 def use_shelves_only(status=True):
-    """Call before preload(). Status=True to read identify files based on their
+    """Call before preload(). Status=True to identify files based on their
     presence in the infoshelf files rather than searching the holdings directory
     and it subdirectories."""
 
@@ -1101,7 +1101,7 @@ class PdsFile(object):
 
     @staticmethod
     def os_path_exists(abspath):
-        """True if the given absolute path points to a file that existst; False
+        """True if the given absolute path points to a file that exists; False
         otherwise. This replaces os.path.exists(path) but might use infoshelf
         files rather than refer to the holdings directory.
         """
@@ -1873,8 +1873,8 @@ class PdsFile(object):
         If no OPUS type exists, it returns ''
 
         Examples:
-            ('Cassini ISS',   0, 'coiss-raw',  'Raw Image')
-            ('Cassini ISS', 130, 'coiss-full', 'Extra preview (full-size)')
+            ('Cassini ISS',   0, 'coiss_raw',  'Raw Image')
+            ('Cassini ISS', 130, 'coiss_full', 'Extra preview (full-size)')
 
         """
 
@@ -1982,7 +1982,7 @@ class PdsFile(object):
             if abspath not in abspaths:
                 abspaths.append(abspath)
 
-        # Links from the label of this is this isn't a label
+        # Links from the label of this if this isn't a label
         parent = self.parent()
         if self.label_basename and parent:
             label = parent.child(self.label_basename)
@@ -2671,7 +2671,7 @@ class PdsFile(object):
 
         Inputs:
             basename        name of the child.
-            fix_case        True to fix the case of the child.(If False, it is
+            fix_case        True to fix the case of the child. (If False, it is
                             permissible but not necessary to fix the case
                             anyway.)
             must_exist      True to raise an exception if the parent or child
@@ -3500,11 +3500,11 @@ class PdsFile(object):
         by a tuple containing this information:
           (group, priority, opus_type, description)
         Examples:
-          ('Cassini ISS',    0, 'coiss-raw',       'Raw image')
-          ('Cassini VIMS', 130, 'covims-full',     'Extra preview (full-size)')
-          ('Cassini CIRS', 618, 'cirs-browse-pan', 'Extra Browse Diagram (Pan)')
-          ('metadata',      40, 'ring-geometry',   'Ring Geometry Index')
-          ('browse',        30, 'browse-medium',   'Browse Image (medium)')
+          ('Cassini ISS',    0, 'coiss_raw',       'Raw image')
+          ('Cassini VIMS', 130, 'covims_full',     'Extra preview (full-size)')
+          ('Cassini CIRS', 618, 'cirs_browse_pan', 'Extra Browse Diagram (Pan)')
+          ('metadata',      40, 'ring_geometry',   'Ring Geometry Index')
+          ('browse',        30, 'browse_medium',   'Browse Image (medium)')
         These keys are designed such that OPUS results will be returned in the
         sorted order of these keys.
 

@@ -137,17 +137,17 @@ opus_format = translator.TranslatorByRegex([
 ####################################################################################################################################
 
 opus_type = translator.TranslatorByRegex([
-    (r'volumes/.*\.(qub|lbl)$',                      0, ('Cassini VIMS',   0, 'covims-raw',    'Raw cube')),
-    (r'volumes/.*/extras/thumbnail/.*\.jpeg_small$', 0, ('Cassini VIMS', 110, 'covims-thumb',  'Extra preview (thumbnail)')),
-    (r'volumes/.*/extras/browse/.*\.jpeg$',          0, ('Cassini VIMS', 120, 'covims-medium', 'Extra preview (medium)')),
-    (r'volumes/.*/extras/(tiff|full)/.*\.\w+$',      0, ('Cassini VIMS', 130, 'covims-full',   'Extra preview (full-size)')),
+    (r'volumes/.*\.(qub|lbl)$',                      0, ('Cassini VIMS',   0, 'covims_raw',    'Raw cube')),
+    (r'volumes/.*/extras/thumbnail/.*\.jpeg_small$', 0, ('Cassini VIMS', 110, 'covims_thumb',  'Extra preview (thumbnail)')),
+    (r'volumes/.*/extras/browse/.*\.jpeg$',          0, ('Cassini VIMS', 120, 'covims_medium', 'Extra preview (medium)')),
+    (r'volumes/.*/extras/(tiff|full)/.*\.\w+$',      0, ('Cassini VIMS', 130, 'covims_full',   'Extra preview (full)')),
 ])
 
 ####################################################################################################################################
 # OPUS_PRODUCTS
 ####################################################################################################################################
 
-PACKED_OPUS_TYPE = ('Cassini VIMS', 0, 'covims-packed', 'Packed version of unpacked raw data')
+PACKED_OPUS_TYPE = ('Cassini VIMS', 0, 'covims_packed', 'Packed version of unpacked raw data')
 
 opus_products = translator.TranslatorByRegex([
     (r'.*volumes/(COVIMS_0xxx)/(COVIMS_0...)/data/(\w+/v[0-9]{10})_[0-9]+(|_[0-9]{3})\.(qub|lbl)', 0,

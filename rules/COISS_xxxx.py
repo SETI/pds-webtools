@@ -213,9 +213,9 @@ neighbors = translator.TranslatorByRegex([
     (r'(volumes|previews|calibrated)/(COISS_[12]...)(|_.*?)/COISS_..../data',     0, r'\1/\2\3/*/data'),
     (r'(volumes|previews|calibrated)/(COISS_[12]...)(|_.*?)/COISS_..../data/\w+', 0, r'\1/\2\3/*/data/*'),
 
-    (r'(volumes)/(COISS_[12]...)(|_.*?)/COISS_..../extras',           0, r'\1/\2\3/*/extras'),
-    (r'(volumes)/(COISS_[12]...)(|_.*?)/COISS_..../extras/(w+)',      0, r'\1/\2\3/*/extras/\4'),
-    (r'(volumes)/(COISS_[12]...)(|_.*?)/COISS_..../extras/(w+)/\w+',  0, r'\1/\2\3/*/extras/\4/*'),
+    (r'volumes/(COISS_[12]xxx)/COISS_..../extras/(\w+)/\w+',     0, r'volumes/\1/*/extras/\2/*'),
+    (r'volumes/(COISS_[12]xxx)/COISS_..../extras/(\w+)',         0, r'volumes/\1/*/extras/\2'),
+    (r'volumes/(COISS_[12]xxx)/COISS_..../(\w+)',                0, r'volumes/\1/*/\2'),
 
     (r'metadata/(COISS_[12]xxx)/(COISS_....)/(COISS_....)(_.*)', 0, r'metadata/\1/*/*\4'),
 ])
@@ -239,11 +239,11 @@ sort_key = translator.TranslatorByRegex([
 ####################################################################################################################################
 
 opus_type = translator.TranslatorByRegex([
-    (r'volumes/.*\.(IMG|LBL)$',                      0, ('Cassini ISS',   0, 'coiss-raw',    'Raw image')),
-    (r'calibrated/.*_CALIB\.(IMG|LBL)$',             0, ('Cassini ISS',  10, 'coiss-calib',  'Calibrated image')),
-    (r'volumes/.*/extras/thumbnail/.*\.jpeg_small$', 0, ('Cassini ISS', 110, 'coiss-thumb',  'Extra preview (thumbnail)')),
-    (r'volumes/.*/extras/browse/.*\.jpeg$',          0, ('Cassini ISS', 120, 'coiss-medium', 'Extra preview (medium)')),
-    (r'volumes/.*/extras/(tiff|full)/.*\.\w+$',      0, ('Cassini ISS', 130, 'coiss-full',   'Extra preview (full-size)')),
+    (r'volumes/.*\.(IMG|LBL)$',                      0, ('Cassini ISS',   0, 'coiss_raw',    'Raw image')),
+    (r'calibrated/.*_CALIB\.(IMG|LBL)$',             0, ('Cassini ISS',  10, 'coiss_calib',  'Calibrated image')),
+    (r'volumes/.*/extras/thumbnail/.*\.jpeg_small$', 0, ('Cassini ISS', 110, 'coiss_thumb',  'Extra preview (thumbnail)')),
+    (r'volumes/.*/extras/browse/.*\.jpeg$',          0, ('Cassini ISS', 120, 'coiss_medium', 'Extra preview (medium)')),
+    (r'volumes/.*/extras/(tiff|full)/.*\.\w+$',      0, ('Cassini ISS', 130, 'coiss_full',   'Extra preview (full)')),
 ])
 
 ####################################################################################################################################
