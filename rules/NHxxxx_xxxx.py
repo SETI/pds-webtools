@@ -61,6 +61,28 @@ FILE_CODE_PRIORITY = {
     '54A': 29, #- MVIC Panchromatic Frame Transfer Lossy (CDH 2)/MPF
 }
 
+def description(code):
+    desc = []
+    if code in {'630', '633', '636', '639',
+                '530', '533', '536', '539', '53F', '542', '545', '548'}:
+        desc.append('Lossless')
+
+    if code in {'631', '634', '637', '63A',
+                '531', '534', '537', '53A', '540', '543', '546', '549'}:
+        desc.append('Packetized')
+
+    if code in {'632', '635', '638', '63B',
+                '532', '535', '538', '53B', '541', '544', '547', '54A'}:
+        desc.append('Lossy')
+
+    if code in {'633', '634', '635',
+                '533', '534', '535', '542', '543', '544'}:
+        desc.append('Binned')
+    else:
+        desc.append('Unbinned')
+
+    return ', '.join(desc)
+
 ####################################################################################################################################
 # DESCRIPTION_AND_ICON
 ####################################################################################################################################
@@ -202,9 +224,9 @@ opus_type = translator.TranslatorByRegex([
     (r'previews/NHxx.._xxxx(|_v.+)/NH...._2xxx/.*$', 0, ''),
 
     (r'volumes/NHxx.._xxxx(|_v.+)/NH...._1.../data/.*_eng(|_[1-9])\.(fit|lbl)$', re.I,
-                                            ('New Horizons',   0, 'nh_raw',   'Raw Image')),
+                                            ('New Horizons',   0, 'nh-raw',   'Raw Image')),
     (r'volumes/NHxx.._xxxx(|_v.+)/NH...._2.../data/.*_sci(|_[1-9])\.(fit|lbl)$', re.I,
-                                            ('New Horizons', 100, 'nh_calib', 'Calibrated Image'))
+                                            ('New Horizons', 100, 'nh-calib', 'Calibrated Image'))
 ])
 
 ####################################################################################################################################
@@ -376,12 +398,14 @@ class NHxxxx_xxxx(pdsfile.PdsFile):
                     continue
 
                 new_header = ('New Horizons',
-                              header[1]+50,
-                              header[2]+'_alternate',
-                              header[3]+' Alternate Downlink')
+                              header[1] + 50,
+                              header[2] + '-alternate',
+                              header[3] + ' Alternate Downlink')
                 if new_header not in pdsfiles:
                     pdsfiles[new_header] = []
+
                 pdsfiles[new_header].append(sublist)
+
             pdsfiles[header] = list0
 
         return pdsfiles

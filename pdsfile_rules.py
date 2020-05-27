@@ -264,7 +264,7 @@ VIEW_OPTIONS = translator.TranslatorByRegex([
 ####################################################################################################################################
 # NEIGHBORS
 #
-# Given a directory path, return the file fnmatch pattern to indicate other loigcal paths to directories to be treated as adjacent.
+# Given a directory path, return the file fnmatch pattern to indicate other logical paths to directories to be treated as adjacent.
 ####################################################################################################################################
 
 NEIGHBORS = translator.TranslatorByRegex([
@@ -366,23 +366,23 @@ SPLIT_RULES = translator.TranslatorByRegex([
 OPUS_TYPE = translator.TranslatorByRegex([
 
     # Previews
-    (r'previews/.*\_thumb\..*$', 0, ('browse', 10, 'browse_thumb',  'Browse Image (thumbnail)')),
-    (r'previews/.*\_small\..*$', 0, ('browse', 20, 'browse_small',  'Browse Image (small)')),
-    (r'previews/.*\_med\..*$',   0, ('browse', 30, 'browse_medium', 'Browse Image (medium)')),
-    (r'previews/.*\_full\..*$',  0, ('browse', 40, 'browse_full',   'Browse Image (full)')),
+    (r'previews/.*\_thumb\..*$', 0, ('browse', 10, 'browse-thumb',  'Browse Image (thumbnail)')),
+    (r'previews/.*\_small\..*$', 0, ('browse', 20, 'browse-small',  'Browse Image (small)')),
+    (r'previews/.*\_med\..*$',   0, ('browse', 30, 'browse-medium', 'Browse Image (medium)')),
+    (r'previews/.*\_full\..*$',  0, ('browse', 40, 'browse-full',   'Browse Image (full-size)')),
 
     # Diagrams
-    (r'diagrams/.*\_thumb\..*$', 0, ('diagram', 10, 'diagram_thumb',  'Browse Diagram (thumbnail)')),
-    (r'diagrams/.*\_small\..*$', 0, ('diagram', 20, 'diagram_small',  'Browse Diagram (small)')),
-    (r'diagrams/.*\_med\..*$',   0, ('diagram', 30, 'diagram_medium', 'Browse Diagram (medium)')),
-    (r'diagrams/.*\_full\..*$',  0, ('diagram', 40, 'diagram_full',   'Browse Diagram (full)')),
+    (r'diagrams/.*\_thumb\..*$', 0, ('diagram', 10, 'diagram-thumb',  'Browse Diagram (thumbnail)')),
+    (r'diagrams/.*\_small\..*$', 0, ('diagram', 20, 'diagram-small',  'Browse Diagram (small)')),
+    (r'diagrams/.*\_med\..*$',   0, ('diagram', 30, 'diagram-medium', 'Browse Diagram (medium)')),
+    (r'diagrams/.*\_full\..*$',  0, ('diagram', 40, 'diagram-full',   'Browse Diagram (full-size)')),
 
     # Metadata
     (r'metadata/.*_inventory\..*',             0, ('metadata', 10, 'inventory',       'Target Body Inventory')),
     (r'metadata/.*_(jupiter|saturn|uranus|neptune|pluto)_summary\..*',
-                                               0, ('metadata', 20, 'planet_geometry', 'Planet Geometry Index')),
-    (r'metadata/.*_(moon|charon)_summary\..*', 0, ('metadata', 30, 'moon_geometry',   'Moon Geometry Index')),
-    (r'metadata/.*_ring_summary\..*',          0, ('metadata', 40, 'ring_geometry',   'Ring Geometry Index')),
+                                               0, ('metadata', 20, 'planet-geometry', 'Planet Geometry Index')),
+    (r'metadata/.*_(moon|charon)_summary\..*', 0, ('metadata', 30, 'moon-geometry',   'Moon Geometry Index')),
+    (r'metadata/.*_ring_summary\..*',          0, ('metadata', 40, 'ring-geometry',   'Ring Geometry Index')),
 ])
 
 ####################################################################################################################################
