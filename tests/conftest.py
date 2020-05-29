@@ -29,4 +29,7 @@ def setup(request):
     elif mode == '4':
         pdsfile.use_pickles(False)
         pdsfile.use_shelves_only(False)
+    else: # default
+        pdsfile.use_pickles(True)
+        pdsfile.use_shelves_only(False)
     pdsfile.preload(PDS_DATA_DIR)
