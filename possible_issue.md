@@ -4,7 +4,28 @@
     * Expected result: RSS_2005_123_K34_E_CAL
     * Actual result: RSS_2005
     * Should the anchor be RSS_2005_123_K34_E_CAL? Because if anchor is RSS_2005, then RSS_2005_123_K34_E_CAL.TAB and RSS_2005_123_K34_E_DLP_500M.TAB will be in the same row in viewmaster. The issue is caused by the regex pattern VOLNAME_PLUS_REGEX
+* from_path:
+    * CACHE will be empty after preload.
+* associated_parallel:
+    * return None
+* row_pdsfile:
+    * This is removed, line 4570 in pdsfile.py will cause AttributeError
+* unhide:
+    * line 4972, NameError: name 'pdf' is not defined, should be 'pdsf'
+* unhide_all:
+    * line 4978, need to removed unused argument 'pdsf'
+* remove_pdsfile:
+    * line 5188, need to add pdsf to the function argument so that it can be passed to remove function at line 5190.
+
 
 * Note:
     * is_index:
         * definition is changed, this is determined by whether an index shelf file exists under /shelves/index or not.
+    * The following functions are removed:
+        * find_selected_row_number
+        * find_row_number_at_or_below
+        * test_cache_child_row_pdsfiles
+        * row_pdsfile
+            * line 4570 in pdsfile.py will cause AttributeError
+        * nearest_row_pdsfile
+        * data_pdsfile_for_index_and_selection
