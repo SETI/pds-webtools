@@ -1,15 +1,9 @@
 ### Possible issues:
 * Blackbox:
-    * anchor:
-        * Note: the following test case is not used in OPUS
-        * Test case: volumes/CORSS_8xxx/CORSS_8001/data/Rev007/Rev007E/Rev007E_RSS_2005_123_K34_E/RSS_2005_123_K34_E_CAL.tab
-        * Expected result: RSS_2005_123_K34_E_CAL
-        * Actual result: RSS_2005
-        * Should the anchor be RSS_2005_123_K34_E_CAL? Because if anchor is RSS_2005, then RSS_2005_123_K34_E_CAL.TAB and RSS_2005_123_K34_E_DLP_500M.TAB will be in the same row in viewmaster. The issue is caused by the regex pattern VOLNAME_PLUS_REGEX
     * from_path:
         * KeyError when accessing info from CACHE.
     * associated_parallel:
-        * return None
+        * return None, KeyError when accessing info from CACHE.
     * row_pdsfile:
         * This is removed, line 4570 in pdsfile.py will cause AttributeError
     * unhide:
@@ -26,8 +20,6 @@
         * KeyError for ranks from CACHE
 
 * Note:
-    * is_index:
-        * definition is changed, this is determined by whether an index shelf file exists under /shelves/index or not.
     * The following functions are removed:
         * find_selected_row_number
         * find_row_number_at_or_below
@@ -38,3 +30,11 @@
         * data_pdsfile_for_index_and_selection
     * exists/isdir:
         * Some path can only be test with pdsfile.use_shelves_only(False), because if shelves info are loaded, those files will have abspath and be treated as existing files.
+    * is_index:
+        * definition is changed, this is determined by whether an index shelf file exists under /shelves/index or not.
+    * anchor: (ignore this case for now, it's not used in OPUS)
+        * Note: the following test case is not used in OPUS
+        * Test case: volumes/CORSS_8xxx/CORSS_8001/data/Rev007/Rev007E/Rev007E_RSS_2005_123_K34_E/RSS_2005_123_K34_E_CAL.tab
+        * Expected result: RSS_2005_123_K34_E_CAL
+        * Actual result: RSS_2005
+        * Should the anchor be RSS_2005_123_K34_E_CAL? Because if anchor is RSS_2005, then RSS_2005_123_K34_E_CAL.TAB and RSS_2005_123_K34_E_DLP_500M.TAB will be in the same row in viewmaster. The issue is caused by the regex pattern VOLNAME_PLUS_REGEX

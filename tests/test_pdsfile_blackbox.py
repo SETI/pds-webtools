@@ -652,7 +652,7 @@ class TestPdsFileBlackBox:
         [
             ('holdings/volumes/COUVIS_0xxx_v1/COUVIS_0009/DATA/D2004_274/EUV2004_274_01_39.DAT',
              True),
-            ('volumes/COCIRS_0xxx/COCIRS_0012/DATA/NAV_DATA/GEO00120100.DAT ',
+            ('volumes/COCIRS_0xxx/COCIRS_0012/DATA/NAV_DATA/GEO00120100.DAT',
              True),
             ('COVIMS_0xxx/COVIMS_0001/data/1999010T054026_1999010T060958', True),
             ('metadata/HSTOx_xxxx/HSTO0_7308', True),
