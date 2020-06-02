@@ -1,22 +1,29 @@
 ### Possible issues:
-* anchor:
-    * Test case: volumes/CORSS_8xxx/CORSS_8001/data/Rev007/Rev007E/Rev007E_RSS_2005_123_K34_E/RSS_2005_123_K34_E_CAL.tab
-    * Expected result: RSS_2005_123_K34_E_CAL
-    * Actual result: RSS_2005
-    * Should the anchor be RSS_2005_123_K34_E_CAL? Because if anchor is RSS_2005, then RSS_2005_123_K34_E_CAL.TAB and RSS_2005_123_K34_E_DLP_500M.TAB will be in the same row in viewmaster. The issue is caused by the regex pattern VOLNAME_PLUS_REGEX
-* from_path:
-    * CACHE will be empty after preload.
-* associated_parallel:
-    * return None
-* row_pdsfile:
-    * This is removed, line 4570 in pdsfile.py will cause AttributeError
-* unhide:
-    * line 4972, NameError: name 'pdf' is not defined, should be 'pdsf'
-* unhide_all:
-    * line 4978, need to removed unused argument 'pdsf'
-* remove_pdsfile:
-    * line 5188, need to add pdsf to the function argument so that it can be passed to remove function at line 5190.
-
+* Blackbox:
+    * anchor:
+        * Note: the following test case is not used in OPUS
+        * Test case: volumes/CORSS_8xxx/CORSS_8001/data/Rev007/Rev007E/Rev007E_RSS_2005_123_K34_E/RSS_2005_123_K34_E_CAL.tab
+        * Expected result: RSS_2005_123_K34_E_CAL
+        * Actual result: RSS_2005
+        * Should the anchor be RSS_2005_123_K34_E_CAL? Because if anchor is RSS_2005, then RSS_2005_123_K34_E_CAL.TAB and RSS_2005_123_K34_E_DLP_500M.TAB will be in the same row in viewmaster. The issue is caused by the regex pattern VOLNAME_PLUS_REGEX
+    * from_path:
+        * KeyError when accessing info from CACHE.
+    * associated_parallel:
+        * return None
+    * row_pdsfile:
+        * This is removed, line 4570 in pdsfile.py will cause AttributeError
+    * unhide:
+        * line 4972, NameError: name 'pdf' is not defined, should be 'pdsf'
+    * unhide_all:
+        * line 4978, need to removed unused argument 'pdsf'
+    * remove_pdsfile:
+        * line 5188, need to add pdsf to the function argument so that it can be passed to remove function at line 5190.
+* Blackbox cached:
+    * version_ranks:
+        * return None. KeyError when accessing info from CACHE, ranks from CACHE is empty.
+* Whitebox:
+    * version_ranks:
+        * KeyError for ranks from CACHE
 
 * Note:
     * is_index:
@@ -29,3 +36,5 @@
             * line 4570 in pdsfile.py will cause AttributeError
         * nearest_row_pdsfile
         * data_pdsfile_for_index_and_selection
+    * exists/isdir:
+        * Some path can only be test with pdsfile.use_shelves_only(False), because if shelves info are loaded, those files will have abspath and be treated as existing files.

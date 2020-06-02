@@ -69,7 +69,7 @@ class TestPdsFileBlackBox:
         'input_path,expected',
         [
             ('metadata/VGISS_7xxx/VGISS_7201/VGISS_7201_inventory.tab',
-             ('VGISS_7201_inventory', '', '.tab')),
+             ('VGISS_7201', '_inventory', '.tab')),
             ('previews/NHxxMV_xxxx/NHLAMV_1001/data/20060321_000526/mc1_0005261846_0x536_eng_1_thumb.jpg',
              ('mc1_0005261846_0x536_eng_1', '_thumb', '.jpg')),
             ('previews/VGISS_7xxx/VGISS_7201/DATA/C24476XX/C2447654_small.jpg',

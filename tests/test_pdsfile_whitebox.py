@@ -20,6 +20,8 @@ class TestPdsFileWhiteBox:
         target_pdsfile = pdsfile.PdsFile.new_virtual('volumes')
         assert target_pdsfile.exists == True
 
+    # Can only be tested with pdsfile.use_shelves_only(False) to make sure
+    # child.abspath is None for this path
     @pytest.mark.parametrize(
         'input_path,expected',
         [
@@ -70,18 +72,6 @@ class TestPdsFileWhiteBox:
         assert target_pdsfile.html_path == expected
 
     @pytest.mark.parametrize(
-        'input_path,selection,expected',
-        [
-            ('metadata/HSTOx_xxxx/HSTO0_7308/HSTO0_7308_index.tab',
-             'O43BA4DUQ', 'HSTO0_7308_index-O43BA4DUQ'),
-        ]
-    )
-    def test_anchor(self, input_path, selection, expected):
-        target_pdsfile = instantiate_target_pdsfile(input_path)
-        res = target_pdsfile.row_pdsfile(selection=selection)
-        assert res.anchor == expected
-
-    @pytest.mark.parametrize(
         'input_path,expected',
         [
             ('volumes', ''),
@@ -117,19 +107,6 @@ class TestPdsFileWhiteBox:
     def test_description1(self, input_path, expected):
         target_pdsfile = instantiate_target_pdsfile(input_path)
         assert target_pdsfile.description == expected
-
-    @pytest.mark.parametrize(
-        'input_path,selection,expected',
-        [
-            ('metadata/HSTOx_xxxx/HSTO0_7308/HSTO0_7308_index.tab',
-             'O43BA4DUQ', 'Selected row of index'),
-        ]
-    )
-    def test_description2(self, input_path, selection, expected):
-        target_pdsfile = instantiate_target_pdsfile(input_path)
-        res = target_pdsfile.row_pdsfile(selection=selection)
-        print(res.row_dicts)
-        assert res.description == expected
 
     @pytest.mark.parametrize(
         'input_path,expected',
@@ -332,24 +309,7 @@ class TestPdsFileWhiteBox:
     ############################################################################
     # Test for support for PdsFile objects representing index rows
     ############################################################################
-    @pytest.mark.parametrize(
-        'input_path,selection,expected',
-        [
-            # ['O43B05C1Q', 'O43B05C3Q', 'O43B06BTQ', 'O43B06BVQ', 'O43B09B3Q', 'O43B09B5Q', 'O43B11D7Q', 'O43B11D8Q', 'O43B12XAQ', 'O43B13S4Q', 'O43B13S6Q', 'O43B13S8Q', 'O43B13SAQ', 'O43B14SFQ', 'O43B14SIQ', 'O43B15XEQ', 'O43B20010', 'O43B20X9Q', 'O43B21010', 'O43B21020', 'O43B22010', 'O43B22LXQ', 'O43B22MBQ', 'O43B2AXBQ', 'O43B2AXCQ', 'O43B2QXCQ', 'O43B2RXEQ', 'O43B2SXGQ', 'O43B2SXIQ', 'O43B2TXKQ', 'O43B2TXMQ', 'O43B2XCLQ', 'O43B2XCMQ', 'O43B4ASKQ', 'O43B5HXGQ', 'O43B5HXIQ', 'O43BA1BNQ', 'O43BA1BPQ', 'O43BA2H4Q', 'O43BA2H6Q', 'O43BA3M4Q', 'O43BA3M6Q', 'O43BA4DUQ', 'O43BA4DWQ', 'O43BA5C5Q', 'O43BA5C7Q', 'O43BA6BXQ', 'O43BA6BZQ', 'O43BA9B7Q', 'O43BA9B9Q', 'O43BB9BBQ', 'O43BC9BDQ', 'O43BD9BFQ', 'O43BD9BHQ', 'O43BE9BJQ']
-            ('metadata/HSTOx_xxxx/HSTO0_7308/HSTO0_7308x_index.tab',
-             'O43B06BTQ', 2),
-            ('volumes/HSTOx_xxxx/HSTO0_7308/DATA/VISIT_05/O43B05C1Q.lbl',
-             'O43BB9BBQ', 50),
-        ]
-    )
-    def test_find_selected_row_number(self, input_path, selection, expected):
-        target_pdsfile = instantiate_target_pdsfile(input_path)
-        try:
-            res = target_pdsfile.find_selected_row_number(selection=selection)
-            assert res == expected
-        except IOError as e:
-            assert 'Row selections' in e # Index row is not found
-            # assert e == True # Index row is not found
+    
 
     def test_absolute_or_logical_path(self):
         """absolute_or_logical_path: get logical path."""

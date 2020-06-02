@@ -72,6 +72,15 @@ class TestPdsFileBlackBox:
         assert target_pdsfile.SORT_ORDER['info_first'] == expected
 
     ############################################################################
+     # Constructor
+    ############################################################################
+    def test_new_index_row_pdsfile(self):
+        target_pdsfile = pdsfile.PdsFile()
+        res = target_pdsfile.new_index_row_pdsfile(
+            filename_key='', row_dicts=[])
+        assert isinstance(res, pdsfile.PdsFile)
+
+    ############################################################################
     # Test for properties
     ############################################################################
     @pytest.mark.parametrize(
