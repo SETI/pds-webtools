@@ -271,6 +271,7 @@ def cache_lifetime(arg):
 
 # Initialize the cache
 LOCAL_PRELOADED = []        # local copy of CACHE['$PRELOADED']
+PRELOAD_IN_PROGRESS = False
 MEMCACHE_PORT = 0           # default is to use a DictionaryCache instead
 DICTIONARY_CACHE_LIMIT = 200000
 
@@ -341,8 +342,9 @@ def preload(holdings_list, port=0, clear=False):
     """
 
     global CACHE, MEMCACHE_PORT, DEFAULT_CACHING, LOCAL_PRELOADED
-    global SUPPORT_OPUS_LOOKUPS, CACHE_ALL_INFO
+    global SUPPORT_OPUS_LOOKUPS, CACHE_ALL_INFO, PRELOAD_IN_PROGRESS
 
+    PRELOAD_IN_PROGRESS = True
     # Convert holdings to a list of strings
     if not isinstance(holdings_list, (list,tuple)):
         holdings_list = [holdings_list]
@@ -453,12 +455,14 @@ def preload(holdings_list, port=0, clear=False):
     if already_loaded:
         LOCAL_PRELOADED = preloaded
 
+
         if MEMCACHE_PORT:
             get_permanent_values(holdings_list, MEMCACHE_PORT)
             # Note that if any permanently cached values are missing, this call
             # will recursively clear the cache and preload again. This reduces
             # the chance of a corrupted cache.
 
+        PRELOAD_IN_PROGRESS = False
         return
 
     # Clear and block the cache before proceeding
@@ -543,6 +547,7 @@ def preload(holdings_list, port=0, clear=False):
         CACHE.resume()
         CACHE.unblock(flush=True)
         LOCAL_PRELOADED = preloaded
+        PRELOAD_IN_PROGRESS = False
 
     if LOGGER:
         LOGGER.info('PdsFile preloading completed')
@@ -2613,9 +2618,11 @@ class PdsFile(object):
         # CACHE['$VOLS-category_'] is keyed by [volume set or name][rank] and
         # returns a volset or volname PdsFile.
 
-        global LOCAL_PRELOADED
+        global LOCAL_PRELOADED, PRELOAD_IN_PROGRESS
 
-        if not LOCAL_PRELOADED:     # we don't track ranks without a preload
+        # we don't track ranks without a preload
+        # But during preload, we need to update $RANKS & $VOLS info in CACHE
+        if not LOCAL_PRELOADED not PRELOAD_IN_PROGRESS:
             return
 
         if self.volset and not self.volname:
@@ -4969,13 +4976,13 @@ class PdsGroup(object):
 
         for k in range(len(self.rows)):
             if self.rows[k].logical_path == pdsf.logical_path:
-                if pdf.logical_path in self.hidden:
+                if pdsf.logical_path in self.hidden:
                     self.hidden -= {pdsf.logical_path}
                     return True
 
         return False
 
-    def unhide_all(self, pdsf):
+    def unhide_all(self):
         self.hidden = set()
 
     def iterator(self):
@@ -5185,7 +5192,7 @@ class PdsGroupTable(object):
 
         return False
 
-    def remove_pdsfile(self):
+    def remove_pdsfile(self, pdsf):
         for group in self.groups:
             test = group.remove(pdsf)
             if test: return test
