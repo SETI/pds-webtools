@@ -1,11 +1,15 @@
 ### Possible issues:
 * Blackbox:
+    * CACHE:
+        * '$RANKS-' & '$VOLS-' didn't get updated in preload.
+            * In \_update_ranks_and_vols (during preload), LOCAL_PRELOADED flag is not updated so the function will always return without updating the CACHE (line 2618-2619).
     * from_path:
         * KeyError when accessing info from CACHE.
     * associated_parallel:
         * return None, KeyError when accessing info from CACHE.
-    * row_pdsfile:
-        * This is removed, line 4570 in pdsfile.py will cause AttributeError
+    * \_associated_paths
+        * row_pdsfile:
+            * This is removed, line 4570 in pdsfile.py will cause AttributeError
     * unhide:
         * line 4972, NameError: name 'pdf' is not defined, should be 'pdsf'
     * unhide_all:
