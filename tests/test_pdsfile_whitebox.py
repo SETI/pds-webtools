@@ -309,7 +309,6 @@ class TestPdsFileWhiteBox:
     ############################################################################
     # Test for support for PdsFile objects representing index rows
     ############################################################################
-    
 
     def test_absolute_or_logical_path(self):
         """absolute_or_logical_path: get logical path."""

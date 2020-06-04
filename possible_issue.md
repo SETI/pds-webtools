@@ -1,20 +1,24 @@
 ### Possible issues:
 * Blackbox:
-    * CACHE:
-        * '$RANKS-' & '$VOLS-' didn't get updated in preload.
-            * In \_update_ranks_and_vols (during preload), LOCAL_PRELOADED flag is not updated so the function will always return without updating the CACHE (line 2618-2619).
-    * \_associated_paths
-        * row_pdsfile:
-            * This is removed, line 4570 in pdsfile.py will cause AttributeError
-    * unhide:
-        * line 4972, NameError: name 'pdf' is not defined, should be 'pdsf'
-    * unhide_all:
-        * line 4978, need to removed unused argument 'pdsf'
-    * remove_pdsfile:
-        * line 5188, need to add pdsf to the function argument so that it can be passed to remove function at line 5190.
+    * Still looking:
+        * version_ranks:
+            * When with pdsfile.use_shelves_only(True), it will always return None.
+        * \_associated_paths
+            * row_pdsfile:
+                * This is removed, line 4570 in pdsfile.py will cause AttributeError, not sure what's the proper replacement function for row_pdsfile.
+    * Fix added:
+        * CACHE:
+            * '$RANKS-' & '$VOLS-' didn't get updated in preload.
+                * In \_update_ranks_and_vols (during preload), LOCAL_PRELOADED flag is not updated so the function will always return without updating the CACHE (line 2618-2619).
+        * unhide:
+            * line 4972, NameError: name 'pdf' is not defined, should be 'pdsf'
+        * unhide_all:
+            * line 4978, need to removed unused argument 'pdsf'
+        * remove_pdsfile:
+            * line 5188, need to add pdsf to the function argument so that it can be passed to remove function at line 5190.
 * Blackbox cached:
     * version_ranks:
-        * return None. KeyError when accessing info from CACHE, ranks from CACHE is empty.
+        * return None.
 * Whitebox:
     * version_ranks:
         * KeyError for ranks from CACHE
