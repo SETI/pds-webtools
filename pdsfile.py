@@ -2622,7 +2622,7 @@ class PdsFile(object):
 
         # we don't track ranks without a preload
         # But during preload, we need to update $RANKS & $VOLS info in CACHE
-        if not LOCAL_PRELOADED not PRELOAD_IN_PROGRESS:
+        if not LOCAL_PRELOADED and not PRELOAD_IN_PROGRESS:
             return
 
         if self.volset and not self.volname:
