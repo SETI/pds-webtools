@@ -57,8 +57,8 @@ DATAFILE_EXTS = set(['dat', 'img', 'cub', 'qub', 'fit', 'fits'])
 VOLSET_REGEX        = re.compile(r'^([A-Z][A-Z0-9x]{1,5}_[0-9x]{3}x)$')
 VOLSET_REGEX_I      = re.compile(VOLSET_REGEX.pattern, re.I)
 VOLSET_PLUS_REGEX   = re.compile(VOLSET_REGEX.pattern[:-1] +
-                r'(_v[0-9.]+|_in_prep|_prelim|_peer_review|_lien_resolution|)' +
-                r'(_\w+|)(|.[A-Za-z0-9_\.]+)$')
+            r'(_v[0-9.]+?|_in_prep|_prelim|_peer_review|_lien_resolution|)' +
+            r'(_\w+|)(|.[A-Za-z0-9_\.]+)$')
 VOLSET_PLUS_REGEX_I = re.compile(VOLSET_PLUS_REGEX.pattern, re.I)
 
 CATEGORY_REGEX      = re.compile(r'^(|checksums\-)(|archives\-)(\w+)$')
@@ -234,11 +234,6 @@ def cache_all_info(status=True):
 #                data set IDs)
 #       for volnames and volsets. Keys are lower case.
 #
-# CACHE['$PRELOADING']
-#       This key exists and is True in the cache while a thread is preloading.
-#       It indicates to other threads that they should also preload, but it
-#       blocks the cache until the preload is finished.
-#
 # In addition...
 #
 # CACHE[absolute-path]
@@ -283,50 +278,7 @@ DEFAULT_CACHING = 'all'     # 'dir', 'all' or 'none';
                             # use 'dir' for Viewmaster without MemCache;
                             # use 'all' for Viewmaster with MemCache;
 
-def preload_required(holdings_list, port=0, clear=False):
-    """Returns True if a preload is required; False if the needed information is
-    already cached and available.
-
-    Input:
-        holdings_list       an absolute path to a holdings directory or a list
-                            of absolute paths.
-        port                MemCache port if using the MemCache daemon,
-                            otherwise 0.
-        clear               True if the cache is to be preloaded no matter what;
-                            False if preloading is only needed if the list of
-                            holdings directories has changed.
-    """
-
-    global LOCAL_PRELOADED      # local copy of CACHE['$PRELOADED']
-
-    if clear: return True
-    if port != MEMCACHE_PORT: return True
-
-    # If another thread is already preloading, then yes, this thread must also
-    # preload. (That preload will be fast but will have to wait till the other
-    # thread is finished.)
-    try:
-        if CACHE.get_now('$PRELOADING'): return True
-    except KeyError:
-        pass
-
-    # Make sure the holdings_list is not just an individual string
-    if not isinstance(holdings_list, (list,tuple)):
-        holdings_list = [holdings_list]
-
-    # If the holdings list has changed, a preload is required
-    if set(holdings_list) != set(LOCAL_PRELOADED):
-        return True
-
-    # If the holdings list does not match the cached list, a preload is
-    # required
-    try:
-        preloaded = CACHE['$PRELOADED']
-    except KeyError:
-        return True
-
-    LOCAL_PRELOADED = preloaded
-    return set(holdings_list) != set(LOCAL_PRELOADED)
+PRELOAD_TRIES = 4
 
 def preload(holdings_list, port=0, clear=False):
     """Cache the top-level directories, starting from the given holdings
@@ -341,26 +293,28 @@ def preload(holdings_list, port=0, clear=False):
     """
 
     global CACHE, MEMCACHE_PORT, DEFAULT_CACHING, LOCAL_PRELOADED
-    global SUPPORT_OPUS_LOOKUPS, CACHE_ALL_INFO
+    global SUPPORT_OPUS_LOOKUPS, CACHE_ALL_INFO, PRELOAD_TRIES
 
-    # Convert holdings to a list of strings
+    # Convert holdings to a list of absolute paths
     if not isinstance(holdings_list, (list,tuple)):
         holdings_list = [holdings_list]
 
-    cleared_already = False
+    holdings_list = [_clean_abspath(h) for h in holdings_list]
 
     # Use cache as requested
     if (port == 0 and MEMCACHE_PORT == 0) or not HAS_PYLIBMC:
-        CACHE = pdscache.DictionaryCache(lifetime=cache_lifetime,
-                                         limit=DICTIONARY_CACHE_LIMIT,
-                                         logger=LOGGER)
-
+        if not isinstance(CACHE, pdscache.DictionaryCache):
+            CACHE = pdscache.DictionaryCache(lifetime=cache_lifetime,
+                                             limit=DICTIONARY_CACHE_LIMIT,
+                                             logger=LOGGER)
         if LOGGER:
-            LOGGER.info('Caching PdsFile objects in local dictionary')
+            LOGGER.info('Using local dictionary cache')
 
     else:
         MEMCACHE_PORT = MEMCACHE_PORT or port
-        try:
+
+        for k in range(PRELOAD_TRIES):
+          try:
             CACHE = pdscache.MemcachedCache(MEMCACHE_PORT,
                                             lifetime=cache_lifetime,
                                             logger=LOGGER)
@@ -368,27 +322,81 @@ def preload(holdings_list, port=0, clear=False):
                 LOGGER.info('Connecting to PdsFile Memcache [%s]' %
                             MEMCACHE_PORT)
 
-            # Clear if necessary
-            if clear and not CACHE.is_blocked():
-                CACHE.clear(block=True)
-                cleared_already = True
+            break
 
-        except pylibmc.Error:
-            if LOGGER:
-                LOGGER.error(('Failed to connect PdsFile Memcache [%s]; '+
-                               'using dictionary instead') %
-                              MEMCACHE_PORT)
+          except pylibmc.Error:
+            if k < PRELOAD_TRIES - 1:
+                if LOGGER:
+                    LOGGER.warn(('Failed to connect PdsFile Memcache [%s]; ' +
+                                   'trying again in %d sec') %
+                                  (MEMCACHE_PORT, 2**k))
+                time.sleep(2.**k)       # wait 1, 2, 4, 8 sec
 
-            MEMCACHE_PORT = 0
-            CACHE = pdscache.DictionaryCache(lifetime=cache_lifetime,
-                                             limit=DICTIONARY_CACHE_LIMIT,
-                                             logger=LOGGER)
+            else:       # give up after four tries
+                if LOGGER:
+                    LOGGER.error(('Failed to connect PdsFile Memcache [%s]; '+
+                                   'using dictionary instead') %
+                                  MEMCACHE_PORT)
+
+                MEMCACHE_PORT = 0
+                if not isinstance(CACHE, pdscache.DictionaryCache):
+                    CACHE = pdscache.DictionaryCache(lifetime=cache_lifetime,
+                                                limit=DICTIONARY_CACHE_LIMIT,
+                                                logger=LOGGER)
+
+    # Clear if necessary
+    if clear:
+        CACHE.clear(block=True)     # For a MemcachedCache, this will pause for
+                                    # any other thread's block, then clear, and
+                                    # retain the block until the preload is
+                                    # finished.
 
     # Define default caching based on whether MemCache is active
     if MEMCACHE_PORT == 0:
         DEFAULT_CACHING = 'dir'
     else:
         DEFAULT_CACHING = 'all'
+
+    if LOGGER:          # This suppresses long absolute paths in the logs
+        LOGGER.add_root(holdings_list)
+
+    # Get the current list of preloaded holdings directories
+    try:
+        LOCAL_PRELOADED = list(CACHE['$PRELOADED'])
+    except KeyError:
+        LOCAL_PRELOADED = []
+
+    # If nothing is missing, we're done
+    already_loaded = True
+    for holdings in holdings_list:
+        if holdings in LOCAL_PRELOADED:
+            if LOGGER:
+                LOGGER.info('Holdings are already cached', holdings)
+        else:
+            already_loaded = False
+
+    if already_loaded:
+        if MEMCACHE_PORT:
+            get_permanent_values(holdings_list, MEMCACHE_PORT)
+            # Note that if any permanently cached values are missing, this call
+            # will recursively clear the cache and preload again. This reduces
+            # the chance of a corrupted cache.
+
+        return
+
+    # Block the cache before proceeding
+    CACHE.block()       # Blocked means no other thread can use it
+
+    # Pause the cache before proceeding--saves I/O
+    CACHE.pause()       # Paused means no local changes will be flushed to the
+                        # external cache until resume() is called.
+
+    ############################################################################
+    # Always create and cache permanent, category-level virtual directories.
+    # These are roots of the cache tree and they are also virtual directories,
+    # meaning that their childen can be assembled from multiple physical
+    # directories.
+    ############################################################################
 
     #### Recursive interior function
 
@@ -431,60 +439,11 @@ def preload(holdings_list, port=0, clear=False):
             except ValueError:              # Skip out-of-place files
                 pdsdir._childnames_filled.remove(basename)
 
-    #### Begin active code
-
-    if LOGGER:
-        LOGGER.add_root(holdings_list)
-
-    # Initialize the list of preloaded holdings directories
-    try:
-        preloaded = CACHE['$PRELOADED']
-    except KeyError:
-        preloaded = []
-
-    already_loaded = True
-    for holdings in holdings_list:
-        if holdings in preloaded:
-            if LOGGER:
-                LOGGER.info('Holdings are already cached', str(holdings))
-        else:
-            already_loaded = False
-
-    if already_loaded:
-        LOCAL_PRELOADED = preloaded
-
-        if MEMCACHE_PORT:
-            get_permanent_values(holdings_list, MEMCACHE_PORT)
-            # Note that if any permanently cached values are missing, this call
-            # will recursively clear the cache and preload again. This reduces
-            # the chance of a corrupted cache.
-
-        return
-
-    # Clear and block the cache before proceeding
-    if not cleared_already:
-        CACHE.clear(block=True) # Blocked means every other thread is waiting
-
-    # Indicate that the cache is preloading
-    CACHE.set('$PRELOADING', True)
-    CACHE.flush()       # make sure the other threads know preload has started
-                        # Does this create a significant race condition??
-
-    # Pause the cache before proceeding--saves I/O
-    CACHE.pause()       # Paused means no local changes will be flushed to the
-                        # external cache until resume() is called.
-
-    ############################################################################
-    # Always create and cache permanent, category-level virtual directories.
-    # These are roots of the cache tree and they are also virtual directories,
-    # meaning that their childen can be assembled from multiple physical
-    # directories.
-    ############################################################################
-
-    for category in CATEGORIES:
-        CACHE.set(category, PdsFile.new_virtual(category), lifetime=0)
 
     try:    # undo the pause and block in the "finally" clause below
+
+        for category in CATEGORIES:
+            CACHE.set(category, PdsFile.new_virtual(category), lifetime=0)
 
         # Initialize RANKS, VOLS and category list
         categories = []     # order counts below!
@@ -507,13 +466,14 @@ def preload(holdings_list, port=0, clear=False):
                 except KeyError:
                     CACHE.set(key, {}, lifetime=0)
 
-        # Prepare dictionary of top-level PdsFiles
+        # Cache all of the top-level PdsFiles
         for holdings in holdings_list:
 
-            holdings = _clean_abspath(holdings)
-            if holdings in preloaded:
+            if holdings in LOCAL_PRELOADED:
+                LOGGER.info('Pre-load not needed for ' + holdings)
                 continue
 
+            LOCAL_PRELOADED.append(holdings)
             if LOGGER: LOGGER.info('Pre-loading ' + holdings)
 
             # Load volume info
@@ -535,35 +495,13 @@ def preload(holdings_list, port=0, clear=False):
                                               caching='all', lifetime=0)
                 _preload_dir(pdsdir)
 
-            preloaded.append(holdings)
-
     finally:
-        CACHE.set('$PRELOADED', preloaded, lifetime=0)
-        CACHE.set('$PRELOADING', False)
+        CACHE.set('$PRELOADED', LOCAL_PRELOADED, lifetime=0)
         CACHE.resume()
         CACHE.unblock(flush=True)
-        LOCAL_PRELOADED = preloaded
 
     if LOGGER:
         LOGGER.info('PdsFile preloading completed')
-
-def is_preloading():
-    return CACHE.get_now('$PRELOADING')
-
-def pause_caching():
-    CACHE.pause()
-
-def resume_caching():
-    CACHE.resume()
-
-def clear_cache(block=True):
-    CACHE.clear(block)
-
-def block_cache():
-    CACHE.block()
-
-def unblock_cache():
-    CACHE.unblock()
 
 def get_permanent_values(holdings_list, port):
     """Load the most obvious set of permanent values from the cache to ensure
@@ -586,7 +524,7 @@ def get_permanent_values(holdings_list, port):
     except KeyError as e:
         if LOGGER:
             LOGGER.warn('Permanent value "%s" missing from Memcache; '
-                        'preloading again' % category)
+                        'preloading again' % str(e))
         preload(holdings_list, port, clear=True)
 
     else:
@@ -1110,8 +1048,14 @@ class PdsFile(object):
             try:
                 (shelf_abspath,
                  key) = PdsFile.shelf_path_and_key_for_abspath(abspath, 'info')
-                shelf = PdsFile._get_shelf(shelf_abspath)
-                return (key in shelf)
+
+                if key:
+                    shelf = PdsFile._get_shelf(shelf_abspath,
+                                               log_missing_file=False)
+                    return (key in shelf)
+                else:       # Every shelf file has an entry with an empty key,
+                            # so this avoids an unnecessary open of the file.
+                    return True
             except:
                 pass
 
@@ -1145,9 +1089,15 @@ class PdsFile(object):
             try:
                 (shelf_abspath,
                  key) = PdsFile.shelf_path_and_key_for_abspath(abspath, 'info')
-                shelf = PdsFile._get_shelf(shelf_abspath)
-                (_, _, _, checksum, _) = shelf[key]
-                return (checksum == '')
+
+                if key:
+                    shelf = PdsFile._get_shelf(shelf_abspath,
+                                               log_missing_file=False)
+                    (_, _, _, checksum, _) = shelf[key]
+                    return (checksum == '')
+                else:       # The blank key in a shelf is always a directory, so
+                            # this avoids an unnecessary open of the file.
+                    return True
             except:
                 pass
 
@@ -1186,7 +1136,9 @@ class PdsFile(object):
             try:
                 (shelf_abspath,
                  key) = PdsFile.shelf_path_and_key_for_abspath(abspath, 'info')
-                shelf = PdsFile._get_shelf(shelf_abspath)
+
+                shelf = PdsFile._get_shelf(shelf_abspath,
+                                           log_missing_file=False)
             except (ValueError, IndexError, IOError, OSError):
                 pass
             else:
@@ -1211,6 +1163,8 @@ class PdsFile(object):
 
                 testpath = abspath.replace('/checksums-','/')
                 results = PdsFile.os_listdir(testpath)
+                if PdsFile._basenames_are_volsets(results):
+                    return [r for r in results]
 
                 for voltype in VOLTYPES:
                   if '-' + voltype in abspath:
@@ -1218,6 +1172,8 @@ class PdsFile(object):
                         return [r + '_md5.txt' for r in results]
                     else:
                         return [r + '_' + voltype + '_md5.txt' for r in results]
+
+                raise ValueError('Invalid abspath for os_listdir: ' + abspath)
 
             # Deal with checksums directories
             if '/holdings/checksums-' in abspath:
@@ -1236,6 +1192,8 @@ class PdsFile(object):
                     else:
                         return [r + '_' + voltype + '_md5.txt' for r in results]
 
+                raise ValueError('Invalid abspath for os_listdir: ' + abspath)
+
             # Deal with archives directories
             if '/holdings/archives-' in abspath:
                 if abspath.endswith('.tar.gz'):
@@ -1243,15 +1201,14 @@ class PdsFile(object):
 
                 testpath = abspath.replace('/archives-','/')
                 results = PdsFile.os_listdir(testpath)
-                if not all('.' in r for r in results):
-                    return [r for r in results]
-
                 for voltype in VOLTYPES:
                   if '-' + voltype in abspath:
                     if voltype == 'volumes':
                         return [r + '.tar.gz' for r in results]
                     else:
                         return [r + '_' + voltype + '.tar.gz' for r in results]
+
+                raise ValueError('Invalid abspath for os_listdir: ' + abspath)
 
             # Deal with other holdings directories
             if '/holdings/' in abspath:
@@ -1276,6 +1233,8 @@ class PdsFile(object):
                     return filtered
                 else:                   # This handles infoshelf subdirs
                     return results
+
+                raise ValueError('Invalid abspath for os_listdir: ' + abspath)
 
         childnames = os.listdir(abspath)
         return [c for c in childnames
@@ -1303,7 +1262,7 @@ class PdsFile(object):
         # Gather the matching entries in each shelf
         abspaths = []
         for shelf_path in shelf_paths:
-            shelf = PdsFile._get_shelf(shelf_path)
+            shelf = PdsFile._get_shelf(shelf_path, log_missing_file=False)
             parts = shelf_path.split('/shelves/info/')
             assert len(parts) == 2
 
@@ -3234,7 +3193,8 @@ class PdsFile(object):
 
         # Return the answer quickly if it exists
         try:
-            return PdsFile._get_shelf(self.indexshelf_abspath)
+            return PdsFile._get_shelf(self.indexshelf_abspath,
+                                      log_missing_file=False)
         except Exception as e:
             saved_e = e
             pass
@@ -3413,10 +3373,10 @@ class PdsFile(object):
                 return None
 
             if volume_key:
-                parts = [self.volset_abspath().replace('metadata','volumes'),
+                parts = [self.volset_abspath().replace('metadata', 'volumes'),
                          row_dict[volume_key], row_dict[filespec_key]]
             else:
-                parts = [self.volume_abspath().replace('metadata','volumes'),
+                parts = [self.volume_abspath().replace('metadata', 'volumes'),
                          row_dict[filespec_key]]
 
             return '/'.join(parts)
@@ -3825,9 +3785,13 @@ class PdsFile(object):
             return (abspath, self.interior)
 
     @staticmethod
-    def _get_shelf(shelf_path):
+    def _get_shelf(shelf_path, log_missing_file=True):
         """Internal method to open a shelf file or pickle file. A limited number
-        of shelf files are kept open at all times to reduce file IO."""
+        of shelf files are kept open at all times to reduce file IO.
+
+        Use log_missing_file = False to suppress log entries when a nonexistent
+        shelf file is requested but the exception is handled externally.
+        """
 
         global USE_PICKLES, SUPPORT_OPUS_LOOKUPS, CACHE_ALL_INFO
 
@@ -3850,7 +3814,8 @@ class PdsFile(object):
             return PdsFile.SHELF_CACHE[shelf_path]
 
         if LOGGER:
-            LOGGER.debug('Opening %s file' % name, shelf_path)
+            if log_missing_file or os.path.exists(shelf_path):
+                LOGGER.debug('Opening %s file' % name, shelf_path)
 
         if not os.path.exists(shelf_path):
             raise IOError('%s file not found: %s' % (Name, shelf_path))
@@ -3920,7 +3885,7 @@ class PdsFile(object):
     @staticmethod
     def _close_shelf(shelf_path):
         """Internal method to close a shelf file. A limited number of shelf
-        fiels are kept open at all times to reduce file IO."""
+        files are kept open at all times to reduce file IO."""
 
         # If the shelf is not already open, return
         if shelf_path not in PdsFile.SHELF_CACHE:
@@ -3943,7 +3908,7 @@ class PdsFile(object):
         if LOGGER:
             if USE_PICKLES:
                 LOGGER.debug('Pickle file closed',
-                             shelf_path.rpartition('.') + '.pickle')
+                             shelf_path.rpartition('.')[0] + '.pickle')
             else:
                 LOGGER.debug('Shelf closed', shelf_path)
 
@@ -4567,7 +4532,7 @@ class PdsFile(object):
                 for abspath in test_abspaths:
                     try:
                         parent = PdsFile.from_abspath(abspath)
-                        pdsf = parent.row_pdsfile(suffix)
+                        pdsf = parent.child_of_index(suffix)
                         filtered_abspaths.append(pdsf.abspath)
                     except IOError:
                         pass
@@ -4969,13 +4934,13 @@ class PdsGroup(object):
 
         for k in range(len(self.rows)):
             if self.rows[k].logical_path == pdsf.logical_path:
-                if pdf.logical_path in self.hidden:
+                if pdsf.logical_path in self.hidden:
                     self.hidden -= {pdsf.logical_path}
                     return True
 
         return False
 
-    def unhide_all(self, pdsf):
+    def unhide_all(self):
         self.hidden = set()
 
     def iterator(self):
@@ -5185,7 +5150,7 @@ class PdsGroupTable(object):
 
         return False
 
-    def remove_pdsfile(self):
+    def remove_pdsfile(self, pdsf):
         for group in self.groups:
             test = group.remove(pdsf)
             if test: return test
