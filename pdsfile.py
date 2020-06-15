@@ -57,8 +57,9 @@ DATAFILE_EXTS = set(['dat', 'img', 'cub', 'qub', 'fit', 'fits'])
 VOLSET_REGEX        = re.compile(r'^([A-Z][A-Z0-9x]{1,5}_[0-9x]{3}x)$')
 VOLSET_REGEX_I      = re.compile(VOLSET_REGEX.pattern, re.I)
 VOLSET_PLUS_REGEX   = re.compile(VOLSET_REGEX.pattern[:-1] +
-            r'(_v[0-9.]+?|_in_prep|_prelim|_peer_review|_lien_resolution|)' +
-            r'(_\w+|)(|.[A-Za-z0-9_\.]+)$')
+                        r'(_v[0-9]+.[0-9]+.[0-9]+|_v[0-9]+.[0-9]+|_v[0-9]+|' +
+                        r'_in_prep|_prelim|_peer_review|_lien_resolution|)' +
+                        r'(_\w+|)(|.[A-Za-z0-9_\.]+)$')
 VOLSET_PLUS_REGEX_I = re.compile(VOLSET_PLUS_REGEX.pattern, re.I)
 
 CATEGORY_REGEX      = re.compile(r'^(|checksums\-)(|archives\-)(\w+)$')
