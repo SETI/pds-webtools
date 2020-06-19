@@ -133,6 +133,8 @@ class TestPdsFileBlackBox:
              )),
             ('volumes/VGISS_8xxx/VGISS_8201/DATA/C08966XXx',
              (0, 0, None, '', (0,0))),
+            ('volumes/VGISS_8xxx',
+             (50678641092, 10, datetime.datetime(2015, 9, 22, 11, 39, 20), '', (0, 0))),
         ]
     )
     def test__info(self, input_path, expected):
