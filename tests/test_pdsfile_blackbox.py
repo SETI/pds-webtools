@@ -980,6 +980,31 @@ class TestPdsFileBlackBox:
         assert target_pdsfile.archive_path_and_lskip() == expected
 
     @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('archives-volumes/COCIRS_0xxx/COCIRS_0010.tar.gz', ''),
+            ('volumes/COCIRS_0xxx/COCIRS_0010',
+             PDS_DATA_DIR + 'archives-volumes/COCIRS_0xxx/COCIRS_0010.tar.gz'),
+        ]
+    )
+    def test_archive_path_if_exact(self, input_path, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        res = target_pdsfile.archive_path_if_exact()
+        assert res == expected
+
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('archives-volumes/COCIRS_0xxx/COCIRS_0010.tar.gz',
+             ('/Users/yjchang/Dropbox/testing/pdsdata/holdings/volumes/COCIRS_0xxx/COCIRS_0010', '/Users/yjchang/Dropbox/testing/pdsdata/holdings/volumes/COCIRS_0xxx/')),
+        ]
+    )
+    def test_dirpath_and_prefix_for_archive(self, input_path, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        res = target_pdsfile.dirpath_and_prefix_for_archive()
+        assert res == expected
+
+    @pytest.mark.parametrize(
         'input_path,task,expected',
         [
             ('archives-volumes/COCIRS_0xxx/COCIRS_0012.tar.gz', '',
@@ -990,6 +1015,10 @@ class TestPdsFileBlackBox:
         target_pdsfile = instantiate_target_pdsfile(input_path)
         res = target_pdsfile.archive_logpath(task=task)
         assert re.match(expected, res)
+
+    ############################################################################
+    # Test for shelf support
+    ############################################################################
 
     ############################################################################
     # Test for log path associations
