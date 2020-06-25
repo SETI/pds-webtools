@@ -1019,6 +1019,22 @@ class TestPdsFileBlackBox:
     ############################################################################
     # Test for shelf support
     ############################################################################
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('volumes/VGISS_5xxx/VGISS_5101/DATA/C13854XX/C1385455_RAW.lbl',
+             (PDS_PDSDATA_PATH + 'shelves/info/volumes/VGISS_5xxx/VGISS_5101_info.shelf', 78)),
+            ('metadata/NHxxLO_xxxx/NHLALO_1001/NHLALO_1001_inventory.tab',
+             (PDS_PDSDATA_PATH + 'shelves/info/metadata/NHxxLO_xxxx/NHLALO_1001_info.shelf', 81)),
+            ('archives-volumes/EBROCC_xxxx/EBROCC_0001.tar.gz',
+             (PDS_PDSDATA_PATH + 'shelves/info/archives-volumes/EBROCC_xxxx_info.shelf', 77))
+        ]
+    )
+    def test_shelf_path_and_lskip(self, input_path, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        assert target_pdsfile.shelf_path_and_lskip() == expected
+
+    # Need to add tests for _get_shelf & _close_shelf when shelf_path is available.
 
     ############################################################################
     # Test for log path associations
@@ -1055,7 +1071,45 @@ class TestPdsFileBlackBox:
     )
     def test_log_path_for_volset(self, input_path, expected):
         target_pdsfile = instantiate_target_pdsfile(input_path)
-        res = target_pdsfile.log_path_for_volset(id='', task='', dir='')
+        res = target_pdsfile.log_path_for_volset()
+        assert re.match(expected, res)
+
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('volumes/HSTIx_xxxx/HSTI1_1556',
+             PDS_PDSDATA_PATH + 'logs/volumes/HSTIx_xxxx_.*.log'),
+        ]
+    )
+    def test_log_path_for_volset2(self, input_path, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        res = target_pdsfile.log_path_for_volset(place='parallel')
+        assert re.match(expected, res)
+
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('volumes/HSTIx_xxxx/HSTI1_1556',
+             PDS_PDSDATA_PATH + 'logs/index/_.*.log'),
+        ]
+    )
+    def test_log_path_for_index(self, input_path, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        res = target_pdsfile.log_path_for_index()
+        print(res)
+        assert re.match(expected, res)
+
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('volumes/HSTIx_xxxx/HSTI1_1556',
+             PDS_PDSDATA_PATH + 'logs/index/_.*.log'),
+        ]
+    )
+    def test_log_path_for_index2(self, input_path, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        res = target_pdsfile.log_path_for_index(place='parallel')
+        print(res)
         assert re.match(expected, res)
 
     ############################################################################
@@ -1320,6 +1374,26 @@ class TestPdsFileBlackBox:
                 'volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.lbl',
                 'volumes/HSTNx_xxxx/HSTN0_7176/DATA/VISIT_01/N4BI01L4Q.LBL'
              ],
+             [
+                PDS_DATA_DIR + 'volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.lbl',
+                PDS_DATA_DIR + 'volumes/HSTNx_xxxx/HSTN0_7176/DATA/VISIT_01/N4BI01L4Q.LBL',
+             ])
+        ]
+    )
+    def test_abspaths_for_logicals(self, input_path, expected):
+        res = pdsfile.PdsFile.abspaths_for_logicals(logical_paths=input_path,
+                                                    must_exist=True)
+
+        for path in res:
+            assert path in expected
+
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ([
+                'volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.lbl',
+                'volumes/HSTNx_xxxx/HSTN0_7176/DATA/VISIT_01/N4BI01L4Q.LBL'
+             ],
              ['W1294561202_1.lbl', 'N4BI01L4Q.LBL'])
         ]
     )
@@ -1348,8 +1422,8 @@ class TestPdsFileBlackBox:
         'input_path,basenames,expected',
         [
             ('volumes/COCIRS_6xxx/COCIRS_6004/DATA/GEODATA/',
-             ['GEO1004021018_699.lbl'],
-             ['volumes/COCIRS_6xxx/COCIRS_6004/DATA/GEODATA/GEO1004021018_699.lbl'])
+             ['GEO1004021018_699.LBL'],
+             ['volumes/COCIRS_6xxx/COCIRS_6004/DATA/GEODATA/GEO1004021018_699.LBL'])
         ]
     )
     def test_logicals_for_basenames(self, input_path, basenames, expected):
@@ -1452,22 +1526,6 @@ class TestPdsFileBlackBox:
         print(res)
         for path in res:
             assert path in expected
-
-    ############################################################################
-    # Shelf support
-    ############################################################################
-    @pytest.mark.parametrize(
-        'input_path,expected',
-        [
-            ('volumes/VGISS_5xxx/VGISS_5101/DATA/C13854XX/C1385455_RAW.lbl',
-             (PDS_PDSDATA_PATH + 'shelves/info/volumes/VGISS_5xxx/VGISS_5101_info.shelf', 78)),
-            ('metadata/NHxxLO_xxxx/NHLALO_1001/NHLALO_1001_inventory.tab',
-             (PDS_PDSDATA_PATH + 'shelves/info/metadata/NHxxLO_xxxx/NHLALO_1001_info.shelf', 81))
-        ]
-    )
-    def test_shelf_path_and_lskip(self, input_path, expected):
-        target_pdsfile = instantiate_target_pdsfile(input_path)
-        assert target_pdsfile.shelf_path_and_lskip() == expected
 
     ############################################################################
     # Test for file grouping

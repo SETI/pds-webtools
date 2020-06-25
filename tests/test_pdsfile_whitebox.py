@@ -315,3 +315,159 @@ class TestPdsFileWhiteBox:
         target_pdsfile = pdsfile.PdsFile.new_virtual('volumes')
         expected = 'volumes'
         assert target_pdsfile.absolute_or_logical_path == expected
+
+    ############################################################################
+    # Test for transformations
+    ############################################################################
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ([
+                'volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.lbl',
+                'volumes/HSTNx_xxxx/HSTN0_7176/DATA/VISIT_01/N4BI01L4Q.LBL'
+             ],
+             [
+                 PDS_DATA_DIR + 'volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.lbl',
+                 PDS_DATA_DIR + 'volumes/HSTNx_xxxx/HSTN0_7176/DATA/VISIT_01/N4BI01L4Q.LBL'
+             ])
+        ]
+    )
+    def test_abspaths_for_pdsfiles(self, input_path, expected):
+        pdsfiles = []
+        for path in input_path:
+            pdsfiles.append(instantiate_target_pdsfile(path))
+
+        res = pdsfile.PdsFile.abspaths_for_pdsfiles(
+            pdsfiles=pdsfiles, must_exist=False)
+
+        print(res)
+        for path in res:
+            assert path in expected
+
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ([
+                'volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.lbl',
+                'volumes/HSTNx_xxxx/HSTN0_7176/DATA/VISIT_01/N4BI01L4Q.LBL'
+             ],
+             [
+                'volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.lbl',
+                'volumes/HSTNx_xxxx/HSTN0_7176/DATA/VISIT_01/N4BI01L4Q.LBL'
+             ])
+        ]
+    )
+    def test_logicals_for_pdsfiles(self, input_path, expected):
+        pdsfiles = []
+        for path in input_path:
+            pdsfiles.append(instantiate_target_pdsfile(path, is_abspath=False))
+
+        res = pdsfile.PdsFile.logicals_for_pdsfiles(pdsfiles=pdsfiles,
+                                                    must_exist=True)
+
+        for path in res:
+            assert path in expected
+
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ([
+                'volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.lbl',
+                'volumes/HSTNx_xxxx/HSTN0_7176/DATA/VISIT_01/N4BI01L4Q.LBL'
+             ],
+             ['W1294561202_1.lbl', 'N4BI01L4Q.LBL'])
+        ]
+    )
+    def test_basenames_for_pdsfiles(self, input_path, expected):
+        pdsfiles = []
+        for path in input_path:
+            pdsfiles.append(instantiate_target_pdsfile(path, is_abspath=False))
+
+        res = pdsfile.PdsFile.basenames_for_pdsfiles(pdsfiles=pdsfiles,
+                                                     must_exist=True)
+
+        for basename in res:
+            assert basename in expected
+
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ([
+                PDS_DATA_DIR + 'volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.lbl',
+                PDS_DATA_DIR + 'volumes/HSTNx_xxxx/HSTN0_7176/DATA/VISIT_01/N4BI01L4Q.LBL'
+             ],
+             ['W1294561202_1.lbl', 'N4BI01L4Q.LBL'])
+        ]
+    )
+    def test_basenames_for_abspaths(self, input_path, expected):
+        res = pdsfile.PdsFile.basenames_for_abspaths(abspaths=input_path,
+                                                     must_exist=True)
+
+        for basename in res:
+            assert basename in expected
+
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ([
+                'volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.lbl',
+                'volumes/HSTNx_xxxx/HSTN0_7176/DATA/VISIT_01/N4BI01L4Q.LBL'
+             ],
+             pdsfile.PdsFile)
+        ]
+    )
+    def test_pdsfiles_for_logicals(self, input_path, expected):
+        res = pdsfile.PdsFile.pdsfiles_for_logicals(logical_paths=input_path,
+                                                    must_exist=True)
+
+        for pdsf in res:
+            assert isinstance(pdsf, expected)
+
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ([
+                'volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.lbl',
+                'volumes/HSTNx_xxxx/HSTN0_7176/DATA/VISIT_01/N4BI01L4Q.LBL'
+             ],
+             ['W1294561202_1.lbl', 'N4BI01L4Q.LBL'])
+        ]
+    )
+    def test_basenames_for_logicals(self, input_path, expected):
+        res = pdsfile.PdsFile.basenames_for_logicals(logical_paths=input_path,
+                                                     must_exist=True)
+
+        for basename in res:
+            assert basename in expected
+
+    @pytest.mark.parametrize(
+        'input_path,basenames,expected',
+        [
+            ('volumes/COISS_0xxx/COISS_0001/data/wacfm/bit_wght/13302',
+             ['133020.lbl'],
+             [PDS_DATA_DIR + 'volumes/COISS_0xxx/COISS_0001/data/wacfm/bit_wght/13302/133020.lbl'])
+        ]
+    )
+    def test_abspaths_for_basenames(self, input_path, basenames, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        res = target_pdsfile.abspaths_for_basenames(basenames=basenames,
+                                                    must_exist=True)
+
+        for path in res:
+            assert path in expected
+
+    @pytest.mark.parametrize(
+        'input_path,basenames,expected',
+        [
+            ('volumes/COCIRS_6xxx/COCIRS_6004/DATA/GEODATA/',
+             ['GEO1004021018_699.LBL'],
+             ['volumes/COCIRS_6xxx/COCIRS_6004/DATA/GEODATA/GEO1004021018_699.LBL'])
+        ]
+    )
+    def test_logicals_for_basenames(self, input_path, basenames, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path, is_abspath=False)
+        res = target_pdsfile.logicals_for_basenames(basenames=basenames,
+                                                    must_exist=True)
+
+        for path in res:
+            assert path in expected

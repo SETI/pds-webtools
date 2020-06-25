@@ -24,6 +24,10 @@ def setup(request):
     elif mode == '4':
         pdsfile.use_pickles(False)
         pdsfile.use_shelves_only(False)
+    elif mode == '5':
+        pdsfile.use_pickles(True)
+        pdsfile.use_shelves_only(True)
+        pdsfile.support_opus_lookups(True)
     else: # default
         pdsfile.use_pickles(True)
         pdsfile.use_shelves_only(False)
