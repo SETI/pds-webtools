@@ -1342,6 +1342,26 @@ class TestPdsFileBlackBox:
                 PDS_DATA_DIR + 'volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.lbl',
                 PDS_DATA_DIR + 'volumes/HSTNx_xxxx/HSTN0_7176/DATA/VISIT_01/N4BI01L4Q.LBL'
              ],
+             [
+                'volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.lbl',
+                'volumes/HSTNx_xxxx/HSTN0_7176/DATA/VISIT_01/N4BI01L4Q.LBL',
+             ])
+        ]
+    )
+    def test_logicals_for_abspaths(self, input_path, expected):
+        res = pdsfile.PdsFile.logicals_for_abspaths(abspaths=input_path,
+                                                    must_exist=True)
+
+        for path in res:
+            assert path in expected
+
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ([
+                PDS_DATA_DIR + 'volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.lbl',
+                PDS_DATA_DIR + 'volumes/HSTNx_xxxx/HSTN0_7176/DATA/VISIT_01/N4BI01L4Q.LBL'
+             ],
              ['W1294561202_1.lbl', 'N4BI01L4Q.LBL'])
         ]
     )
@@ -1600,6 +1620,25 @@ class TestPdsGroupBlackBox:
         pdsfiles = get_pdsfiles(input_paths)
         pdsgroup = pdsfile.PdsGroup(pdsfiles=pdsfiles)
         res = pdsgroup.isdir
+        assert res == expected
+
+    @pytest.mark.parametrize(
+        'input_paths,expected',
+        [
+            ([
+                'previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31_thumb.png',
+                'previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31_med.png',
+                'previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31_small.png',
+                'previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31_full.png',
+             ],
+             False),
+            (['previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/'], True)
+        ]
+    )
+    def test__iconset(self, input_paths, expected):
+        pdsfiles = get_pdsfiles(input_paths)
+        pdsgroup = pdsfile.PdsGroup(pdsfiles=pdsfiles)
+        res = pdsgroup._iconset
         assert res == expected
 
     @pytest.mark.parametrize(

@@ -8,7 +8,7 @@ PDS_DATA_DIR = os.environ['PDS_DATA_DIR']
 ################################################################################
 def pytest_addoption(parser):
     parser.addoption("--mode", action="store")
-
+# We only use use_pickles and use_shelves_only
 @pytest.fixture(scope='session', autouse=True)
 def setup(request):
     mode = request.config.option.mode
@@ -24,10 +24,6 @@ def setup(request):
     elif mode == '4':
         pdsfile.use_pickles(False)
         pdsfile.use_shelves_only(False)
-    elif mode == '5':
-        pdsfile.use_pickles(True)
-        pdsfile.use_shelves_only(True)
-        pdsfile.support_opus_lookups(True)
     else: # default
         pdsfile.use_pickles(True)
         pdsfile.use_shelves_only(False)

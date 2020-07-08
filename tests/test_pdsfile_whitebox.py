@@ -173,8 +173,10 @@ class TestPdsFileWhiteBox:
         'input_path,expected',
         [
             # The 1st case should return [], instead of None
-            ('volumes/VGISS_8xxx/VGISS_8201/DATA/C08966XX/C0896631xx_RAW.lbl',
-             []),
+            ('volumes/VGISS_8xxx/VGISS_8201/DATA/C08966XX/C0896631_RAW.LBL',
+             [999999]),
+            ('volumes/VGISS_8xxx/VGISS_8201/DATA/C08966XX/C0896631xx_RAW.LBL',
+             None),
             ('volumes/VGISS_8xxx', [999999]),
             ('volumes', []),
             ('', []),
@@ -261,8 +263,8 @@ class TestPdsFileWhiteBox:
             # ('archives-volumes/COCIRS_0xxx/', None),
             # ('volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31.lbl',
             #  None),
-            # ('metadata/COUVIS_0xxx/COUVIS_0001/COUVIS_0001_index.tab',
-            #  pdsviewable.PdsViewable),
+            ('metadata/COUVIS_0xxx/COUVIS_0001/COUVIS_0001_index.tab',
+             pdsviewable.PdsViewable),
             ('volumes/COCIRS_6xxx/COCIRS_6002/DATA/RINDATA/RIN1002071502_FP3.LBL',
              pdsviewable.PdsViewable),
         ]
@@ -471,3 +473,117 @@ class TestPdsFileWhiteBox:
 
         for path in res:
             assert path in expected
+
+    ############################################################################
+    # Test for log path associations
+    ############################################################################
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('volumes/HSTIx_xxxx/HSTI1_1556',
+             PDS_PDSDATA_PATH + 'logs/volumes/HSTIx_xxxx/HSTI1_1556_.*.log'),
+        ]
+    )
+    def test_log_path_for_volume(self, input_path, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        res = target_pdsfile.log_path_for_volume(id='', task='', dir='',
+                                                 place='parallel')
+        assert re.match(expected, res)
+
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/FUV1999_007_16_57.DAT',
+             'volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/FUV1999_007_16_57.DAT'),
+            ('volumes', 'volumes')
+        ]
+    )
+    def test_associated_parallel1(self, input_path, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        print(target_pdsfile.category_.rstrip('/'))
+        print(target_pdsfile.volset)
+        res = target_pdsfile.associated_parallel(rank='latest')
+        print(res)
+        assert res.logical_path == expected
+
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/FUV1999_007_16_57.DAT',
+             None),
+        ]
+    )
+    def test_associated_parallel2(self, input_path, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        # Need index file for this, will have to modify later when
+        # "/shelves/index/" is available.
+        res = target_pdsfile.associated_parallel(rank='previous')
+        if res:
+            assert res.logical_path == expected
+        else:
+            assert res == expected
+
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/FUV1999_007_16_57.DAT',
+             None),
+        ]
+    )
+    def test_associated_parallel3(self, input_path, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        # Need index file for this, will have to modify later when
+        # "/shelves/index/" is available.
+        res = target_pdsfile.associated_parallel(rank='next')
+        if res:
+            assert res.logical_path == expected
+        else:
+            assert res == expected
+
+    ############################################################################
+    # Test for split and sort filenames
+    ############################################################################
+    @pytest.mark.parametrize(
+        'input_path,basenames,expected',
+        [
+            ('volumes/COCIRS_0xxx/COCIRS_0410',
+             ['COCIRS_0xxx_v3', 'COCIRS_0xxx', 'COCIRS_0xxx_v2'],
+             #  Sort by version number
+             ['COCIRS_0xxx', 'COCIRS_0xxx_v3', 'COCIRS_0xxx_v2']),
+        ]
+    )
+    def test_sort_basenames1(self, input_path, basenames, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        res = target_pdsfile.sort_basenames(basenames=basenames, dirs_first=True)
+        assert res == expected
+
+    @pytest.mark.parametrize(
+        'input_path,basenames,expected',
+        [
+            ('volumes/COCIRS_0xxx/COCIRS_0410',
+             ['COCIRS_0xxx_v3', 'COCIRS_0xxx', 'COCIRS_0xxx_v2'],
+             #  Sort by version number
+             ['COCIRS_0xxx', 'COCIRS_0xxx_v3', 'COCIRS_0xxx_v2']),
+        ]
+    )
+    def test_sort_basenames2(self, input_path, basenames, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        res = target_pdsfile.sort_basenames(basenames=basenames, dirs_last=True)
+        assert res == expected
+
+################################################################################
+# Blackbox test for functions & properties in PdsGroup class
+################################################################################
+class TestPdsGroupWhiteBox:
+    @pytest.mark.parametrize(
+        'input_paths,expected',
+        [
+            (['volumes'], ''),
+
+        ]
+    )
+    def test_parent_logical_path(self, input_paths, expected):
+        pdsfiles = get_pdsfiles(input_paths)
+        pdsgroup = pdsfile.PdsGroup(pdsfiles=pdsfiles)
+        res = pdsgroup.parent_logical_path
+        assert res == expected

@@ -428,7 +428,7 @@ class TestPdsFileBlackBox:
     @pytest.mark.parametrize(
         'input_path,expected',
         [
-            ('volumes/VGISS_8xxx/VGISS_8201/DATA/C08966XX/C0896631_RAW.lbl',
+            ('volumes/VGISS_8xxx/VGISS_8201/DATA/C08966XX/C0896631_RAW.LBL',
              [999999]),
         ]
     )
