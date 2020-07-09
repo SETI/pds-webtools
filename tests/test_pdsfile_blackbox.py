@@ -131,14 +131,15 @@ class TestPdsFileBlackBox:
         'input_path,expected',
         [
             ('diagrams/COCIRS_5xxx/COCIRS_5401/BROWSE/TARGETS/IMG0401130240_FP1_thumb.jpg',
-             PDS_DATA_DIR + 'diagrams/COCIRS_5xxx/COCIRS_5401/BROWSE/TARGETS/IMG0401130240_FP1_thumb.jpg'),
-            ('volumes', PDS_DATA_DIR + 'volumes')
+             PDS_DATA_DIR + '/diagrams/COCIRS_5xxx/COCIRS_5401/BROWSE/TARGETS/IMG0401130240_FP1_thumb.jpg'),
+            ('volumes', PDS_DATA_DIR + '/volumes')
         ]
     )
     def test_absolute_or_logical_path(self, input_path, expected):
         """absolute_or_logical_path: get abspath."""
         target_pdsfile = instantiate_target_pdsfile(input_path)
-        expected = PDS_DATA_DIR + input_path if expected is None else expected
+        if expected is None:
+            expected = PDS_DATA_DIR + '/' + input_path
         assert target_pdsfile.absolute_or_logical_path == expected
 
     @pytest.mark.parametrize(
@@ -262,10 +263,10 @@ class TestPdsFileBlackBox:
         'input_path,expected',
         [
             ('volumes/GO_0xxx/GO_0017/J0/OPNAV/C0346405900R.IMG',
-             PDS_DATA_DIR + 'volumes/GO_0xxx/GO_0017/J0/OPNAV/C0346405900R.LBL'),
+             PDS_DATA_DIR + '/volumes/GO_0xxx/GO_0017/J0/OPNAV/C0346405900R.LBL'),
             ('volumes/GO_0xxx/GO_0017/J0/OPNAV', ''),
             ('metadata/GO_0xxx/GO_0017/GO_0017_index.tab',
-             PDS_DATA_DIR + 'metadata/GO_0xxx/GO_0017/GO_0017_index.lbl'),
+             PDS_DATA_DIR + '/metadata/GO_0xxx/GO_0017/GO_0017_index.lbl'),
             ('previews/GO_0xxx/GO_0017/J0/OPNAV/C0346405900R_med.jpg', '')
         ]
     )
@@ -426,7 +427,7 @@ class TestPdsFileBlackBox:
         [
             ('volumes/COCIRS_6xxx/COCIRS_6004/DATA/GEODATA/GEO1004021018_699.LBL',
              [
-                PDS_DATA_DIR + 'volumes/COCIRS_6xxx/COCIRS_6004/DATA/GEODATA/GEO1004021018_699.TAB'
+                PDS_DATA_DIR + '/volumes/COCIRS_6xxx/COCIRS_6004/DATA/GEODATA/GEO1004021018_699.TAB'
              ])
         ]
     )
@@ -552,7 +553,8 @@ class TestPdsFileBlackBox:
         'input_path,expected',
         [
             ('volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31.LBL',
-             ('/Users/yjchang/Dropbox/testing/pdsdata/shelves/info/volumes/COUVIS_0xxx/COUVIS_0001_info.shelf', 'DATA/D1999_007/HDAC1999_007_16_31.LBL'))
+             (PDS_PDSDATA_PATH + 'shelves/info/volumes/COUVIS_0xxx/COUVIS_0001_info.shelf',
+              'DATA/D1999_007/HDAC1999_007_16_31.LBL'))
         ]
     )
     def test_infoshelf_path_and_key(self, input_path, expected):
@@ -597,10 +599,10 @@ class TestPdsFileBlackBox:
         [
             ('volumes/COCIRS_6xxx/COCIRS_6004/DATA/GEODATA/',
              'GEO1004021018_699.LBL',
-             PDS_DATA_DIR + 'volumes/COCIRS_6xxx/COCIRS_6004/DATA/GEODATA/GEO1004021018_699.LBL'),
+             PDS_DATA_DIR + '/volumes/COCIRS_6xxx/COCIRS_6004/DATA/GEODATA/GEO1004021018_699.LBL'),
             ('metadata/COISS_1xxx/COISS_1001',
              'COISS_1001_inventory.tab',
-             PDS_DATA_DIR + 'metadata/COISS_1xxx/COISS_1001/COISS_1001_inventory.tab'),
+             PDS_DATA_DIR + '/metadata/COISS_1xxx/COISS_1001/COISS_1001_inventory.tab'),
         ]
     )
     def test_child(self, input_path, basename, expected):
@@ -614,9 +616,9 @@ class TestPdsFileBlackBox:
         'input_path,expected',
         [
             ('volumes/COCIRS_0xxx_v3/COCIRS_0401/DATA/TSDR/NAV_DATA/TAR04012400.LBL',
-             PDS_DATA_DIR + 'volumes/COCIRS_0xxx_v3/COCIRS_0401/DATA/TSDR/NAV_DATA'),
+             PDS_DATA_DIR + '/volumes/COCIRS_0xxx_v3/COCIRS_0401/DATA/TSDR/NAV_DATA'),
             ('volumes/COCIRS_1xxx/COCIRS_1001/DATA/TSDR/NAV_DATA/TAR10013100.DAT',
-             PDS_DATA_DIR + 'volumes/COCIRS_1xxx/COCIRS_1001/DATA/TSDR/NAV_DATA'),
+             PDS_DATA_DIR + '/volumes/COCIRS_1xxx/COCIRS_1001/DATA/TSDR/NAV_DATA'),
         ]
     )
     def test_parent(self, input_path, expected):
@@ -642,7 +644,7 @@ class TestPdsFileBlackBox:
         [
             ('volumes/COISS_0xxx/COISS_0001/data/wacfm/bit_wght/13302/133020.LBL',
              True),
-            (PDS_DATA_DIR + 'volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.LBL',
+            (PDS_DATA_DIR + '/volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.LBL',
              True),
         ]
     )
@@ -679,7 +681,7 @@ class TestPdsFileBlackBox:
         [
             ('volumes/CORSS_8xxx/CORSS_8001/data/Rev007/Rev007E/Rev007E_RSS_2005_123_K34_E/RSS_2005_123_K34_E_CAL.LBL',
              True),
-            (PDS_DATA_DIR + 'volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.LBL',
+            (PDS_DATA_DIR + '/volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.LBL',
              True),
         ]
     )
@@ -734,9 +736,9 @@ class TestPdsFileBlackBox:
     @pytest.mark.parametrize(
         'input_path,interiors,expected',
         [
-            (PDS_DATA_DIR + 'volumes/HSTNx_xxxx/HSTN0_7176/',
+            (PDS_DATA_DIR + '/volumes/HSTNx_xxxx/HSTN0_7176/',
              ['DATA/VISIT_01/N4BI01L4Q.LBL'],
-             PDS_DATA_DIR + 'volumes/HSTNx_xxxx/HSTN0_7176/DATA/VISIT_01/N4BI01L4Q.LBL')
+             PDS_DATA_DIR + '/volumes/HSTNx_xxxx/HSTN0_7176/DATA/VISIT_01/N4BI01L4Q.LBL')
         ]
     )
     def test_from_opus_id(self, input_path, interiors, expected):
@@ -830,11 +832,11 @@ class TestPdsFileBlackBox:
         'input_path,expected',
         [
             ('metadata/VGISS_8xxx/VGISS_8201/VGISS_8201_inventory.tab',
-             PDS_DATA_DIR + 'metadata/VGISS_8xxx/VGISS_8201'),
+             PDS_DATA_DIR + '/metadata/VGISS_8xxx/VGISS_8201'),
             ('metadata/VGISS_6xxx/VGISS_6101',
-             PDS_DATA_DIR + 'metadata/VGISS_6xxx/VGISS_6101'),
+             PDS_DATA_DIR + '/metadata/VGISS_6xxx/VGISS_6101'),
             ('volumes/VGISS_7xxx/VGISS_7201/DATA/C24476XX/C2447654_RAW.lbl',
-             PDS_DATA_DIR + 'volumes/VGISS_7xxx/VGISS_7201')
+             PDS_DATA_DIR + '/volumes/VGISS_7xxx/VGISS_7201')
         ]
     )
     def test_volume_abspath(self, input_path, expected):
@@ -845,9 +847,9 @@ class TestPdsFileBlackBox:
         'input_path,expected',
         [
             ('volumes/HSTOx_xxxx/HSTO0_7308/DATA/VISIT_05/O43B05C1Q.asc',
-             PDS_DATA_DIR + 'volumes/HSTOx_xxxx'),
+             PDS_DATA_DIR + '/volumes/HSTOx_xxxx'),
             ('previews/HSTNx_xxxx/HSTN0_7176/DATA/VISIT_01/N4BI01L4Q_thumb.jpg',
-             PDS_DATA_DIR + 'previews/HSTNx_xxxx')
+             PDS_DATA_DIR + '/previews/HSTNx_xxxx')
         ]
     )
     def test_volset_abspath(self, input_path, expected):
@@ -945,22 +947,30 @@ class TestPdsFileBlackBox:
         'input_path,expected',
         [
             ('volumes/COUVIS_0xxx_v1/COUVIS_0009/DATA/D2004_274/EUV2004_274_01_39.lbl',
-             (PDS_DATA_DIR + 'checksums-volumes/COUVIS_0xxx_v1/COUVIS_0009_md5.txt', 81)),
+             PDS_DATA_DIR + '/checksums-volumes/COUVIS_0xxx_v1/COUVIS_0009_md5.txt'),
             ('metadata/VGISS_5xxx/VGISS_5101/VGISS_5101_supplemental_index.tab',
-             (PDS_DATA_DIR + 'checksums-metadata/VGISS_5xxx/VGISS_5101_metadata_md5.txt', 78))
+             PDS_DATA_DIR + '/checksums-metadata/VGISS_5xxx/VGISS_5101_metadata_md5.txt')
         ]
     )
     def test_checksum_path_and_lskip(self, input_path, expected):
         target_pdsfile = instantiate_target_pdsfile(input_path)
+        if target_pdsfile.archives_:
+            lskip = (len(target_pdsfile.root_) + len('checksums_')
+                     + len(target_pdsfile.category_))
+        else:
+            lskip = (len(target_pdsfile.root_) + len('checksums_')
+                     + len(target_pdsfile.category_)
+                     + len(target_pdsfile.volset_))
+        expected = (expected, lskip)
         assert target_pdsfile.checksum_path_and_lskip() == expected
 
     @pytest.mark.parametrize(
         'input_path,expected',
         [
             ('archives-volumes/COCIRS_0xxx/COCIRS_0010.tar.gz',
-             PDS_DATA_DIR + 'checksums-archives-volumes/COCIRS_0xxx_md5.txt'),
+             PDS_DATA_DIR + '/checksums-archives-volumes/COCIRS_0xxx_md5.txt'),
             ('volumes/COCIRS_0xxx/COCIRS_0010',
-             PDS_DATA_DIR + 'checksums-volumes/COCIRS_0xxx/COCIRS_0010_md5.txt'),
+             PDS_DATA_DIR + '/checksums-volumes/COCIRS_0xxx/COCIRS_0010_md5.txt'),
             ('checksums-volumes/COCIRS_0xxx/COCIRS_0010_md5.txt', '')
         ]
     )
@@ -974,12 +984,12 @@ class TestPdsFileBlackBox:
         [
             # ('archives-volumes/COCIRS_0xxx/COCIRS_0010.tar.gz',
             #  (
-            #     PDS_DATA_DIR + 'archives-volumes/COCIRS_0xxx',
-            #     PDS_DATA_DIR + 'archives-volumes/COCIRS_0xxx/')),
+            #     PDS_DATA_DIR + '/archives-volumes/COCIRS_0xxx',
+            #     PDS_DATA_DIR + '/archives-volumes/COCIRS_0xxx/')),
             ('checksums-volumes/COCIRS_0xxx/COCIRS_0010_md5.txt',
              (
-                PDS_DATA_DIR + 'volumes/COCIRS_0xxx/COCIRS_0010',
-                PDS_DATA_DIR + 'volumes/COCIRS_0xxx/')),
+                PDS_DATA_DIR + '/volumes/COCIRS_0xxx/COCIRS_0010',
+                PDS_DATA_DIR + '/volumes/COCIRS_0xxx/')),
         ]
     )
     def test_dirpath_and_prefix_for_checksum(self, input_path, expected):
@@ -994,13 +1004,16 @@ class TestPdsFileBlackBox:
         'input_path,expected',
         [
             ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
-             (PDS_DATA_DIR + 'archives-metadata/HSTUx_xxxx/HSTU0_5167_metadata.tar.gz', 68)),
+             PDS_DATA_DIR + '/archives-metadata/HSTUx_xxxx/HSTU0_5167_metadata.tar.gz'),
             ('volumes/EBROCC_xxxx/EBROCC_0001/DATA/ESO1M/ES1_EPD.lbl',
-             (PDS_DATA_DIR + 'archives-volumes/EBROCC_xxxx/EBROCC_0001.tar.gz', 68))
+             PDS_DATA_DIR + '/archives-volumes/EBROCC_xxxx/EBROCC_0001.tar.gz')
         ]
     )
     def test_archive_path_and_lskip(self, input_path, expected):
         target_pdsfile = instantiate_target_pdsfile(input_path)
+        lskip = (len(target_pdsfile.root_) + len(target_pdsfile.category_)
+                 + len(target_pdsfile.volset_))
+        expected = (expected, lskip)
         assert target_pdsfile.archive_path_and_lskip() == expected
 
     @pytest.mark.parametrize(
@@ -1008,7 +1021,7 @@ class TestPdsFileBlackBox:
         [
             ('archives-volumes/COCIRS_0xxx/COCIRS_0010.tar.gz', ''),
             ('volumes/COCIRS_0xxx/COCIRS_0010',
-             PDS_DATA_DIR + 'archives-volumes/COCIRS_0xxx/COCIRS_0010.tar.gz'),
+             PDS_DATA_DIR + '/archives-volumes/COCIRS_0xxx/COCIRS_0010.tar.gz'),
         ]
     )
     def test_archive_path_if_exact(self, input_path, expected):
@@ -1020,7 +1033,8 @@ class TestPdsFileBlackBox:
         'input_path,expected',
         [
             ('archives-volumes/COCIRS_0xxx/COCIRS_0010.tar.gz',
-             ('/Users/yjchang/Dropbox/testing/pdsdata/holdings/volumes/COCIRS_0xxx/COCIRS_0010', '/Users/yjchang/Dropbox/testing/pdsdata/holdings/volumes/COCIRS_0xxx/')),
+             (PDS_DATA_DIR + '/volumes/COCIRS_0xxx/COCIRS_0010',
+              PDS_DATA_DIR + '/volumes/COCIRS_0xxx/')),
         ]
     )
     def test_dirpath_and_prefix_for_archive(self, input_path, expected):
@@ -1047,15 +1061,23 @@ class TestPdsFileBlackBox:
         'input_path,expected',
         [
             ('volumes/VGISS_5xxx/VGISS_5101/DATA/C13854XX/C1385455_RAW.lbl',
-             (PDS_PDSDATA_PATH + 'shelves/info/volumes/VGISS_5xxx/VGISS_5101_info.shelf', 78)),
+             PDS_PDSDATA_PATH + 'shelves/info/volumes/VGISS_5xxx/VGISS_5101_info.shelf'),
             ('metadata/NHxxLO_xxxx/NHLALO_1001/NHLALO_1001_inventory.tab',
-             (PDS_PDSDATA_PATH + 'shelves/info/metadata/NHxxLO_xxxx/NHLALO_1001_info.shelf', 81)),
+             PDS_PDSDATA_PATH + 'shelves/info/metadata/NHxxLO_xxxx/NHLALO_1001_info.shelf'),
             ('archives-volumes/EBROCC_xxxx/EBROCC_0001.tar.gz',
-             (PDS_PDSDATA_PATH + 'shelves/info/archives-volumes/EBROCC_xxxx_info.shelf', 77))
+             PDS_PDSDATA_PATH + 'shelves/info/archives-volumes/EBROCC_xxxx_info.shelf')
         ]
     )
     def test_shelf_path_and_lskip(self, input_path, expected):
         target_pdsfile = instantiate_target_pdsfile(input_path)
+        if target_pdsfile.archives_:
+            lskip = (len(target_pdsfile.root_) + len(target_pdsfile.category_)
+                     + len(target_pdsfile.volset_))
+        else:
+            lskip = (len(target_pdsfile.root_) + len(target_pdsfile.category_)
+                     + len(target_pdsfile.volset_) + len(target_pdsfile.volname)
+                     + 1)
+        expected = (expected, lskip)
         assert target_pdsfile.shelf_path_and_lskip() == expected
 
     @pytest.mark.parametrize(
@@ -1150,12 +1172,12 @@ class TestPdsFileBlackBox:
     @pytest.mark.parametrize(
         'input_path,interiors,expected',
         [
-            (PDS_DATA_DIR + 'volumes/COISS_1xxx/COISS_1001',
+            (PDS_DATA_DIR + '/volumes/COISS_1xxx/COISS_1001',
              ['data/1294561143_1295221348/W1294561202_1.lbl'],
-             PDS_DATA_DIR + 'volumes/COISS_1xxx/COISS_1001'),
-            (PDS_DATA_DIR + 'volumes/COUVIS_0xxx/COUVIS_0001',
+             PDS_DATA_DIR + '/volumes/COISS_1xxx/COISS_1001'),
+            (PDS_DATA_DIR + '/volumes/COUVIS_0xxx/COUVIS_0001',
              ['DATA/D1999_007/HDAC1999_007_16_31.DAT'],
-             PDS_DATA_DIR + 'volumes/COUVIS_0xxx/COUVIS_0001'),
+             PDS_DATA_DIR + '/volumes/COUVIS_0xxx/COUVIS_0001'),
         ]
     )
     def test_load_opus_ids_for_volume_interiors(
@@ -1308,8 +1330,8 @@ class TestPdsFileBlackBox:
                 'volumes/HSTNx_xxxx/HSTN0_7176/DATA/VISIT_01/N4BI01L4Q.LBL'
              ],
              [
-                 PDS_DATA_DIR + 'volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.lbl',
-                 PDS_DATA_DIR + 'volumes/HSTNx_xxxx/HSTN0_7176/DATA/VISIT_01/N4BI01L4Q.LBL'
+                 PDS_DATA_DIR + '/volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.lbl',
+                 PDS_DATA_DIR + '/volumes/HSTNx_xxxx/HSTN0_7176/DATA/VISIT_01/N4BI01L4Q.LBL'
              ])
         ]
     )
@@ -1371,8 +1393,8 @@ class TestPdsFileBlackBox:
         'input_path,expected',
         [
             ([
-                PDS_DATA_DIR + 'volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.lbl',
-                PDS_DATA_DIR + 'volumes/HSTNx_xxxx/HSTN0_7176/DATA/VISIT_01/N4BI01L4Q.LBL'
+                PDS_DATA_DIR + '/volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.lbl',
+                PDS_DATA_DIR + '/volumes/HSTNx_xxxx/HSTN0_7176/DATA/VISIT_01/N4BI01L4Q.LBL'
              ],
              [
                 'volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.lbl',
@@ -1391,8 +1413,8 @@ class TestPdsFileBlackBox:
         'input_path,expected',
         [
             ([
-                PDS_DATA_DIR + 'volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.lbl',
-                PDS_DATA_DIR + 'volumes/HSTNx_xxxx/HSTN0_7176/DATA/VISIT_01/N4BI01L4Q.LBL'
+                PDS_DATA_DIR + '/volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.lbl',
+                PDS_DATA_DIR + '/volumes/HSTNx_xxxx/HSTN0_7176/DATA/VISIT_01/N4BI01L4Q.LBL'
              ],
              ['W1294561202_1.lbl', 'N4BI01L4Q.LBL'])
         ]
@@ -1427,8 +1449,8 @@ class TestPdsFileBlackBox:
                 'volumes/HSTNx_xxxx/HSTN0_7176/DATA/VISIT_01/N4BI01L4Q.LBL'
              ],
              [
-                PDS_DATA_DIR + 'volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.lbl',
-                PDS_DATA_DIR + 'volumes/HSTNx_xxxx/HSTN0_7176/DATA/VISIT_01/N4BI01L4Q.LBL',
+                PDS_DATA_DIR + '/volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.lbl',
+                PDS_DATA_DIR + '/volumes/HSTNx_xxxx/HSTN0_7176/DATA/VISIT_01/N4BI01L4Q.LBL',
              ])
         ]
     )
@@ -1460,7 +1482,7 @@ class TestPdsFileBlackBox:
         [
             ('volumes/COISS_0xxx/COISS_0001/data/wacfm/bit_wght/13302',
              ['133020.lbl'],
-             [PDS_DATA_DIR + 'volumes/COISS_0xxx/COISS_0001/data/wacfm/bit_wght/13302/133020.lbl'])
+             [PDS_DATA_DIR + '/volumes/COISS_0xxx/COISS_0001/data/wacfm/bit_wght/13302/133020.lbl'])
         ]
     )
     def test_abspaths_for_basenames(self, input_path, basenames, expected):
@@ -1518,18 +1540,18 @@ class TestPdsFileBlackBox:
         [
             ('volumes/COUVIS_0xxx/COUVIS_0058/DATA/D2017_001/EUV2017_001_03_49.LBL',
              [
-                PDS_DATA_DIR + 'volumes/COUVIS_0xxx/COUVIS_0058/CALIB/VERSION_5/D2017_001/EUV2017_001_03_49_CAL_5.DAT',
-                PDS_DATA_DIR + 'volumes/COUVIS_0xxx/COUVIS_0058/DATA/D2017_001/EUV2017_001_03_49.LBL',
-                PDS_DATA_DIR + 'volumes/COUVIS_0xxx/COUVIS_0058/DATA/D2017_001/EUV2017_001_03_49.DAT',
-                PDS_DATA_DIR + 'volumes/COUVIS_0xxx/COUVIS_0058/CALIB/VERSION_5/D2017_001/EUV2017_001_03_49_CAL_5.LBL',
-                PDS_DATA_DIR + 'volumes/COUVIS_0xxx/COUVIS_0058/CALIB/VERSION_4/D2017_001/EUV2017_001_03_49_CAL_4.LBL',
-                PDS_DATA_DIR + 'volumes/COUVIS_0xxx/COUVIS_0058/CALIB/VERSION_4/D2017_001/EUV2017_001_03_49_CAL_4.DAT'
+                PDS_DATA_DIR + '/volumes/COUVIS_0xxx/COUVIS_0058/CALIB/VERSION_5/D2017_001/EUV2017_001_03_49_CAL_5.DAT',
+                PDS_DATA_DIR + '/volumes/COUVIS_0xxx/COUVIS_0058/DATA/D2017_001/EUV2017_001_03_49.LBL',
+                PDS_DATA_DIR + '/volumes/COUVIS_0xxx/COUVIS_0058/DATA/D2017_001/EUV2017_001_03_49.DAT',
+                PDS_DATA_DIR + '/volumes/COUVIS_0xxx/COUVIS_0058/CALIB/VERSION_5/D2017_001/EUV2017_001_03_49_CAL_5.LBL',
+                PDS_DATA_DIR + '/volumes/COUVIS_0xxx/COUVIS_0058/CALIB/VERSION_4/D2017_001/EUV2017_001_03_49_CAL_4.LBL',
+                PDS_DATA_DIR + '/volumes/COUVIS_0xxx/COUVIS_0058/CALIB/VERSION_4/D2017_001/EUV2017_001_03_49_CAL_4.DAT'
              ]),
             ('volumes/COUVIS_0xxx/COUVIS_0058/DATA',
              [
-                PDS_DATA_DIR + 'volumes/COUVIS_0xxx/COUVIS_0058/DATA',
-                PDS_DATA_DIR + 'volumes/COUVIS_0xxx/COUVIS_0058/CALIB/VERSION_5',
-                PDS_DATA_DIR + 'volumes/COUVIS_0xxx/COUVIS_0058/CALIB/VERSION_4',
+                PDS_DATA_DIR + '/volumes/COUVIS_0xxx/COUVIS_0058/DATA',
+                PDS_DATA_DIR + '/volumes/COUVIS_0xxx/COUVIS_0058/CALIB/VERSION_5',
+                PDS_DATA_DIR + '/volumes/COUVIS_0xxx/COUVIS_0058/CALIB/VERSION_4',
              ]),
         ]
     )
@@ -1562,13 +1584,13 @@ class TestPdsFileBlackBox:
             ('volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/FUV1999_007_16_57.DAT',
              'metadata',
              # should we have the "/" at the end?
-             PDS_DATA_DIR + 'metadata/COUVIS_0xxx/COUVIS_0001/'),
+             PDS_DATA_DIR + '/metadata/COUVIS_0xxx/COUVIS_0001/'),
             ('volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/FUV1999_007_16_57.DAT',
              'archives-volumes',
-             PDS_DATA_DIR + 'archives-volumes/COUVIS_0xxx/COUVIS_0001.tar.gz'),
+             PDS_DATA_DIR + '/archives-volumes/COUVIS_0xxx/COUVIS_0001.tar.gz'),
             ('volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/FUV1999_007_16_57.DAT',
              'checksums-volumes',
-             PDS_DATA_DIR + 'checksums-volumes/COUVIS_0xxx/COUVIS_0001_md5.txt'),
+             PDS_DATA_DIR + '/checksums-volumes/COUVIS_0xxx/COUVIS_0001_md5.txt'),
         ]
     )
     def test__associated_paths(self, input_path, category, expected):
@@ -2871,7 +2893,7 @@ class TestPdsFileHelperBlackBox:
         [
             ('volumes/COVIMS_8xxx/COVIMS_8001/data/VIMS_2017_251_GAMCRU_I_TAU_10KM.tab',
              True),
-            (PDS_DATA_DIR + 'metadata/COVIMS_0xxx/COVIMS_0001',
+            (PDS_DATA_DIR + '/metadata/COVIMS_0xxx/COVIMS_0001',
              False),
         ]
     )
@@ -2882,7 +2904,7 @@ class TestPdsFileHelperBlackBox:
     @pytest.mark.parametrize(
         'input_path,expected',
         [
-            (PDS_DATA_DIR + 'volumes/COUVIS_0xxx/COUVIS_0058/DATA/D2017_001/EUV2017_001_03_49.dat',
+            (PDS_DATA_DIR + '/volumes/COUVIS_0xxx/COUVIS_0058/DATA/D2017_001/EUV2017_001_03_49.dat',
              'volumes/COUVIS_0xxx/COUVIS_0058/DATA/D2017_001/EUV2017_001_03_49.dat'),
             ('volumes/COUVIS_0xxx/COUVIS_0058/DATA/D2017_001/EUV2017_001_03_49.dat',
              'volumes/COUVIS_0xxx/COUVIS_0058/DATA/D2017_001/EUV2017_001_03_49.dat'),
@@ -2898,8 +2920,8 @@ class TestPdsFileHelperBlackBox:
     @pytest.mark.parametrize(
         'input_path,expected',
         [
-            (PDS_DATA_DIR + 'volumes/COUVIS_0xxx/COUVIS_0058/DATA/D2017_001/EUV2017_001_03_49.dat',
-             PDS_DATA_DIR + 'volumes/COUVIS_0xxx/COUVIS_0058/DATA/D2017_001/EUV2017_001_03_49.dat')
+            (PDS_DATA_DIR + '/volumes/COUVIS_0xxx/COUVIS_0058/DATA/D2017_001/EUV2017_001_03_49.dat',
+             PDS_DATA_DIR + '/volumes/COUVIS_0xxx/COUVIS_0058/DATA/D2017_001/EUV2017_001_03_49.dat')
         ]
     )
     def test_repair_case(self, input_path, expected):
@@ -2909,10 +2931,10 @@ class TestPdsFileHelperBlackBox:
     @pytest.mark.parametrize(
         'input_path,expected',
         [
-            (PDS_DATA_DIR + 'volumes/COUVIS_0xxx/COUVIS_0058/DATA/D2017_001/EUV2017_001_03_49.dat',
-             PDS_DATA_DIR + 'volumes/COUVIS_0xxx/COUVIS_0058/DATA/D2017_001/EUV2017_001_03_49.dat'),
+            (PDS_DATA_DIR + '/volumes/COUVIS_0xxx/COUVIS_0058/DATA/D2017_001/EUV2017_001_03_49.dat',
+             PDS_DATA_DIR + '/volumes/COUVIS_0xxx/COUVIS_0058/DATA/D2017_001/EUV2017_001_03_49.dat'),
             ('volumes/COISS_0xxx/COISS_0001/data/wacfm/bit_wght/13302/133020.lbl',
-             PDS_DATA_DIR + 'volumes/COISS_0xxx/COISS_0001/data/wacfm/bit_wght/13302/133020.lbl'),
+             PDS_DATA_DIR + '/volumes/COISS_0xxx/COISS_0001/data/wacfm/bit_wght/13302/133020.lbl'),
         ]
     )
     def test_selected_path_from_path(self, input_path, expected):

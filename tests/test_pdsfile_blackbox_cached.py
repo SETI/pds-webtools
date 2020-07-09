@@ -265,7 +265,7 @@ class TestPdsFileBlackBox:
         [
             ('metadata/COUVIS_0xxx/COUVIS_0001/COUVIS_0001_index.tab',
              ('ASCII', 'Table')),
-            ('volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31.lbl',
+            ('volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31.LBL',
              ('ASCII', 'PDS3 Label')),
             ('previews/COISS_2xxx/COISS_2002/data/1460960653_1461048959/N1460960908_1_thumb.jpg',
              ('Binary', 'JPEG')),
@@ -319,9 +319,9 @@ class TestPdsFileBlackBox:
             ('previews/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561261_1_thumb.jpg', []),
             ('volumes/COCIRS_0xxx/COCIRS_0012/DATA/NAV_DATA/GEO00120100.LBL',
              [
-                (24, 'GEO00120100.DAT', PDS_DATA_DIR + 'volumes/COCIRS_0xxx/COCIRS_0012/DATA/NAV_DATA/GEO00120100.DAT'),
-                (25, 'GEO00120100.DAT', PDS_DATA_DIR + 'volumes/COCIRS_0xxx/COCIRS_0012/DATA/NAV_DATA/GEO00120100.DAT'),
-                (32, 'GEO.FMT', PDS_DATA_DIR + 'volumes/COCIRS_0xxx/COCIRS_0012/DATA/NAV_DATA/GEO.FMT')
+                (24, 'GEO00120100.DAT', PDS_DATA_DIR + '/volumes/COCIRS_0xxx/COCIRS_0012/DATA/NAV_DATA/GEO00120100.DAT'),
+                (25, 'GEO00120100.DAT', PDS_DATA_DIR + '/volumes/COCIRS_0xxx/COCIRS_0012/DATA/NAV_DATA/GEO00120100.DAT'),
+                (32, 'GEO.FMT', PDS_DATA_DIR + '/volumes/COCIRS_0xxx/COCIRS_0012/DATA/NAV_DATA/GEO.FMT')
              ])
         ]
     )

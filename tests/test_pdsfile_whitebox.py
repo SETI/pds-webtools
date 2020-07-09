@@ -258,24 +258,20 @@ class TestPdsFileWhiteBox:
     @pytest.mark.parametrize(
         'input_path,expected',
         [
-            # ('previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007',
-            #  pdsviewable.PdsViewSet),
-            # ('archives-volumes/COCIRS_0xxx/', None),
-            # ('volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31.lbl',
-            #  None),
+            ('previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007',
+             pdsviewable.PdsViewSet),
+            ('archives-volumes/COCIRS_0xxx/', None),
             ('metadata/COUVIS_0xxx/COUVIS_0001/COUVIS_0001_index.tab',
-             pdsviewable.PdsViewable),
+             pdsviewable.PdsViewSet),
             ('volumes/COCIRS_6xxx/COCIRS_6002/DATA/RINDATA/RIN1002071502_FP3.LBL',
-             pdsviewable.PdsViewable),
+             pdsviewable.PdsViewSet),
+            ('volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31.LBL',
+             pdsviewable.PdsViewSet),
         ]
     )
     def test_viewset_lookup(self, input_path, expected):
         target_pdsfile = instantiate_target_pdsfile(input_path)
-        print(pdsfile._isstr(target_pdsfile.VIEWABLES['default'].first(target_pdsfile.logical_path)))
-        print(target_pdsfile.VIEWABLES['default'].first(target_pdsfile.logical_path))
-        print(target_pdsfile.VIEWABLES['default'].all(target_pdsfile.logical_path))
-        print(target_pdsfile.is_viewable)
-        print(target_pdsfile.isdir)
+        print(target_pdsfile.exists)
         if expected is not None:
             assert isinstance(target_pdsfile.viewset_lookup(), expected)
         else:
@@ -329,8 +325,8 @@ class TestPdsFileWhiteBox:
                 'volumes/HSTNx_xxxx/HSTN0_7176/DATA/VISIT_01/N4BI01L4Q.LBL'
              ],
              [
-                 PDS_DATA_DIR + 'volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.lbl',
-                 PDS_DATA_DIR + 'volumes/HSTNx_xxxx/HSTN0_7176/DATA/VISIT_01/N4BI01L4Q.LBL'
+                 PDS_DATA_DIR + '/volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.lbl',
+                 PDS_DATA_DIR + '/volumes/HSTNx_xxxx/HSTN0_7176/DATA/VISIT_01/N4BI01L4Q.LBL'
              ])
         ]
     )
@@ -395,8 +391,8 @@ class TestPdsFileWhiteBox:
         'input_path,expected',
         [
             ([
-                PDS_DATA_DIR + 'volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.lbl',
-                PDS_DATA_DIR + 'volumes/HSTNx_xxxx/HSTN0_7176/DATA/VISIT_01/N4BI01L4Q.LBL'
+                PDS_DATA_DIR + '/volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.lbl',
+                PDS_DATA_DIR + '/volumes/HSTNx_xxxx/HSTN0_7176/DATA/VISIT_01/N4BI01L4Q.LBL'
              ],
              ['W1294561202_1.lbl', 'N4BI01L4Q.LBL'])
         ]
@@ -447,7 +443,7 @@ class TestPdsFileWhiteBox:
         [
             ('volumes/COISS_0xxx/COISS_0001/data/wacfm/bit_wght/13302',
              ['133020.lbl'],
-             [PDS_DATA_DIR + 'volumes/COISS_0xxx/COISS_0001/data/wacfm/bit_wght/13302/133020.lbl'])
+             [PDS_DATA_DIR + '/volumes/COISS_0xxx/COISS_0001/data/wacfm/bit_wght/13302/133020.lbl'])
         ]
     )
     def test_abspaths_for_basenames(self, input_path, basenames, expected):
