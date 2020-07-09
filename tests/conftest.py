@@ -26,5 +26,5 @@ def setup(request):
         pdsfile.use_shelves_only(False)
     else: # default
         pdsfile.use_pickles(True)
-        pdsfile.use_shelves_only(False)
+        pdsfile.use_shelves_only(True)
     pdsfile.preload(PDS_DATA_DIR)

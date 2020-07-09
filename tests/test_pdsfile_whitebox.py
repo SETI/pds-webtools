@@ -500,16 +500,15 @@ class TestPdsFileWhiteBox:
     )
     def test_associated_parallel1(self, input_path, expected):
         target_pdsfile = instantiate_target_pdsfile(input_path)
-        print(target_pdsfile.category_.rstrip('/'))
-        print(target_pdsfile.volset)
         res = target_pdsfile.associated_parallel(rank='latest')
-        print(res)
         assert res.logical_path == expected
 
     @pytest.mark.parametrize(
         'input_path,expected',
         [
             ('volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/FUV1999_007_16_57.DAT',
+             None),
+            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
              None),
         ]
     )

@@ -4,6 +4,7 @@ import pdsfile
 import pdsviewable
 import pytest
 import re
+import sys
 
 from tests.helper import *
 
@@ -364,28 +365,44 @@ class TestPdsFileBlackBox:
         target_pdsfile = instantiate_target_pdsfile(input_path)
         assert target_pdsfile.isdir == expected
 
-    # Bypass this for now since we don't have any files under "/shelves/index/"
-    # @pytest.mark.parametrize(
-    #     'input_path,expected',
-    #     [
-    #         ('volumes/NHSP_xxxx/NHSP_1000/DATA/CK/MERGED_NHPC_2006_V011.LBL',
-    #          False)
-    #     ]
-    # )
-    # def test_is_index(self, input_path, expected):
-    #     target_pdsfile = instantiate_target_pdsfile(input_path)
-    #     assert target_pdsfile.is_index == expected
-    #
-    # @pytest.mark.parametrize(
-    #     'input_path,expected',
-    #     [
-    #         ('volumes/NHSP_xxxx/NHSP_1000/DATA/CK/MERGED_NHPC_2006_V011.LBL',
-    #          None)
-    #     ]
-    # )
-    # def test_index_pdslabel(self, input_path, expected):
-    #     target_pdsfile = instantiate_target_pdsfile(input_path)
-    #     assert target_pdsfile.index_pdslabel == expected
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
+             PDS_PDSDATA_PATH + 'shelves/index/metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.shelf')
+        ]
+    )
+    def test_indexshelf_abspath(self, input_path, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        assert target_pdsfile.indexshelf_abspath == expected
+
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
+             True)
+        ]
+    )
+    def test_is_index(self, input_path, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        assert target_pdsfile.is_index == expected
+
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
+             'HSTU0_5167_label.txt')
+        ]
+    )
+    def test_index_pdslabel(self, input_path, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        res = target_pdsfile.index_pdslabel
+        # file_path = os.path.join(sys.path[0], 'tests/' + expected)
+        # with open(file_path, 'r') as f:
+        #     label_txt = f.read()
+        # assert str(res) == str(label_txt)
+        assert res != None
+        assert res != 'failed'
 
     @pytest.mark.parametrize(
         'input_path,expected',
@@ -403,20 +420,6 @@ class TestPdsFileBlackBox:
         """childnames: test on one directory and one label file."""
         target_pdsfile = instantiate_target_pdsfile(input_path)
         assert target_pdsfile.childnames == expected
-
-    # Bypass this test for now since we don't have any files under /shelves/index
-    # @pytest.mark.parametrize(
-    #     'input_path,expected',
-    #     [
-    #         ('metadata/NHxxMV_xxxx/NHLAMV_1001/NHLAMV_1001_index.tab', True),
-    #         ('volumes/NHxxMV_xxxx/NHLAMV_1001/index/index.tab', True),
-    #         ('volumes/NHxxMV_xxxx/NHLAMV_1001/data/20060321_000526/mc0_0005261846_0x536_eng_1.lbl',
-    #          False)
-    #     ]
-    # )
-    # def test_is_index(self, input_path, expected):
-    #     target_pdsfile = instantiate_target_pdsfile(input_path)
-    #     assert target_pdsfile.is_index == expected
 
     @pytest.mark.parametrize(
         'input_path,expected',
@@ -700,7 +703,8 @@ class TestPdsFileBlackBox:
             ('volumes/VGIRIS_xxxx_peer_review/VGIRIS_0001/DATA/JUPITER_VG1/C1547XXX.LBL',
              True),
             # ('checksums-volumes/COCIRS_0xxx/COCIRS_0010_md5.txt', True),
-            # ('RES_xxxx_prelim/RES_0001/data/', True),
+            # ('COCIRS_0010.tar.gz', True),
+            # ('archives-volumes/COCIRS_0xxx/COCIRS_0010.tar.gz', True),
         ]
     )
     def test_from_path(self, input_path, expected):
@@ -853,14 +857,11 @@ class TestPdsFileBlackBox:
     ############################################################################
     # Test for support for PdsFile objects representing index rows
     ############################################################################
-    # TODO: revisit this category once we have files under "/shelves/index/".
-    # This one will fail for now because we don't have any files under
-    # "/shelves/index/".
     @pytest.mark.parametrize(
         'input_path,expected',
         [
-            ('volumes/NHSP_xxxx/NHSP_1000/DATA/CK/MERGED_NHPC_2006_V011.LBL',
-             ''),
+            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
+             {'U2NO0401T': [0], 'U2NO0402T': [1], 'U2NO0403T': [2], 'U2NO0404T': [3]}),
         ]
     )
     def test_get_indexshelf(self, input_path, expected):
@@ -868,21 +869,32 @@ class TestPdsFileBlackBox:
         res = target_pdsfile.get_indexshelf()
         assert res == expected
 
-    # Selection doesn't exist because we don't have any files under
-    # "/shelves/index/".
     @pytest.mark.parametrize(
         'input_path,selection,flag,expected',
         [
-            ('metadata/HSTOx_xxxx/HSTO0_7308/HSTO0_7308_index.tab',
+            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
+             'U2NO0403T', '', 'U2NO0403T'),
+            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
+             'U2NO0404Tx', '<', 'U2NO0404T'),
+            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
+             'U2NO0404T', '<', 'U2NO0404T'),
+            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
+             'U2NO0402Tx', '>', 'U2NO0402T'),
+            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
+             'U2NO0402T', '>', 'U2NO0402T'),
+            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
+             'U2NO0401T', '=', 'U2NO0401T'),
+            ('metadata/HSTOx_xxxx/HSTO0_7308/HSTO0_7308x_index.tab',
              'O43B06BTQ', '', 'O43B06BTQ'),
-            ('metadata/HSTOx_xxxx/HSTO0_7308/HSTO0_7308_index.tab',
+            ('metadata/HSTOx_xxxx/HSTO0_7308/HSTO0_7308x_index.tab',
              'O43B06BTQ', '<', 0),
-            ('metadata/HSTOx_xxxx/HSTO0_7308/HSTO0_7308_index.tab',
+            ('metadata/HSTOx_xxxx/HSTO0_7308/HSTO0_7308x_index.tab',
              'O43B06BTQ', '>', -1),
         ]
     )
     def test_find_selected_row_key(self, input_path, selection, flag, expected):
         target_pdsfile = instantiate_target_pdsfile(input_path)
+        print(target_pdsfile.childnames)
         res = target_pdsfile.find_selected_row_key(selection, flag)
         assert res == expected
 
@@ -890,9 +902,17 @@ class TestPdsFileBlackBox:
         'input_path,selection,flag,expected',
         [
             ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
-             'U2NO0404T', '', pdsfile.PdsFile),
+             'U2NO0404T', '=', pdsfile.PdsFile),
             ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
-             'U2NO0404Tx', '', pdsfile.PdsFile),
+             'U2NO0403Tx', '>', pdsfile.PdsFile),
+            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
+             'U2NO0403T', '>', pdsfile.PdsFile),
+            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
+             'U2NO0401Tx', '<', pdsfile.PdsFile),
+            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
+             'U2NO0401T', '<', pdsfile.PdsFile),
+            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
+             'U2NO0402T', '', pdsfile.PdsFile),
         ]
     )
     def test_child_of_index(self, input_path, selection, flag, expected):
@@ -901,17 +921,21 @@ class TestPdsFileBlackBox:
         assert isinstance(res, expected)
 
     @pytest.mark.parametrize(
-        'input_path,expected',
+        'input_path,selection,flag,expected',
         [
             ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
-             None),
-            ('metadata/HSTOx_xxxx/HSTO0_7308/HSTO0_7308_index.tab',
+             'U2NO0402T', '',
              None),
         ]
     )
-    def test_data_abspath_associated_with_index_row(self, input_path, expected):
+    def test_data_abspath_associated_with_index_row(self, input_path,
+                                                    selection, flag,
+                                                    expected):
         target_pdsfile = instantiate_target_pdsfile(input_path)
-        res = target_pdsfile.data_abspath_associated_with_index_row()
+        index_row = target_pdsfile.child_of_index(selection, flag)
+        print(index_row.is_index_row)
+        print(index_row.row_dicts)
+        res = index_row.data_abspath_associated_with_index_row()
         assert res == expected
 
     ############################################################################
@@ -1034,7 +1058,15 @@ class TestPdsFileBlackBox:
         target_pdsfile = instantiate_target_pdsfile(input_path)
         assert target_pdsfile.shelf_path_and_lskip() == expected
 
-    # Need to add tests for _get_shelf & _close_shelf when shelf_path is available.
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            (PDS_PDSDATA_PATH + 'shelves/info/volumes/VGISS_5xxx/VGISS_5101_info.pickle',
+             None),
+        ]
+    )
+    def test__get_shelf(self, input_path, expected):
+        assert pdsfile.PdsFile._get_shelf(input_path) != expected
 
     ############################################################################
     # Test for log path associations
@@ -1622,24 +1654,24 @@ class TestPdsGroupBlackBox:
         res = pdsgroup.isdir
         assert res == expected
 
-    @pytest.mark.parametrize(
-        'input_paths,expected',
-        [
-            ([
-                'previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31_thumb.png',
-                'previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31_med.png',
-                'previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31_small.png',
-                'previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31_full.png',
-             ],
-             False),
-            (['previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/'], True)
-        ]
-    )
-    def test__iconset(self, input_paths, expected):
-        pdsfiles = get_pdsfiles(input_paths)
-        pdsgroup = pdsfile.PdsGroup(pdsfiles=pdsfiles)
-        res = pdsgroup._iconset
-        assert res == expected
+    # @pytest.mark.parametrize(
+    #     'input_paths,expected',
+    #     [
+    #         ([
+    #             'previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31_thumb.png',
+    #             'previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31_med.png',
+    #             'previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31_small.png',
+    #             'previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31_full.png',
+    #          ],
+    #          False),
+    #         (['previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/'], True)
+    #     ]
+    # )
+    # def test__iconset(self, input_paths, expected):
+    #     pdsfiles = get_pdsfiles(input_paths)
+    #     pdsgroup = pdsfile.PdsGroup(pdsfiles=pdsfiles)
+    #     res = pdsgroup._iconset
+    #     assert res == expected
 
     @pytest.mark.parametrize(
         'input_paths,expected',
