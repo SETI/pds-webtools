@@ -591,6 +591,23 @@ class TestPdsFileBlackBox:
         res = pdsfile.PdsFile.version_info(suffix=input_suffix)
         assert res == expected
 
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('previews/VGISS_5xxx/VGISS_5101/DATA/C13854XX/C1385455_small.jpg',
+             'PdsFile.VGISS_xxxx("/Users/yjchang/Dropbox/testing/pdsdata/holdings/previews/VGISS_5xxx/VGISS_5101/DATA/C13854XX/C1385455_small.jpg")'),
+        ]
+    )
+    def test___repr__1(self, input_path, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        res = target_pdsfile.__repr__()
+        assert res == expected
+
+    def test___repr__2(self):
+        target_pdsfile = pdsfile.PdsFile()
+        res = target_pdsfile.__repr__()
+        assert res == 'PdsFile("")'
+
     ############################################################################
     # Test for alternative constructors
     ############################################################################
