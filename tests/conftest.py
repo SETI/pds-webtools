@@ -1,5 +1,6 @@
 import os
 import pdsfile
+import pdslogger
 import pytest
 
 PDS_DATA_DIR = os.environ['PDS_DATA_DIR']
@@ -8,6 +9,11 @@ PDS_DATA_DIR = os.environ['PDS_DATA_DIR']
 ################################################################################
 def pytest_addoption(parser):
     parser.addoption("--mode", action="store")
+
+def turn_on_logger(filename):
+    LOGGER = pdslogger.PdsLogger(filename)
+    pdsfile.set_logger(LOGGER)
+
 # We only use use_pickles and use_shelves_only
 @pytest.fixture(scope='session', autouse=True)
 def setup(request):
@@ -27,4 +33,5 @@ def setup(request):
     else: # default
         pdsfile.use_pickles(True)
         pdsfile.use_shelves_only(True)
+    turn_on_logger("test_log.txt")
     pdsfile.preload(PDS_DATA_DIR)
