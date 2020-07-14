@@ -351,6 +351,18 @@ class TestPdsFileWhiteBox:
         res = target_pdsfile.find_selected_row_key(selection, flag)
         assert res == expected
 
+    @pytest.mark.parametrize(
+        'input_path,selection,flag,expected',
+        [
+            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
+             'U2nO040', '', pdsfile.PdsFile),
+        ]
+    )
+    def test_child_of_index(self, input_path, selection, flag, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        res = target_pdsfile.child_of_index(selection, flag)
+        assert isinstance(res, expected)
+
     ############################################################################
     # Test for transformations
     ############################################################################
