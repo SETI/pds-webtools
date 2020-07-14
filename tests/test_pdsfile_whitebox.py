@@ -363,6 +363,22 @@ class TestPdsFileWhiteBox:
         res = target_pdsfile.child_of_index(selection, flag)
         assert isinstance(res, expected)
 
+    @pytest.mark.parametrize(
+        'input_path,selection,flag,expected',
+        [
+            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
+             'U2NO04', '',
+             None),
+        ]
+    )
+    def test_data_abspath_associated_with_index_row(self, input_path,
+                                                    selection, flag,
+                                                    expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        index_row = target_pdsfile.child_of_index(selection, flag)
+        res = index_row.data_abspath_associated_with_index_row()
+        assert res == expected
+
     ############################################################################
     # Test for transformations
     ############################################################################
@@ -614,6 +630,68 @@ class TestPdsFileWhiteBox:
         target_pdsfile = instantiate_target_pdsfile(input_path)
         res = target_pdsfile.sort_basenames(basenames=basenames, dirs_last=True)
         assert res == expected
+
+    ############################################################################
+    # Test for associations
+    ############################################################################
+    @pytest.mark.parametrize(
+        'input_path,category,selection,flag,expected',
+        [
+
+            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
+             'metadata', 'u2no0403t', '',
+             PDS_DATA_DIR + '/metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab'),
+        ]
+    )
+    def test__associated_paths1(self, input_path, category, selection,
+                                flag, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        index_row = target_pdsfile.child_of_index(selection, flag)
+        res = index_row._associated_paths(
+            category=category)
+        print(res)
+        for path in res:
+            assert path in expected
+
+    @pytest.mark.parametrize(
+        'input_path,category,expected',
+        [
+
+            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
+             'metadata',
+             PDS_DATA_DIR + '/metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab'),
+            ('volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/FUV1999_007_16_57.DAT',
+             'archives-volumes',
+             PDS_DATA_DIR + '/archives-volumes/COUVIS_0xxx/COUVIS_0001.tar.gz'),
+            ('volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/FUV1999_007_16_57.DAT',
+             'checksums-volumes',
+             PDS_DATA_DIR + '/checksums-volumes/COUVIS_0xxx/COUVIS_0001_md5.txt'),
+        ]
+    )
+    def test__associated_paths2(self, input_path, category, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        res = target_pdsfile._associated_paths(
+            category=category, use_abspaths=False)
+        print(res)
+        for path in res:
+            assert path in expected
+
+    @pytest.mark.parametrize(
+        'input_path,category,expected',
+        [
+
+            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
+             'metadata',
+             PDS_DATA_DIR + '/metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab'),
+        ]
+    )
+    def test__associated_paths3(self, input_path, category, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        res = target_pdsfile._associated_paths(
+            category=category, must_exist=False)
+        print(res)
+        for path in res:
+            assert path in expected
 
 ################################################################################
 # Whitebox test for functions & properties in PdsGroup class
