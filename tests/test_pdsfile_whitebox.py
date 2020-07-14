@@ -277,6 +277,32 @@ class TestPdsFileWhiteBox:
         else:
             assert target_pdsfile.viewset_lookup() == expected
 
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('/volumes/pdsdata/holdings/volumes/COUVIS_0xxx_v1', True),
+            ('checksums-volumes/COCIRS_0xxx/COCIRS_0012_md5.txt', True),
+            ('archives-volumes/COCIRS_0xxx/COCIRS_0010.tar.gz', True),
+            ('volumes/VGIRIS_xxxx_peer_review/VGIRIS_0001/DATA/JUPITER_VG1/C1547XXX.LBL',
+             True),
+            ('volumes/VGIRIS_xxxx_in_prep/VGIRIS_0001/DATA/JUPITER_VG1/C1547XXX.LBL',
+             True),
+            ('archives-volumes/VGIRIS_xxxx_peer_review/VGIRIS_0001.tar.gz',
+             True),
+            ('archives-volumes/VGIRIS_xxxx_in_prep/VGIRIS_0001.tar.gz', True),
+            ('volumes/COCIRS_0xxx_v2/COCIRS_0401/DATA/TSDR/NAV_DATA/TAR04012400.LBL',
+             True),
+            ('COCIRS_0xxx_v3', True),
+            ('VGIRIS_0001.tar.gz', True),
+        ]
+    )
+    def test_from_path(self, input_path, expected):
+        res = pdsfile.PdsFile.from_path(path=input_path)
+        print(res.volname)
+        print(res.volset)
+        assert isinstance(res, pdsfile.PdsFile)
+        assert res.exists == expected
+
     ############################################################################
     # Test for associated volumes and volsets
     ############################################################################
@@ -567,7 +593,7 @@ class TestPdsFileWhiteBox:
         assert res == expected
 
 ################################################################################
-# Blackbox test for functions & properties in PdsGroup class
+# Whitebox test for functions & properties in PdsGroup class
 ################################################################################
 class TestPdsGroupWhiteBox:
     @pytest.mark.parametrize(

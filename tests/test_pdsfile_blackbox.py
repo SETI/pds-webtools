@@ -717,13 +717,10 @@ class TestPdsFileBlackBox:
             ('COVIMS_0xxx/COVIMS_0001/data/1999010T054026_1999010T060958', True),
             ('metadata/HSTOx_xxxx/HSTO0_7308', True),
             ('HSTOx_xxxx', True),
-            ('COCIRS_1001/DATA/CUBE/EQUIRECTANGULAR/123RI_EQLBS002_____CI____699_F1_039E.tar.gz',
-             True),
             ('volumes/VGIRIS_xxxx_peer_review/VGIRIS_0001/DATA/JUPITER_VG1/C1547XXX.LBL',
              True),
-            # ('checksums-volumes/COCIRS_0xxx/COCIRS_0010_md5.txt', True),
-            # ('COCIRS_0010.tar.gz', True),
-            # ('archives-volumes/COCIRS_0xxx/COCIRS_0010.tar.gz', True),
+            ('COCIRS_1001/DATA/CUBE/EQUIRECTANGULAR/123RI_EQLBS002_____CI____699_F1_039E.tar.gz',
+             True),
         ]
     )
     def test_from_path(self, input_path, expected):
