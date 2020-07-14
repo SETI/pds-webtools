@@ -290,10 +290,6 @@ class TestPdsFileWhiteBox:
             ('archives-volumes/VGIRIS_xxxx_peer_review/VGIRIS_0001.tar.gz',
              True),
             ('archives-volumes/VGIRIS_xxxx_in_prep/VGIRIS_0001.tar.gz', True),
-            ('volumes/COCIRS_0xxx_v2/COCIRS_0401/DATA/TSDR/NAV_DATA/TAR04012400.LBL',
-             True),
-            ('COCIRS_0xxx_v3', True),
-            ('VGIRIS_0001.tar.gz', True),
         ]
     )
     def test_from_path(self, input_path, expected):
@@ -333,12 +329,27 @@ class TestPdsFileWhiteBox:
     ############################################################################
     # Test for support for PdsFile objects representing index rows
     ############################################################################
-
     def test_absolute_or_logical_path(self):
         """absolute_or_logical_path: get logical path."""
         target_pdsfile = pdsfile.PdsFile.new_virtual('volumes')
         expected = 'volumes'
         assert target_pdsfile.absolute_or_logical_path == expected
+
+    @pytest.mark.parametrize(
+        'input_path,selection,flag,expected',
+        [
+            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
+             'u2no0403t', '', 'U2NO0403T'),
+            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
+             'U2nO0404', '', 'U2NO0404T'),
+            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
+             'U2nO040', '', 'U2nO040'),
+        ]
+    )
+    def test_find_selected_row_key(self, input_path, selection, flag, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        res = target_pdsfile.find_selected_row_key(selection, flag)
+        assert res == expected
 
     ############################################################################
     # Test for transformations

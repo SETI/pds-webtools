@@ -3091,7 +3091,8 @@ class PdsFile(object):
         this.category_ = this.checksums_ + this.archives_ + this.voltype_
 
         # Determine the volume set and path below
-        if this.volname:
+        if (this.volname and 'archives-' not in this.category_ and
+                'checksums-' not in this.category_):
             volname = this.volname.lower()
             if this.suffix:
                 rank = PdsFile.version_info(this.suffix)[0]
