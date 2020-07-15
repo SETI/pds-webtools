@@ -390,6 +390,29 @@ class TestPdsFileWhiteBox:
         target_pdsfile = instantiate_target_pdsfile(input_path)
         assert target_pdsfile.volset_pdsdir().logical_path == expected
 
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('archives-volumes/COUVIS_0xxx/COUVIS_0001.tar.gz',
+             PDS_DATA_DIR + '/archives-volumes/COUVIS_0xxx/COUVIS_0001.tar.gz'),
+
+        ]
+    )
+    def test_volume_abspath(self, input_path, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        assert target_pdsfile.volume_abspath() == expected
+
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('checksums-archives-volumes/ASTROM_xxxx_md5.txt',
+             PDS_DATA_DIR + '/checksums-archives-volumes/ASTROM_xxxx_md5.txt'),
+        ]
+    )
+    def test_volset_abspath(self, input_path, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        assert target_pdsfile.volset_abspath() == expected
+
     ############################################################################
     # Test for support for PdsFile objects representing index rows
     ############################################################################
