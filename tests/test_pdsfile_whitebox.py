@@ -98,19 +98,6 @@ class TestPdsFileWhiteBox:
     @pytest.mark.parametrize(
         'input_path,expected',
         [
-            ('diagrams/COCIRS_6xxx/COCIRS_6004',
-             'Diagrams for Cassini CIRS data, reformatted, 2010-04-01 to 2010-04-30 (SC clock 1648773882-1651332653)'),
-            ('calibrated/COISS_1xxx/COISS_1001',
-             'Calibrated Cassini ISS Jupiter images 1999-01-09 to 2000-10-31 (SC clock 1294562621-1351672562)')
-        ]
-    )
-    def test_description1(self, input_path, expected):
-        target_pdsfile = instantiate_target_pdsfile(input_path)
-        assert target_pdsfile.description == expected
-
-    @pytest.mark.parametrize(
-        'input_path,expected',
-        [
             ('previews/HSTUx_xxxx/HSTU0_5167/DATA/VISIT_04', ''),
             ('volumes/RPX_xxxx/RPX_0001/CALIB/F130LP.tabx', '')
         ]
@@ -237,6 +224,72 @@ class TestPdsFileWhiteBox:
         """filename_keylen: return self._filename_keylen_filled"""
         target_pdsfile = instantiate_target_pdsfile(input_path)
         assert target_pdsfile.filename_keylen == expected
+
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31_thumb.png',
+             'HDAC1999_007_16_31'),
+            ('volumes/COUVIS_8xxx/COUVIS_8001/data/UVIS_HSP_2017_228_BETORI_I_TAU10KM.lbl',
+             'UVIS_HSP_2017_228_BETORI_I_TAU10KM'),
+        ]
+    )
+    def test_anchor(self, input_path, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        assert target_pdsfile.anchor == expected
+
+    @pytest.mark.parametrize(
+        'input_path,selection,flag,expected',
+        [
+
+            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
+             'u2no0403t', '', 'HSTU0_5167-U2NO0403T'),
+        ]
+    )
+    def test_anchor(self, input_path, selection, flag, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        index_row = target_pdsfile.child_of_index(selection, flag)
+        assert index_row.anchor == expected
+
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('diagrams/COCIRS_6xxx/COCIRS_6004',
+             'Diagrams for Cassini CIRS data, reformatted, 2010-04-01 to 2010-04-30 (SC clock 1648773882-1651332653)'),
+            ('calibrated/COISS_1xxx/COISS_1001',
+             'Calibrated Cassini ISS Jupiter images 1999-01-09 to 2000-10-31 (SC clock 1294562621-1351672562)')
+        ]
+    )
+    def test_description1(self, input_path, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        assert target_pdsfile.description == expected
+
+    @pytest.mark.parametrize(
+        'input_path,selection,flag,expected',
+        [
+            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
+             'u2no0403t', '', 'Selected row of index'),
+            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
+             'u2no04', '', 'Selected rows of index'),
+        ]
+    )
+    def test_description2(self, input_path, selection, flag, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        index_row = target_pdsfile.child_of_index(selection, flag)
+        assert index_row.description == expected
+
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('', 'Root directory'),
+        ]
+    )
+    def test_description3(self, input_path, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        res = target_pdsfile.description
+        assert res == expected
+
+
 
     ############################################################################
     # Test for class functions
