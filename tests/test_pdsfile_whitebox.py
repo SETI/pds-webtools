@@ -177,20 +177,6 @@ class TestPdsFileWhiteBox:
         'input_path,expected',
         [
             # nonexistent pdsfile path
-            ('archives-volumes/COCIRS_xxxx/COCIRS_0010.tar.gz',''),
-        ]
-    )
-    def test_exact_archive_url(self, input_path, expected):
-        target_pdsfile = instantiate_target_pdsfile(input_path)
-        res1 = target_pdsfile.exact_archive_url
-        res2 = target_pdsfile.exact_archive_url
-        assert res1 == expected
-        assert res1 == res2
-
-    @pytest.mark.parametrize(
-        'input_path,expected',
-        [
-            # nonexistent pdsfile path
             ('archives-volumes/COCIRS_xxxx/COCIRS_0012.tar.gz',
              ''),
         ]
@@ -289,6 +275,31 @@ class TestPdsFileWhiteBox:
         res = target_pdsfile.description
         assert res == expected
 
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('volumes/COCIRS_0xxx/COCIRS_0010',
+              'holdings/archives-volumes/COCIRS_0xxx/COCIRS_0010.tar.gz'),
+        ]
+    )
+    def test_exact_archive_url1(self, input_path, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        res = target_pdsfile.exact_archive_url
+        assert res == expected
+
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            # nonexistent pdsfile path
+            ('archives-volumes/COCIRS_xxxx/COCIRS_0010.tar.gz',''),
+        ]
+    )
+    def test_exact_archive_url2(self, input_path, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        res1 = target_pdsfile.exact_archive_url
+        res2 = target_pdsfile.exact_archive_url
+        assert res1 == expected
+        assert res1 == res2
 
 
     ############################################################################
