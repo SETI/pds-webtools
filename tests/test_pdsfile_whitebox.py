@@ -16,7 +16,6 @@ class TestPdsFileWhiteBox:
     # Test for properties
     ############################################################################
     def test_exists_1(self):
-        # Note: line 1015, the path will never be hit.
         target_pdsfile = pdsfile.PdsFile.new_virtual('volumes')
         assert target_pdsfile.exists == True
 
@@ -38,7 +37,6 @@ class TestPdsFileWhiteBox:
         assert child.exists == expected
 
     def test_isdir_1(self):
-        # Note: similar to test_exists_1
         target_pdsfile = pdsfile.PdsFile.new_virtual('volumes')
         expected = 'volumes'
         assert target_pdsfile.isdir == True
@@ -779,6 +777,29 @@ class TestPdsFileWhiteBox:
         print(res)
         for path in res:
             assert path in expected
+
+    ############################################################################
+    # Test for alternative constructors
+    ############################################################################
+    @pytest.mark.parametrize(
+        'input_path,basename,expected',
+        [
+            ('',
+             'volumexs',
+             ['Invalid category', 'directory no found', 'Unrecognized volume type']),
+        ]
+    )
+    # For path 2776-2779, self.category_ is only empty when pdsFile is empty,
+    # when preload is called, all self.category_ is not empty.
+    def test_child(self, input_path, basename, expected):
+        with pytest.raises(ValueError) as e:
+            target_pdsfile = pdsfile.PdsFile()
+            res = target_pdsfile.child(basename=basename, fix_case=True)
+        res = False
+        for error_msg in expected:
+            if error_msg in str(e.value):
+                res = True
+        assert res
 
 ################################################################################
 # Whitebox test for functions & properties in PdsGroup class
