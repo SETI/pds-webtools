@@ -801,6 +801,21 @@ class TestPdsFileWhiteBox:
                 res = True
         assert res
 
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            (PDS_DATA_DIR + '/volumes/COISS_0xxx/COISS_0001',
+             True),
+        ]
+    )
+    def test_from_abspath(self, input_path, expected):
+        del pdsfile.CACHE[input_path]
+        res = pdsfile.PdsFile.from_abspath(abspath=input_path,
+                                           fix_case=True)
+        assert isinstance(res, pdsfile.PdsFile)
+        assert res.exists == expected
+
+
 ################################################################################
 # Whitebox test for functions & properties in PdsGroup class
 ################################################################################
