@@ -778,6 +778,66 @@ class TestPdsFileWhiteBox:
         for path in res:
             assert path in expected
 
+    @pytest.mark.parametrize(
+        'input_path,rank,category,expected',
+        [
+            ('checksums-volumes/COUVIS_0xxx/COUVIS_0001_md5.txt',
+             None, 'checksums-volumes',  None),
+            ('volumes', None, None, 'volumes'),
+            ('', None, None, None),
+            ('metadata', "latestx", 'metadata', None),
+            ('volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/FUV1999_007_16_57.DAT',
+             'latest', 'volumes',
+             'volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/FUV1999_007_16_57.DAT'),
+            ('volumes/COUVIS_0xxx/COUVIS_0001',
+             'previous', 'volumes', None),
+            ('volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/FUV1999_007_16_57.DAT',
+             'next', 'volumes', None),
+            ('volumes/COUVIS_0xxx', 'latest', 'volumes', 'volumes/COUVIS_0xxx'),
+        ]
+    )
+    def test_associated_parallel1(self, input_path, rank, category, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        target_associated_parallel = target_pdsfile.associated_parallel(
+                                        rank=rank ,category=category)
+        if target_associated_parallel:
+            assert target_associated_parallel.logical_path == expected
+        else:
+            assert target_associated_parallel == expected
+
+    @pytest.mark.parametrize(
+        'input_path,rank,category,expected',
+        [
+            ('volumes', None, 'volumes', 'volumes'),
+            ('volumes', 999999, 'volumes', 'volumes')
+        ]
+    )
+    def test_associated_parallel2(self, input_path, rank, category, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        target_pdsfile.associated_parallel(rank=rank ,category=category)
+        target_associated_parallel = target_pdsfile.associated_parallel(
+                                        rank=rank ,category=category)
+        if target_associated_parallel:
+            assert target_associated_parallel.logical_path == expected
+        else:
+            assert target_associated_parallel == expected
+
+    @pytest.mark.parametrize(
+        'input_path,rank,category,expected',
+        [
+            ('volumes/COUVIS_0xxx', 'latest', 'volumes', 'volumes/COUVIS_0xxx'),
+        ]
+    )
+    def test_associated_parallel3(self, input_path, rank, category, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        target_pdsfile.associated_parallel(rank=None ,category=category)
+        target_associated_parallel = target_pdsfile.associated_parallel(
+                                        rank=rank ,category=category)
+        if target_associated_parallel:
+            assert target_associated_parallel.logical_path == expected
+        else:
+            assert target_associated_parallel == expected
+
     ############################################################################
     # Test for alternative constructors
     ############################################################################
