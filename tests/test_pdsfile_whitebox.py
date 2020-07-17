@@ -24,16 +24,14 @@ class TestPdsFileWhiteBox:
     @pytest.mark.parametrize(
         'input_path,expected',
         [
-            ('volumes', False),
+            ('volumes', True),
         ]
     )
     def test_exists_2(self, input_path, expected):
         target_pdsfile = instantiate_target_pdsfile(
             input_path, is_abspath=False)
-        # Something doesn't exist
-        child = target_pdsfile.child(basename='ASTROM_xxxx')
+        child = target_pdsfile.child(basename='COCIRS_0xxx')
         assert child.is_virtual == False
-        assert child.abspath == None
         assert child.exists == expected
 
     def test_isdir_1(self):
@@ -53,7 +51,6 @@ class TestPdsFileWhiteBox:
         # Something doesn't exist
         child = target_pdsfile.child(basename='VOLDESC.CAT')
         assert child.is_virtual == False
-        assert child.abspath == None
         assert child.isdir == expected
 
     @pytest.mark.parametrize(
@@ -317,6 +314,22 @@ class TestPdsFileWhiteBox:
     ############################################################################
     # Test for functions
     ############################################################################
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('volumes',
+             'PdsFile.COCIRS_xxxx("' + PDS_DATA_DIR + '/volumes/COCIRS_0xxx")'),
+            # ('volumes/ASTROM_xxxx/ASTROM_0001',
+            #  'PdsFile.ASTROM_xxxx("' + PDS_DATA_DIR + '/volumes/ASTROM_xxxx/ASTROM_0001/VOLDESC.CAT")'),
+        ]
+    )
+    def test__repr__(self, input_path, expected):
+        target_pdsfile = instantiate_target_pdsfile(
+            input_path, is_abspath=False)
+        child = target_pdsfile.child(basename='COCIRS_0xxx')
+        res = child.__repr__()
+        assert res == expected
+
     @pytest.mark.parametrize(
         'input_path,expected',
         [

@@ -12,10 +12,10 @@ import fnmatch
 import numbers
 
 # Import module for memcached if possible, otherwise flag
-try:
+try: # pragma: no cover
     import pylibmc
     HAS_PYLIBMC = True
-except ImportError:
+except ImportError: # pragma: no cover
     HAS_PYLIBMC = False
 
 import pdsfile_rules        # Default rules
@@ -28,9 +28,9 @@ import pdstable
 import pdsparser
 
 # Import GNU support for shelves; otherwise pickle files are used instead
-try:
+try: # pragma: no cover
     GDBM_MODULE = __import__("gdbm")
-except ImportError:
+except ImportError: # pragma: no cover
     try:
         GDBM_MODULE = __import__("dbm.gnu")
     except ImportError:
@@ -39,9 +39,9 @@ except ImportError:
 # Python 2 and 3 compatible, byte strings and unicode
 def _isstr(x): return isinstance(x, ("".__class__, u"".__class__))
 
-if sys.version_info >= (3,0):
+if sys.version_info >= (3,0): # pragma: no cover
     ENCODING = {'encoding': 'latin-1'}  # Needed for open() of ASCII files
-else:
+else: # pragma: no cover
     ENCODING = {}
 
 ################################################################################
@@ -189,7 +189,7 @@ def support_opus_lookups(status=True):
 
     global SUPPORT_OPUS_LOOKUPS
 
-    SUPPORT_OPUS_LOOKUPS = status
+    SUPPORT_OPUS_LOOKUPS = status # pragma: no cover
 
 ################################################################################
 # Permanent storage of file info
@@ -1299,7 +1299,7 @@ class PdsFile(object):
         if self._exists_filled is not None:
             return self._exists_filled
 
-        if self.is_virtual:
+        if self.is_virtual: # pragma: no cover
             self._exists_filled = True
         elif self.abspath is None:
             self._exists_filled = False
@@ -1316,7 +1316,7 @@ class PdsFile(object):
         if self._isdir_filled is not None:
             return self._isdir_filled
 
-        if self.is_virtual:
+        if self.is_virtual: # pragma: no cover
             self._isdir_filled = True
         elif self.abspath is None:
             self._isdir_filled = False
@@ -5488,7 +5488,7 @@ def FROM_RULES_IMPORT_STAR():
     import rules.VGIRIS_xxxx
     import rules.VGISS_xxxx
 
-def reload_rules():
+def reload_rules(): # pragma: no cover
     reload(rules.ASTROM_xxxx)
     reload(rules.COCIRS_xxxx)
     reload(rules.COISS_xxxx)
