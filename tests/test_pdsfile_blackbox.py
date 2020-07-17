@@ -595,7 +595,7 @@ class TestPdsFileBlackBox:
         'input_path,expected',
         [
             ('previews/VGISS_5xxx/VGISS_5101/DATA/C13854XX/C1385455_small.jpg',
-             'PdsFile.VGISS_xxxx("/Users/yjchang/Dropbox/testing/pdsdata/holdings/previews/VGISS_5xxx/VGISS_5101/DATA/C13854XX/C1385455_small.jpg")'),
+             'PdsFile.VGISS_xxxx("' + PDS_DATA_DIR + '/previews/VGISS_5xxx/VGISS_5101/DATA/C13854XX/C1385455_small.jpg")'),
         ]
     )
     def test___repr__1(self, input_path, expected):
