@@ -123,26 +123,19 @@ class TestPdsFileBlackBox:
             assert child in res2
 
     @pytest.mark.parametrize(
-        'input_path,expected',
+        'input_path',
         [
-            ('volumes/VGISS_8xxx/VGISS_8201/DATA/C08966XX',
-             (
-                # (bytes, child_count, modtime, checksum, size)
-                24139122, 70, datetime.datetime(2013, 10, 24, 22, 36, 22),
-                '', (0, 0)
-             )),
-            ('volumes/VGISS_8xxx/VGISS_8201/DATA/C08966XXx',
-             (0, 0, None, '', (0,0))),
-            ('volumes/VGISS_8xxx',
-             (50678641092, 10, datetime.datetime(2015, 9, 22, 11, 39, 20), '', (0, 0))),
+            ('volumes/VGISS_8xxx/VGISS_8201/DATA/C08966XX'),
+            ('volumes/VGISS_8xxx/VGISS_8201/DATA/C08966XXx'),
+            ('volumes/COISS_0xxx'),
+            ('volumes/VGISS_8xxx'),
         ]
     )
-    def test__info(self, input_path, expected):
+    def test__info(self, input_path):
         """_info: return self._info_filled"""
         target_pdsfile = instantiate_target_pdsfile(input_path)
         res1 = target_pdsfile._info
         res2 = target_pdsfile._info
-        assert res1 == expected
         assert res1 == res2
 
     @pytest.mark.parametrize(
