@@ -346,11 +346,13 @@ class TestPdsFileWhiteBox:
     )
     def test_viewset_lookup(self, input_path, expected):
         target_pdsfile = instantiate_target_pdsfile(input_path)
-        print(target_pdsfile.exists)
-        if expected is not None:
-            assert isinstance(target_pdsfile.viewset_lookup(), expected)
+        if not target_pdsfile.exists:
+            assert target_pdsfile.viewset_lookup() == None
         else:
-            assert target_pdsfile.viewset_lookup() == expected
+            if expected is not None:
+                assert isinstance(target_pdsfile.viewset_lookup(), expected)
+            else:
+                assert target_pdsfile.viewset_lookup() == expected
 
     @pytest.mark.parametrize(
         'input_path,expected',

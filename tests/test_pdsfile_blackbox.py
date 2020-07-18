@@ -398,10 +398,6 @@ class TestPdsFileBlackBox:
     def test_index_pdslabel(self, input_path, expected):
         target_pdsfile = instantiate_target_pdsfile(input_path)
         res = target_pdsfile.index_pdslabel
-        # file_path = os.path.join(sys.path[0], 'tests/' + expected)
-        # with open(file_path, 'r') as f:
-        #     label_txt = f.read()
-        # assert str(res) == str(label_txt)
         assert res != None
         assert res != 'failed'
 
