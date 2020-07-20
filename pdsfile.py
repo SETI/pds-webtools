@@ -59,8 +59,10 @@ VOLSET_REGEX_I      = re.compile(VOLSET_REGEX.pattern, re.I)
 VOLSET_PLUS_REGEX   = re.compile(VOLSET_REGEX.pattern[:-1] +
                         r'(_v[0-9]+.[0-9]+.[0-9]+|_v[0-9]+.[0-9]+|_v[0-9]+|' +
                         r'_in_prep|_prelim|_peer_review|_lien_resolution|)' +
-                        r'(_\w+|)(|.[A-Za-z0-9_\.]+)$')
+                        r'(_\w+|)(|\.[A-Za-z0-9_\.]+)$')
 VOLSET_PLUS_REGEX_I = re.compile(VOLSET_PLUS_REGEX.pattern, re.I)
+# Groups are (volset, version_suffix, other_suffix, extension)
+# Example: "COISS_0xxx_v1_md5.txt" -> ("COISS_0xxx", "_v1", "_md5", ".txt")
 
 CATEGORY_REGEX      = re.compile(r'^(|checksums\-)(|archives\-)(\w+)$')
 CATEGORY_REGEX_I    = re.compile(CATEGORY_REGEX.pattern, re.I)
@@ -68,8 +70,11 @@ CATEGORY_REGEX_I    = re.compile(CATEGORY_REGEX.pattern, re.I)
 VOLNAME_REGEX       = re.compile(r'^([A-Z][A-Z0-9]{1,5}_(?:[0-9]{4}))$')
 VOLNAME_REGEX_I     = re.compile(VOLNAME_REGEX.pattern, re.I)
 VOLNAME_PLUS_REGEX  = re.compile(VOLNAME_REGEX.pattern[:-1] +
-                                 r'(_\w+|)(|.[A-Za-z0-9_\.]+)$')
+                                 r'(_\w+|)(|\.[A-Za-z0-9_\.]+)$')
 VOLNAME_PLUS_REGEX_I = re.compile(VOLNAME_PLUS_REGEX.pattern, re.I)
+# Groups are (volname, suffix, extension)
+# Example: "VGISS_5101_previews_md5.txt" -> ("VGISS_5101", "_previews_md5",
+#                                            ".txt")
 
 LOGFILE_TIME_FMT = '%Y-%m-%dT%H-%M-%S'
 
@@ -471,7 +476,8 @@ def preload(holdings_list, port=0, clear=False):
         for holdings in holdings_list:
 
             if holdings in LOCAL_PRELOADED:
-                LOGGER.info('Pre-load not needed for ' + holdings)
+                if LOGGER:
+                    LOGGER.info('Pre-load not needed for ' + holdings)
                 continue
 
             LOCAL_PRELOADED.append(holdings)
@@ -2968,7 +2974,16 @@ class PdsFile(object):
     def from_path(path, must_exist=False, caching='default', lifetime=None):
         """Find the PdsFile, if possible based on anything roughly resembling
         an actual path in the filesystem, using sensible defaults for missing
-        components."""
+        components.
+
+        Examples:
+          diagrams/checksums/whatever -> checksums-diagrams/whatever
+          checksums/archives/whatever -> checksums-archives-volumes/whatever
+          COISS_2001.targz -> archives-volumes/COISS_2xxx/COISS_2001.tar.gz
+          COISS_2001_previews.targz ->
+                    archives-previews/COISS_2xxx/COISS_2001_previews.tar.gz
+          COISS_0xxx/v1 -> COISS_0xxx_v1
+        """
 
         global LOCAL_PRELOADED
 
@@ -3000,18 +3015,35 @@ class PdsFile(object):
         # Interpret leading parts
         this = PdsFile()
 
-        # Look for checksums, archives, and voltypes, and an isolated suffix
+        # Look for checksums, archives, voltypes, and an isolated version suffix
+        # among the leading items of the pseudo-path
         while len(parts) > 0:
+
+            # For this purpose, change "checksums-archives-whatever" to
+            # "checksums/archives/whatever"
             if '-' in parts[0]:
                 parts = parts[0].split('-') + parts[1:]
 
             part = parts[0].lower()
+
+            # If the pseudo-path starts with "archives/", "targz/" etc., it's
+            # an archive path
             if part in ('archives', 'tar', 'targz', 'tar.gz'):
                 this.archives_ = 'archives-'
+
+            # If the pseudo-path starts with "checksums/" or "md5/", it's a
+            # checksum path
             elif part in ('checksums', 'md5'):
                 this.checksums_ = 'checksums-'
+
+            # If the pseudo-path starts with "volumes/", "diagrams/", etc., this
+            # is the volume type
             elif part in VOLTYPES:
                 this.voltype_ = part + '/'
+
+            # If the pseudo-path starts with "v1", "v1.1", "peer_review", etc.,
+            # this is the version suffix; otherwise, this is something else
+            # (such as a volset or volname) so proceed to the next step
             else:
                 try:
                     _ = PdsFile.version_info('_' + part)
@@ -3019,17 +3051,35 @@ class PdsFile(object):
                 except ValueError:
                     break
 
+            # Pop the first entry from the pseudo-path and try again
             parts = parts[1:]
 
-        # Also check at end
+        # Look for checksums, archives, voltypes, and an isolated version suffix
+        # among the trailing items of the pseudo-path
         while len(parts) > 0:
+
+            # For this purpose, change "checksums-archives-whatever" to
+            # "checksums/archives/whatever"
             part = parts[-1].lower()
+
+            # If the pseudo-path starts with "archives/", "targz/" etc., it's
+            # an archive path
             if part in ('archives', 'tar', 'targz', 'tar.gz'):
                 this.archives_ = 'archives-'
+
+            # If the pseudo-path starts with "checksums/" or "md5/", it's a
+            # checksum path
             elif part in ('checksums', 'md5'):
                 this.checksums_ = 'checksums-'
+
+            # If the pseudo-path starts with "volumes/", "diagrams/", etc., this
+            # is the volume type
             elif part in VOLTYPES:
                 this.voltype_ = part + '/'
+
+            # If the pseudo-path starts with "v1", "v1.1", "peer_review", etc.,
+            # this is the version suffix; otherwise, this is something else
+            # (such as a file path) so proceed to the next step
             else:
                 try:
                     _ = PdsFile.version_info('_' + part)
@@ -3037,10 +3087,14 @@ class PdsFile(object):
                 except ValueError:
                     break
 
+            # Pop the last entry from the pseudo-path and try again
             parts = parts[:-1]
 
-        # Look for a volume set
+        # Look for a volume set at the beginning of the pseudo-path
         if len(parts) > 0:
+            # Parse the next part of the pseudo-path as if it is a volset
+            # Parts are (volset, version_suffix, other_suffix, extension)
+            # Example: COISS_0xxx_v1_md5.txt -> (COISS_0xxx, v1, _md5, .txt)
             matchobj = VOLSET_PLUS_REGEX_I.match(parts[0])
             if matchobj:
                 subparts = matchobj.group(1).partition('_')
@@ -3048,70 +3102,95 @@ class PdsFile(object):
                 suffix    = matchobj.group(2).lower()
                 extension = (matchobj.group(3) + matchobj.group(4)).lower()
 
-                # Special file names
+                # <volset>...tar.gz must be an archive file
                 if extension.endswith('.tar.gz'):
                     this.archives_ = 'archives-'
+
+                # <volset>..._md5.txt must be a checksum file
                 elif extension.endswith('_md5.txt'):
                     this.checksums_ = 'checksums-'
 
+                # <volset>_diagrams... must be in the diagrams tree, etc.
                 for test_type in VOLTYPES:
                     if extension[1:].startswith(test_type):
                         this.voltype_ = test_type + '/'
                         break
 
+                # An explicit suffix here overrides any other; don't change an
+                # empty suffix because it might have been specified elsewhhere
+                # in the pseudo-path
                 if suffix:
                     this.suffix = suffix
 
+                # Pop the first entry from the pseudo-path and try again
                 parts = parts[1:]
 
         # Look for a volume name
         if len(parts) > 0:
+            # Parse the next part of the pseudo-path as if it is a volname
+            # Parts are (volname, suffix, extension)
+            # Example: COISS_2001_previews_md5.txt -> (COISS_2001,
+            #                                          _previews_md5, .txt)
             matchobj = VOLNAME_PLUS_REGEX_I.match(parts[0])
             if matchobj:
                 this.volname = matchobj.group(1).upper()
                 extension = (matchobj.group(2) + matchobj.group(3)).lower()
 
-                # Special file names
+                # <volname>...tar.gz must be an archive file
                 if extension.endswith('.tar.gz'):
                     this.archives_ = 'archives-'
+
+                # <volname>..._md5.txt must be a checksum file
                 elif extension.endswith('_md5.txt'):
                     this.checksums_ = 'checksums-'
 
+                # <volname>_diagrams... must be in the diagrams tree, etc.
                 for test_type in VOLTYPES:
                     if extension[1:].startswith(test_type):
                         this.voltype_ = test_type + '/'
                         break
 
+                # Pop the first entry from the pseudo-path and try again
                 parts = parts[1:]
 
-        # Determine category
+        # If the voltype is missing, it must be "volumes"
         if this.voltype_ == '':
             this.voltype_ = 'volumes/'
 
         this.category_ = this.checksums_ + this.archives_ + this.voltype_
 
-        # Determine the volume set and path below
+        # If a volume name was found, try to find the absolute path
         if this.volname:
+
+            # Fill in the rank
             volname = this.volname.lower()
             if this.suffix:
                 rank = PdsFile.version_info(this.suffix)[0]
             else:
                 rank = CACHE['$RANKS-' + this.category_][volname][-1]
 
+            # Try to get the absolute path
             try:
                 this_abspath = CACHE['$VOLS-' + this.category_][volname][rank]
+
+            # On failure, see if an updated suffix will help
             except KeyError:
+
+                # Fill in alt_ranks, a list of alternative version ranks
+
                 # Allow for change from, e.g., _peer_review to _lien_resolution
                 if rank in PdsFile.LATEST_VERSION_RANKS[:-1]:
                     k = PdsFile.LATEST_VERSION_RANKS.index(rank)
                     alt_ranks = PdsFile.LATEST_VERSION_RANKS[k+1:]
 
-                # Without suffix, find most recent
+                # Without a suffix, use the most recent
                 elif rank == PdsFile.LATEST_VERSION_RANKS[-1]:
                     alt_ranks = PdsFile.LATEST_VERSION_RANKS[:-1][::-1]
+
                 else:
                     alt_ranks = []
 
+                # See if any of these alternative ranks will work
                 this_abspath = None
                 for alt_rank in alt_ranks:
                   try:
@@ -3125,28 +3204,41 @@ class PdsFile(object):
                     raise ValueError('Suffix "%s" not found: %s' %
                                      (this.suffix, path))
 
+            # This is the PdsFile object down to the volname
             this = PdsFile.from_abspath(this_abspath, must_exist=must_exist)
 
+        # If a volset was found but not a volname, try to find the absolute path
         elif this.volset:
+
+            # Fill in the rank
             volset = this.volset.lower()
             if this.suffix:
                 rank = PdsFile.version_info(this.suffix)[0]
             else:
                 rank = CACHE['$RANKS-' + this.category_][volset][-1]
 
+            # Try to get the absolute path
             try:
                 this_abspath = CACHE['$VOLS-' + this.category_][volset][rank]
+
+            # On failure, see if an updated suffix will help
             except KeyError:
+
+                # Fill in alt_ranks, a list of alternative version ranks
+
                 # Allow for change from, e.g., _peer_review to _lien_resolution
                 if rank in PdsFile.LATEST_VERSION_RANKS[:-1]:
                     k = PdsFile.LATEST_VERSION_RANKS.index(rank)
                     alt_ranks = PdsFile.LATEST_VERSION_RANKS[k+1:]
-                # Without suffix, find most recent
+
+                # Without a suffix, use the most recent
                 elif rank == PdsFile.LATEST_VERSION_RANKS[-1]:
                     alt_ranks = PdsFile.LATEST_VERSION_RANKS[:-1][::-1]
+
                 else:
                     alt_ranks = []
 
+                # See if any of these alternative ranks will work
                 this_abspath = None
                 for alt_rank in alt_ranks:
                   try:
@@ -3160,15 +3252,18 @@ class PdsFile(object):
                     raise ValueError('Suffix "%s" not found: %s' %
                                      (this.suffix, path))
 
+            # This is the PdsFile object down to the volset
             this = PdsFile.from_abspath(this_abspath, must_exist=must_exist)
 
+        # Without a volname or volset, this must be a very high-level directory
         else:
             this = CACHE[this.category_[:-1]]
 
+        # If there is nothing left in the pseudo-path, return this
         if len(parts) == 0:
             return this._complete(False, caching, lifetime)
 
-        # Resolve the path below
+        # Otherwise, traverse the directory tree downward to the selected file
         for part in parts:
             this = this.child(part, fix_case=True, must_exist=must_exist,
                                     caching=caching, lifetime=lifetime)
@@ -3198,7 +3293,6 @@ class PdsFile(object):
                                       log_missing_file=False)
         except Exception as e:
             saved_e = e
-            pass
 
         # Interpret the error
         if not self.exists:
@@ -3249,14 +3343,15 @@ class PdsFile(object):
         if len(child_keys) == 1:
             return child_keys[0]
 
-        # We disallow multiple matches because this can occur when a key is
-        # incomplete
-        if len(child_keys) > 1 and flag == '':
-            return selection
-
-        # Deal with a match failure
+        # On failure, return the selection if flag is ''
         if flag == '':
             return selection
+
+        # We disallow multiple matches because this can occur when a key is
+        # incomplete
+        if len(child_keys) > 1:
+            raise IOError('Index selection is ambiguous: ' +
+                          self.logical_path + '/' + selection)
 
         if flag == '=':
             raise IOError('Index selection not found: ' +
@@ -3267,9 +3362,13 @@ class PdsFile(object):
         k = childnames.index(selection)
 
         if flag == '<':
-            return max(k-1,0)
+            # Return the childname before the selection; if it is first, return
+            # the second
+            return childnames[k-1] if k > 0 else childnames[1]
         else:
-            return min(k,len(self.childnames)-1)
+            # Return the childname after the selection; if it is last, return
+            # the one before
+            return childnames[k+1] if k < len(childnames)-1 else childnames[-2]
 
     def child_of_index(self, selection, flag='='):
         """Constructor for the PdsFile associated with the selected rows of this
@@ -4322,7 +4421,7 @@ class PdsFile(object):
             return [p.abspath for p in pdsfiles if p.abspath is not None
                                                 and p.exists]
         else:
-            return [p.abspath for p in pdsfilesf if p.abspath is not None]
+            return [p.abspath for p in pdsfiles if p.abspath is not None]
 
     @staticmethod
     def logicals_for_pdsfiles(pdsfiles, must_exist=False):
@@ -4441,7 +4540,7 @@ class PdsFile(object):
             category        the category of the associated paths.
             must_exist      True to return only paths that exist.
             use_abspaths    True to return absolute paths; False to return
-                            logical paths
+                            logical paths.
         """
 
         category = category.strip('/')
@@ -4451,7 +4550,7 @@ class PdsFile(object):
         # the parent index file.
         if self.is_index_row:
             test_abspath = self.data_abspath_associated_with_index_row()
-            if PdsFile.os_path_exists(test_abspath):
+            if test_abspath and PdsFile.os_path_exists(test_abspath):
                 self = PdsFile.from_abspath(test_abspath)
             else:
                 self = self.parent()
@@ -5345,13 +5444,12 @@ def repair_case(abspath):
     # Fields are separated by slashes
     parts = abspath.split('/')
     if parts[-1] == '':
-        parts = parts[:-1]       # Remove trailing slash
+        parts = parts[:-1]      # Remove trailing slash
 
-    parts[0] = ''
-    parts[1] = 'Volumes'   # In Mac OS, absolute paths start with '/Volumes'
+    # On Unix, parts[0] is always '' so no need to check case
 
     # For each subsequent field (between slashes)...
-    for k in range(2, len(parts)):
+    for k in range(1, len(parts)):
 
         # Convert it to lower case for matching
         part_lower = parts[k].lower()
@@ -5359,7 +5457,10 @@ def repair_case(abspath):
         # Construct the name of the parent directory and list its contents. This
         # will raise an IOError if the file does not exist or is not a
         # directory.
-        basenames = PdsFile.os_listdir('/'.join(parts[:k]))
+        if k == 1:
+            basenames = os.listdir('/')
+        else:
+            basenames = PdsFile.os_listdir('/'.join(parts[:k]))
 
         # Find the first name that matches when ignoring case
         found = False
