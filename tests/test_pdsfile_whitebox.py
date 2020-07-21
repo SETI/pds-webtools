@@ -358,23 +358,56 @@ class TestPdsFileWhiteBox:
         'input_path,expected',
         [
             ('/volumes/pdsdata/holdings/volumes/COUVIS_0xxx_v1', True),
-            ('checksums-volumes/COCIRS_0xxx/COCIRS_0012_md5.txt', True),
-            ('archives-volumes/COCIRS_0xxx/COCIRS_0010.tar.gz', True),
             ('volumes/VGIRIS_xxxx_peer_review/VGIRIS_0001/DATA/JUPITER_VG1/C1547XXX.LBL',
              True),
             ('volumes/VGIRIS_xxxx_in_prep/VGIRIS_0001/DATA/JUPITER_VG1/C1547XXX.LBL',
              True),
-            ('archives-volumes/VGIRIS_xxxx_peer_review/VGIRIS_0001.tar.gz',
-             True),
-            ('archives-volumes/VGIRIS_xxxx_in_prep/VGIRIS_0001.tar.gz', True),
+            ('checksums/archives', True),
+            ('diagrams/checksums', True),
+            ('COUVIS_0xxx/v1', True),
+            ('checksums-archives-volumes', True),
+            ('checksums-archives-previews', True),
+            ('archives/', True),
+            ('md5/', True),
+            ('diagrams/', True),
+            ('peer_review/', True),
+            ('COISS_0xxx_tar.gz', True),
+            ('COISS_0xxx_v1_md5.txt', True),
         ]
     )
-    def test_from_path(self, input_path, expected):
+    def test_from_path1(self, input_path, expected):
         res = pdsfile.PdsFile.from_path(path=input_path)
-        print(res.volname)
-        print(res.volset)
         assert isinstance(res, pdsfile.PdsFile)
         assert res.exists == expected
+
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            # this one doesn't exist
+            ('COUVIS_4xxx_v1', '"_v1" not found: COUVIS_4xxx_v1'),
+
+        ]
+    )
+    def test_from_path2(self, input_path, expected):
+        try:
+            res = pdsfile.PdsFile.from_path(path=input_path)
+        except ValueError as e:
+            assert expected in str(e)
+
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('COISS_2001.targz', True),
+            ('COISS_2001_previews.targz', True),
+        ]
+    )
+    def test_from_path3(self, input_path, expected):
+        if pdsfile.SHELVES_ONLY:
+            res = pdsfile.PdsFile.from_path(path=input_path)
+            assert isinstance(res, pdsfile.PdsFile)
+        else:
+            assert True
+
 
     ############################################################################
     # Test for associated volumes and volsets
