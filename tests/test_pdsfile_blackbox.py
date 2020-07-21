@@ -1683,25 +1683,6 @@ class TestPdsGroupBlackBox:
         res = pdsgroup.isdir
         assert res == expected
 
-    # @pytest.mark.parametrize(
-    #     'input_paths,expected',
-    #     [
-    #         ([
-    #             'previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31_thumb.png',
-    #             'previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31_med.png',
-    #             'previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31_small.png',
-    #             'previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31_full.png',
-    #          ],
-    #          False),
-    #         (['previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/'], True)
-    #     ]
-    # )
-    # def test__iconset(self, input_paths, expected):
-    #     pdsfiles = get_pdsfiles(input_paths)
-    #     pdsgroup = pdsfile.PdsGroup(pdsfiles=pdsfiles)
-    #     res = pdsgroup._iconset
-    #     assert res == expected
-
     @pytest.mark.parametrize(
         'input_paths,expected',
         [

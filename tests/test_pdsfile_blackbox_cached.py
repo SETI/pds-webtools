@@ -7,7 +7,10 @@ import pytest
 from tests.helper import instantiate_target_pdsfile
 
 PDS_DATA_DIR = os.environ['PDS_DATA_DIR']
-
+PDS_TESTING_ROOT = PDS_DATA_DIR[:PDS_DATA_DIR.index('pdsdata')]
+ICON_ROOT_ = PDS_TESTING_ROOT + '/icons-local/'
+ICON_URL_  = 'icons-local/'
+ICON_COLOR = 'blue'
 ################################################################################
 # Blackbox test for internal cached in PdsFile class
 ################################################################################
@@ -446,4 +449,53 @@ class TestPdsFileBlackBox:
         res1 = target_pdsfile.filename_keylen
         res2 = target_pdsfile.filename_keylen
         assert res1 == expected
+        assert res1 == res2
+
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007',
+             pdsviewable.PdsViewSet)
+        ]
+    )
+    def test__iconset(self, input_path, expected):
+        """filename_keylen: return self._iconset_filled[0]"""
+        pdsviewable.load_icons(path=ICON_ROOT_, url=ICON_URL_, color=ICON_COLOR)
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        res1 = target_pdsfile._iconset
+        res2 = target_pdsfile._iconset
+        assert isinstance(res1, expected)
+        assert res1 == res2
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007',
+             pdsviewable.PdsViewSet)
+        ]
+    )
+
+    def test_iconset_open(self, input_path, expected):
+        """filename_keylen: return self._iconset_filled[0]"""
+        pdsviewable.load_icons(path=ICON_ROOT_, url=ICON_URL_, color=ICON_COLOR)
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        res1 = target_pdsfile.iconset_open
+        res2 = target_pdsfile.iconset_open
+        assert isinstance(res1, expected)
+        assert res1 == res2
+
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007',
+             pdsviewable.PdsViewSet)
+        ]
+    )
+
+    def test_iconset_closed(self, input_path, expected):
+        """filename_keylen: return self._iconset_filled[0]"""
+        pdsviewable.load_icons(path=ICON_ROOT_, url=ICON_URL_, color=ICON_COLOR)
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        res1 = target_pdsfile.iconset_closed
+        res2 = target_pdsfile.iconset_closed
+        assert isinstance(res1, expected)
         assert res1 == res2
