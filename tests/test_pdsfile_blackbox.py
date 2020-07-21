@@ -898,10 +898,6 @@ class TestPdsFileBlackBox:
              'U2NO0401T', '=', 'U2NO0401T'),
             ('metadata/HSTOx_xxxx/HSTO0_7308/HSTO0_7308x_index.tab',
              'O43B06BTQ', '', 'O43B06BTQ'),
-            ('metadata/HSTOx_xxxx/HSTO0_7308/HSTO0_7308x_index.tab',
-             'O43B06BTQ', '<', 0),
-            ('metadata/HSTOx_xxxx/HSTO0_7308/HSTO0_7308x_index.tab',
-             'O43B06BTQ', '>', -1),
         ]
     )
     def test_find_selected_row_key(self, input_path, selection, flag, expected):
@@ -936,8 +932,8 @@ class TestPdsFileBlackBox:
         'input_path,selection,flag,expected',
         [
             ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
-             'U2NO0402T', '',
-             None),
+             'U2NO0404T', '',
+             '/Users/yjchang/Dropbox/testing/pdsdata/holdings/volumes/HSTUx_xxxx/HSTU0_5167/DATA/VISIT_04/U2NO0404T.LBL'),
         ]
     )
     def test_data_abspath_associated_with_index_row(self, input_path,
@@ -945,10 +941,11 @@ class TestPdsFileBlackBox:
                                                     expected):
         target_pdsfile = instantiate_target_pdsfile(input_path)
         index_row = target_pdsfile.child_of_index(selection, flag)
-        print(index_row.is_index_row)
-        print(index_row.row_dicts)
         res = index_row.data_abspath_associated_with_index_row()
-        assert res == expected
+        if pdsfile.SHELVES_ONLY:
+            assert res == None
+        else:
+            assert res == expected
 
     ############################################################################
     # Test for checksum path associations
@@ -2930,8 +2927,8 @@ class TestPdsFileHelperBlackBox:
     @pytest.mark.parametrize(
         'input_path,expected',
         [
-            (PDS_DATA_DIR + '/volumes/COUVIS_0xxx/COUVIS_0058/DATA/D2017_001/EUV2017_001_03_49.dat',
-             PDS_DATA_DIR + '/volumes/COUVIS_0xxx/COUVIS_0058/DATA/D2017_001/EUV2017_001_03_49.dat')
+            (PDS_DATA_DIR + '/volumes/COUVIS_0xxx/COUVIS_0058/DATA/D2017_001/EUV2017_001_03_49.DAT',
+             PDS_DATA_DIR + '/volumes/COUVIS_0xxx/COUVIS_0058/DATA/D2017_001/EUV2017_001_03_49.DAT')
         ]
     )
     def test_repair_case(self, input_path, expected):

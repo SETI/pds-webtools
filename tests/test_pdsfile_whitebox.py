@@ -468,7 +468,7 @@ class TestPdsFileWhiteBox:
         [
             ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
              'U2NO04', '',
-             None),
+             'Index selection is ambiguous'),
         ]
     )
     def test_data_abspath_associated_with_index_row(self, input_path,
@@ -476,8 +476,10 @@ class TestPdsFileWhiteBox:
                                                     expected):
         target_pdsfile = instantiate_target_pdsfile(input_path)
         index_row = target_pdsfile.child_of_index(selection, flag)
-        res = index_row.data_abspath_associated_with_index_row()
-        assert res == expected
+        try:
+            res = index_row.data_abspath_associated_with_index_row()
+        except OSError as e:
+            assert expected in str(e)
 
     ############################################################################
     # Test for transformations
