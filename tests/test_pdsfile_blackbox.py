@@ -933,7 +933,7 @@ class TestPdsFileBlackBox:
         [
             ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
              'U2NO0404T', '',
-             '/Users/yjchang/Dropbox/testing/pdsdata/holdings/volumes/HSTUx_xxxx/HSTU0_5167/DATA/VISIT_04/U2NO0404T.LBL'),
+             PDS_DATA_DIR + '/volumes/HSTUx_xxxx/HSTU0_5167/DATA/VISIT_04/U2NO0404T.LBL'),
         ]
     )
     def test_data_abspath_associated_with_index_row(self, input_path,

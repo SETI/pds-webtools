@@ -471,7 +471,7 @@ class TestPdsFileWhiteBox:
              'Index selection is ambiguous'),
         ]
     )
-    def test_data_abspath_associated_with_index_row(self, input_path,
+    def test_data_abspath_associated_with_index_row1(self, input_path,
                                                     selection, flag,
                                                     expected):
         target_pdsfile = instantiate_target_pdsfile(input_path)
@@ -480,6 +480,34 @@ class TestPdsFileWhiteBox:
             res = index_row.data_abspath_associated_with_index_row()
         except OSError as e:
             assert expected in str(e)
+
+    @pytest.mark.parametrize(
+        'input_path,selection,flag,expected',
+        [
+            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
+             'U2NO0405T', '',
+             PDS_DATA_DIR + '/volumes/HSTUx_xxxx/HSTU0_5167/DATA/VISIT_04/U2NO0404T.LBL'),
+            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
+             'U2NO0400T', '',
+             PDS_DATA_DIR + '/volumes/HSTUx_xxxx/HSTU0_5167/DATA/VISIT_04/U2NO0401T.LBL'),
+            # '/volumes/HSTUx_xxxx/HSTU0_5167/DATA/VISIT_04/U2NO0403T.LBL'
+            # doesn't exist.
+            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
+             'U2NO0403T', '',
+             None),
+        ]
+    )
+    def test_data_abspath_associated_with_index_row2(self, input_path,
+                                                    selection, flag,
+                                                    expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        index_row = target_pdsfile.new_index_row_pdsfile(filename_key=selection,
+                                                         row_dicts=[])
+        try:
+            res = index_row.data_abspath_associated_with_index_row()
+            assert res == expected
+        except AttributeError as e:
+            assert "object has no attribute 'replace'" in str(e)
 
     ############################################################################
     # Test for transformations
