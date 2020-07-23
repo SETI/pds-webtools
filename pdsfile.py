@@ -3401,17 +3401,18 @@ class PdsFile(object):
 
             row_range = (min(rows), max(rows)+1)
 
-            if SHELVES_ONLY:    # We can fake this if the filesystem is missing
-                table_dicts = (row_range[1] - row_range[0]) * [{}]
+            # With the SHELVES_ONLY option, we can't fill in row_dicts
+            if SHELVES_ONLY:
+                row_dicts = []
             else:
                 table = pdstable.PdsTable(self.label_abspath,
                                           self.index_pdslabel,
                                           row_range=row_range)
                 table_dicts = table.dicts_by_row()
 
-            row_dicts = []
-            for k in rows:
-                row_dicts.append(table_dicts[k - row_range[0]])
+                row_dicts = []
+                for k in rows:
+                    row_dicts.append(table_dicts[k - row_range[0]])
 
             pdsf = self.new_index_row_pdsfile(key, row_dicts)
             pdsf._exists_filled = True
@@ -3425,11 +3426,13 @@ class PdsFile(object):
 
     def data_abspath_associated_with_index_row(self):
         """Attempt to infer the data PdsFile object associated with this index
-        row PdsFile. None on failure.
+        row PdsFile. Empty string on failure.
 
         If the selected row is missing, the associated data file might still
         exist. In this case, it conducts a search for a data file assuming it
-        is on the same volume and parallel to the files in the index.
+        is on the same volume and parallel to the other files in the index.
+
+        This function is not supported when using the SHELVES_ONLY option.
         """
 
         # Internal function identifies the row_dict keys for filespec and volume
@@ -3463,14 +3466,18 @@ class PdsFile(object):
         # Begin active code...
 
         if not self.is_index_row:
-            return None
+            return ''
 
-        # If the row exists
+        # This function is not supported with SHELVES_ONLY
+        if SHELVES_ONLY:
+            return ''
+
+        # If the row exists and not SHELVES_ONLY
         if self.row_dicts:
             row_dict = self.row_dicts[0]
             (volume_key, filespec_key) = get_keys(row_dict)
             if not filespec_key:
-                return None
+                return ''
 
             if volume_key:
                 parts = [self.volset_abspath().replace('metadata', 'volumes'),
@@ -3481,24 +3488,23 @@ class PdsFile(object):
 
             return '/'.join(parts)
 
-        # If the row doesn't exist, try the row before it
+        # If the row doesn't exist, try the rows before it and after it, and
+        # then replace the basename
         parent = self.parent()
-        neighbor = parent.child_of_index(self.basename, flag='<')
-        abspath = neighbor.data_abspath_associated_with_index_row()
-        abspath.replace(neighbor.basename, self.basename)
-        if (neighbor.basename != self.basename and
-            PdsFile.os_path_exists(abspath)):
-                return abspath
+        for flag in ('<', '>'):
+            neighbor = parent.child_of_index(self.basename, flag=flag)
+            abspath = neighbor.data_abspath_associated_with_index_row()
+            if abspath:
+                abspath = abspath.replace(neighbor.basename, self.basename)
+                if (neighbor.basename != self.basename and
+                    PdsFile.os_path_exists(abspath)):
+                        return abspath
 
-        # Finally, try the row after
-        neighbor = parent.child_of_index(self.basename, flag='>')
-        abspath = neighbor.data_abspath_associated_with_index_row()
-        abspath.replace(neighbor.basename, self.basename)
-        if (neighbor.basename != self.basename and
-            PdsFile.os_path_exists(abspath)):
-                return abspath
-
-        return None
+        # We should never reach this point, because there should never be a case
+        # where an index row exists but the data file doesn't. Nevertheless,
+        # I'll let this slide because I can't see a real-world scenario where
+        # this would matter.
+        return ''
 
     ############################################################################
     # OPUS support methods
