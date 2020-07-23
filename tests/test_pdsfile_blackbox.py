@@ -943,7 +943,7 @@ class TestPdsFileBlackBox:
         index_row = target_pdsfile.child_of_index(selection, flag)
         res = index_row.data_abspath_associated_with_index_row()
         if pdsfile.SHELVES_ONLY:
-            assert res == None
+            assert res == ''
         else:
             assert res == expected
 
