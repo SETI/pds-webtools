@@ -542,6 +542,18 @@ class TestPdsFileWhiteBox:
         res = index_row.data_abspath_associated_with_index_row()
         assert res == expected
 
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('volumes/HSTNx_xxxx/HSTN0_7176', ''),
+        ]
+    )
+    def test_data_abspath_associated_with_index_row3(self, input_path,
+                                                     expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        res = target_pdsfile.data_abspath_associated_with_index_row()
+        assert res == expected
+
 
     ############################################################################
     # Test for transformations
