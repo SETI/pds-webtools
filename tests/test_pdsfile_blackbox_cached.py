@@ -4,7 +4,7 @@ import pdsfile
 import pdsviewable
 import pytest
 
-from tests.helper import instantiate_target_pdsfile
+from tests.helper import instantiate_target_pdsfile, get_pdsfiles
 
 PDS_DATA_DIR = os.environ['PDS_DATA_DIR']
 PDS_TESTING_ROOT = PDS_DATA_DIR[:PDS_DATA_DIR.index('pdsdata')]
@@ -466,6 +466,7 @@ class TestPdsFileBlackBox:
         res2 = target_pdsfile._iconset
         assert isinstance(res1, expected)
         assert res1 == res2
+
     @pytest.mark.parametrize(
         'input_path,expected',
         [
@@ -497,5 +498,69 @@ class TestPdsFileBlackBox:
         target_pdsfile = instantiate_target_pdsfile(input_path)
         res1 = target_pdsfile.iconset_closed
         res2 = target_pdsfile.iconset_closed
+        assert isinstance(res1, expected)
+        assert res1 == res2
+
+################################################################################
+# Blackbox test for internal cached in PdsGroup class
+################################################################################
+class TestPdsGroupBlackBox:
+    @pytest.mark.parametrize(
+        'input_paths,expected',
+        [
+            ([
+                'volumes/COCIRS_0xxx/COCIRS_0012/DATA/NAV_DATA/GEO00120100.DAT',
+                'volumes/COCIRS_0xxx/COCIRS_0012/DATA/NAV_DATA/GEO00120100.LBL'
+             ],
+             pdsviewable.PdsViewSet)
+        ]
+    )
+    def test__iconset(self, input_paths, expected):
+        """filename_keylen: return self._iconset_filled[0]"""
+        pdsviewable.load_icons(path=ICON_ROOT_, url=ICON_URL_, color=ICON_COLOR)
+        target_pdsfile = get_pdsfiles(input_paths)
+        target_pdsgroup = pdsfile.PdsGroup(pdsfiles=target_pdsfile)
+        res1 = target_pdsgroup._iconset
+        res2 = target_pdsgroup._iconset
+        assert isinstance(res1, expected)
+        assert res1 == res2
+
+    @pytest.mark.parametrize(
+        'input_paths,expected',
+        [
+            ([
+                'volumes/COCIRS_0xxx/COCIRS_0012/DATA/NAV_DATA/GEO00120100.DAT',
+                'volumes/COCIRS_0xxx/COCIRS_0012/DATA/NAV_DATA/GEO00120100.LBL'
+             ],
+             pdsviewable.PdsViewSet)
+        ]
+    )
+    def test_iconset_open(self, input_paths, expected):
+        """filename_keylen: return self._iconset_filled[0]"""
+        pdsviewable.load_icons(path=ICON_ROOT_, url=ICON_URL_, color=ICON_COLOR)
+        target_pdsfile = get_pdsfiles(input_paths)
+        target_pdsgroup = pdsfile.PdsGroup(pdsfiles=target_pdsfile)
+        res1 = target_pdsgroup.iconset_open
+        res2 = target_pdsgroup.iconset_open
+        assert isinstance(res1, expected)
+        assert res1 == res2
+
+    @pytest.mark.parametrize(
+        'input_paths,expected',
+        [
+            ([
+                'volumes/COCIRS_0xxx/COCIRS_0012/DATA/NAV_DATA/GEO00120100.DAT',
+                'volumes/COCIRS_0xxx/COCIRS_0012/DATA/NAV_DATA/GEO00120100.LBL'
+             ],
+             pdsviewable.PdsViewSet)
+        ]
+    )
+    def test_iconset_closed(self, input_paths, expected):
+        """filename_keylen: return self._iconset_filled[0]"""
+        pdsviewable.load_icons(path=ICON_ROOT_, url=ICON_URL_, color=ICON_COLOR)
+        target_pdsfile = get_pdsfiles(input_paths)
+        target_pdsgroup = pdsfile.PdsGroup(pdsfiles=target_pdsfile)
+        res1 = target_pdsgroup.iconset_closed
+        res2 = target_pdsgroup.iconset_closed
         assert isinstance(res1, expected)
         assert res1 == res2
