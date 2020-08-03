@@ -383,6 +383,9 @@ OPUS_TYPE = translator.TranslatorByRegex([
                                                0, ('metadata', 20, 'planet_geometry', 'Planet Geometry Index')),
     (r'metadata/.*_(moon|charon)_summary\..*', 0, ('metadata', 30, 'moon_geometry',   'Moon Geometry Index')),
     (r'metadata/.*_ring_summary\..*',          0, ('metadata', 40, 'ring_geometry',   'Ring Geometry Index')),
+
+    # Metadata index
+    (r'metadata/.*_index\..*',          0, ('metadata', 7, 'rms_index', 'RMS Node Augmented Index')),
 ])
 
 ####################################################################################################################################

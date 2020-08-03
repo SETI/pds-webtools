@@ -562,11 +562,11 @@ class TestPdsFileWhiteBox:
         'input_path,expected',
         [
             ([
-                'volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.lbl',
+                'volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.LBL',
                 'volumes/HSTNx_xxxx/HSTN0_7176/DATA/VISIT_01/N4BI01L4Q.LBL'
              ],
              [
-                 PDS_DATA_DIR + '/volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.lbl',
+                 PDS_DATA_DIR + '/volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.LBL',
                  PDS_DATA_DIR + '/volumes/HSTNx_xxxx/HSTN0_7176/DATA/VISIT_01/N4BI01L4Q.LBL'
              ])
         ]
@@ -587,11 +587,11 @@ class TestPdsFileWhiteBox:
         'input_path,expected',
         [
             ([
-                'volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.lbl',
+                'volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.LBL',
                 'volumes/HSTNx_xxxx/HSTN0_7176/DATA/VISIT_01/N4BI01L4Q.LBL'
              ],
              [
-                'volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.lbl',
+                'volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.LBL',
                 'volumes/HSTNx_xxxx/HSTN0_7176/DATA/VISIT_01/N4BI01L4Q.LBL'
              ])
         ]
@@ -611,10 +611,10 @@ class TestPdsFileWhiteBox:
         'input_path,expected',
         [
             ([
-                'volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.lbl',
+                'volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.LBL',
                 'volumes/HSTNx_xxxx/HSTN0_7176/DATA/VISIT_01/N4BI01L4Q.LBL'
              ],
-             ['W1294561202_1.lbl', 'N4BI01L4Q.LBL'])
+             ['W1294561202_1.LBL', 'N4BI01L4Q.LBL'])
         ]
     )
     def test_basenames_for_pdsfiles(self, input_path, expected):
@@ -632,10 +632,10 @@ class TestPdsFileWhiteBox:
         'input_path,expected',
         [
             ([
-                PDS_DATA_DIR + '/volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.lbl',
+                PDS_DATA_DIR + '/volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.LBL',
                 PDS_DATA_DIR + '/volumes/HSTNx_xxxx/HSTN0_7176/DATA/VISIT_01/N4BI01L4Q.LBL'
              ],
-             ['W1294561202_1.lbl', 'N4BI01L4Q.LBL'])
+             ['W1294561202_1.LBL', 'N4BI01L4Q.LBL'])
         ]
     )
     def test_basenames_for_abspaths(self, input_path, expected):
@@ -649,7 +649,7 @@ class TestPdsFileWhiteBox:
         'input_path,expected',
         [
             ([
-                'volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.lbl',
+                'volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.LBL',
                 'volumes/HSTNx_xxxx/HSTN0_7176/DATA/VISIT_01/N4BI01L4Q.LBL'
              ],
              pdsfile.PdsFile)
@@ -666,10 +666,10 @@ class TestPdsFileWhiteBox:
         'input_path,expected',
         [
             ([
-                'volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.lbl',
+                'volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.LBL',
                 'volumes/HSTNx_xxxx/HSTN0_7176/DATA/VISIT_01/N4BI01L4Q.LBL'
              ],
-             ['W1294561202_1.lbl', 'N4BI01L4Q.LBL'])
+             ['W1294561202_1.LBL', 'N4BI01L4Q.LBL'])
         ]
     )
     def test_basenames_for_logicals(self, input_path, expected):
