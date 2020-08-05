@@ -284,7 +284,9 @@ opus_products = translator.TranslatorByRegex([
                                                                      r'metadata/\1/\2/\2_ring_summary.lbl',
                                                                      r'metadata/\1/\2/\2_ring_summary.tab',
                                                                      r'metadata/\1/\2/\2_inventory.lbl',
-                                                                     r'metadata/\1/\2/\2_inventory.tab']),
+                                                                     r'metadata/\1/\2/\2_inventory.tab',
+                                                                     r'metadata/\1/\2/\2_index.lbl',
+                                                                     r'metadata/\1/\2/\2_index.tab']),
 ])
 
 ####################################################################################################################################

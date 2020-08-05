@@ -168,7 +168,9 @@ opus_products = translator.TranslatorByRegex([
                                                                      r'metadata/\1/\2/\2_ring_summary.lbl',
                                                                      r'metadata/\1/\2/\2_ring_summary.tab',
                                                                      r'metadata/\1/\2/\2_inventory.lbl',
-                                                                     r'metadata/\1/\2/\2_inventory.tab']),
+                                                                     r'metadata/\1/\2/\2_inventory.tab',
+                                                                     r'metadata/\1/\2/\2_index.lbl',
+                                                                     r'metadata/\1/\2/\2_index.tab']),
     # packed versions of unpacked files
     (r'.*volumes/(COVIMS_0xxx)/(COVIMS_0...)/data/(\w+/v[0-9]{10})_[0-9]+_[0-9]{3}\.(qub|lbl)', 0,
                                                                     [(r'volumes/\1/\2/data/\3_?.qub', PACKED_OPUS_TYPE),
