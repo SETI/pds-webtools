@@ -385,8 +385,7 @@ OPUS_TYPE = translator.TranslatorByRegex([
     (r'metadata/.*_ring_summary\..*',          0, ('metadata', 40, 'ring_geometry',   'Ring Geometry Index')),
 
     # Metadata index
-    (r'metadata/.*_index\..*',          0, ('metadata', 7, 'rms_index', 'RMS Node Augmented Index')),
-    (r'metadata/.*_hstfiles\..*',       0, ('metadata', 7, 'rms_index', 'RMS Node Augmented Index')),
+    (r'metadata/.*_(hstfiles|index)\..*',          0, ('metadata', 7, 'rms_index', 'RMS Node Augmented Index')),
 ])
 
 ####################################################################################################################################
