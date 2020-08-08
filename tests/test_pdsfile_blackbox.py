@@ -767,10 +767,35 @@ class TestPdsFileBlackBox:
     @pytest.mark.parametrize(
         'input_path,expected',
         [
-            ('volumes/COVIMS_0xxx/COVIMS_0001/data/1999010T054026_1999010T060958/v1294638283_1.lbl',
-             ''),
-            ('volumes/HSTOx_xxxx/HSTO0_7308/DATA/VISIT_05/O43B05C1Q.lbl',
-             ''),
+            ('volumes/COISS_2xxx/COISS_2002/data/1460960653_1461048959/N1460960868_1.LBL',
+             [
+                'volumes/COISS_2xxx/COISS_2002/label/prefix2.fmt',
+                'volumes/COISS_2xxx/COISS_2002/label/tlmtab.fmt',
+                'metadata/COISS_2xxx/COISS_2002/COISS_2002_saturn_summary.lbl',
+                'metadata/COISS_2xxx/COISS_2002/COISS_2002_saturn_summary.tab',
+                'volumes/COISS_2xxx/COISS_2002/data/1460960653_1461048959/N1460960868_1.IMG',
+                'volumes/COISS_2xxx/COISS_2002/data/1460960653_1461048959/N1460960868_1.LBL',
+                'metadata/COISS_2xxx/COISS_2002/COISS_2002_index.tab',
+                'metadata/COISS_2xxx/COISS_2002/COISS_2002_index.lbl',
+                'calibrated/COISS_2xxx/COISS_2002/data/1460960653_1461048959/N1460960868_1_CALIB.IMG',
+                'calibrated/COISS_2xxx/COISS_2002/data/1460960653_1461048959/N1460960868_1_CALIB.LBL',
+                'calibrated/COISS_2xxx_v1.0/COISS_2002/data/1460960653_1461048959/N1460960868_1_CALIB.IMG',
+                'calibrated/COISS_2xxx_v1.0/COISS_2002/data/1460960653_1461048959/N1460960868_1_CALIB.LBL',
+                'metadata/COISS_2xxx/COISS_2002/COISS_2002_moon_summary.tab',
+                'metadata/COISS_2xxx/COISS_2002/COISS_2002_moon_summary.lbl',
+                'metadata/COISS_2xxx/COISS_2002/COISS_2002_inventory.tab',
+                'metadata/COISS_2xxx/COISS_2002/COISS_2002_inventory.lbl',
+                'metadata/COISS_2xxx/COISS_2002/COISS_2002_ring_summary.tab',
+                'metadata/COISS_2xxx/COISS_2002/COISS_2002_ring_summary.lbl',
+                'previews/COISS_2xxx/COISS_2002/data/1460960653_1461048959/N1460960868_1_thumb.jpg',
+                'volumes/COISS_2xxx/COISS_2002/extras/thumbnail/1460960653_1461048959/N1460960868_1.IMG.jpeg_small',
+                'volumes/COISS_2xxx/COISS_2002/extras/browse/1460960653_1461048959/N1460960868_1.IMG.jpeg',
+                'previews/COISS_2xxx/COISS_2002/data/1460960653_1461048959/N1460960868_1_full.png',
+                'volumes/COISS_2xxx/COISS_2002/extras/full/1460960653_1461048959/N1460960868_1.IMG.png',
+                'previews/COISS_2xxx/COISS_2002/data/1460960653_1461048959/N1460960868_1_small.jpg',
+                'previews/COISS_2xxx/COISS_2002/data/1460960653_1461048959/N1460960868_1_med.jpg',
+             ]
+            ),
         ]
     )
     # Need to find a better way to test this one.
@@ -781,6 +806,7 @@ class TestPdsFileBlackBox:
             for files in res[key]:
                 for pdsf in files:
                     assert pdsf.exists == True
+                    assert pdsf.logical_path in expected
 
     ############################################################################
     # Test for associated volumes and volsets
