@@ -25,7 +25,14 @@ opus_products = translator.TranslatorByRegex([
                             [r'volumes/COUVIS_8xxx/\1/data/\2_TAU01KM.TAB',
                              r'volumes/COUVIS_8xxx/\1/data/\2_TAU01KM.LBL',
                              r'volumes/COUVIS_8xxx/\1/data/\2_TAU10KM.LBL',
-                             r'volumes/COUVIS_8xxx/\1/data/\2_TAU10KM.TAB'])])
+                             r'volumes/COUVIS_8xxx/\1/data/\2_TAU10KM.TAB']),
+
+    (r'.*volumes/(COUVIS_8xxx)/(COUVIS_8...)/(data|DATA)/.*_TAU01KM\.(TAB|LBL)', 0,
+                            [r'metadata/\1/\2/\2_profile_index.lbl',
+                             r'metadata/\1/\2/\2_profile_index.tab',
+                             r'metadata/\1/\2/\2_supplemental_index.lbl',
+                             r'metadata/\1/\2/\2_supplemental_index.tab']),
+])
 
 ####################################################################################################################################
 # FILESPEC_TO_OPUS_ID

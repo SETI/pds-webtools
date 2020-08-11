@@ -40,6 +40,11 @@ opus_type = translator.TranslatorByRegex([
 opus_products = translator.TranslatorByRegex([
     (r'.*volumes/(EBROCC_..../.*)\.(TAB|LBL)', 0, [r'volumes/\1.TAB',
                                                    r'volumes/\1.LBL']),
+    (r'.*volumes/(EBROCC_....)/(EBROCC_....)/DATA/.*/(\w+)_(EPD|IPD)\.(TAB|LBL)', 0,
+                                        [r'metadata/\1/\2/\3_profile_index.lbl',
+                                         r'metadata/\1/\2/\3_profile_index.tab',
+                                         r'metadata/\1/\2/\3_supplemental_index.lbl',
+                                         r'metadata/\1/\2/\3_supplemental_index.tab']),
 ])
 
 ####################################################################################################################################
