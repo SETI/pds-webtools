@@ -375,7 +375,10 @@ class TestPdsFileBlackBox:
     )
     def test_indexshelf_abspath(self, input_path, expected):
         target_pdsfile = instantiate_target_pdsfile(input_path)
-        assert target_pdsfile.indexshelf_abspath == expected
+        if pdsfile.USE_PICKLES:
+            assert target_pdsfile.indexshelf_abspath == expected.replace('.shelf', '.pickle')
+        else:
+            assert target_pdsfile.indexshelf_abspath == expected
 
     @pytest.mark.parametrize(
         'input_path,expected',

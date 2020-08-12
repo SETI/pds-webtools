@@ -279,11 +279,11 @@ class TestPdsFileBlackBox:
         'input_path,expected',
         [
             ('volumes/COCIRS_6xxx/COCIRS_6004/DATA/GEODATA/GEO1004021018_699.TAB',
-             ('Cassini CIRS', 110, 'cocirs_geo',  'System Geometry')),
+             ('Cassini CIRS', 110, 'cocirs_geo',  'System Geometry', True)),
             ('previews/VGISS_8xxx/VGISS_8201/DATA/C08966XX/C0896631_thumb.jpg',
-             ('browse', 10, 'browse_thumb', 'Browse Image (thumbnail)')),
+             ('browse', 10, 'browse_thumb', 'Browse Image (thumbnail)', True)),
             ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
-             ('metadata', 7, 'rms_index', 'RMS Node Augmented Index')),
+             ('metadata', 7, 'rms_index', 'RMS Node Augmented Index', False)),
         ]
     )
     def test_opus_type(self, input_path, expected):
