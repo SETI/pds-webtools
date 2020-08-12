@@ -1452,8 +1452,12 @@ class PdsFile(object):
             else:
                 abspath = self.abspath
                 abspath = abspath.replace('/holdings/', '/shelves/index/')
-                abspath = abspath.replace('.tab', '.shelf')
-                abspath = abspath.replace('.TAB', '.shelf')
+                if USE_PICKLES:
+                    abspath = abspath.replace('.tab', '.pickle')
+                    abspath = abspath.replace('.TAB', '.pickle')
+                else:
+                    abspath = abspath.replace('.tab', '.shelf')
+                    abspath = abspath.replace('.TAB', '.shelf')
                 self._indexshelf_abspath = abspath
 
             self._recache()

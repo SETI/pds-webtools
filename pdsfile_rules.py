@@ -385,11 +385,11 @@ OPUS_TYPE = translator.TranslatorByRegex([
     (r'metadata/.*_ring_summary\..*',          0, ('metadata', 40, 'ring_geometry',   'Ring Geometry Index')),
 
     # Metadata index
-    (r'metadata/.*_\d+_index\..*',          0, ('metadata', 7, 'rms_index',          'RMS Node Augmented Index')),
-    (r'metadata/.*_hstfiles\..*',           0, ('metadata', 7, 'hstfiles_index',     'HST Files Associations Index')),
-    (r'metadata/.*supplemental_index\..*',  0, ('metadata', 7, 'supplemental_index', 'Supplemental Index')),
-    (r'metadata/.*raw_image_index\..*',     0, ('metadata', 7, 'raw_image_index',    'Raw Image Index')),
-    (r'metadata/.*profile_index\..*',       0, ('metadata', 7, 'profile_index',      'Profile Index')),
+    (r'metadata/.*_\d+_index\..*',          0, ('metadata', 7,  'rms_index',          'RMS Node Augmented Index')),
+    (r'metadata/.*_hstfiles\..*',           0, ('metadata', 8,  'hstfiles_index',     'HST Files Associations Index')),
+    (r'metadata/.*raw_image_index\..*',     0, ('metadata', 9,  'raw_image_index',    'Raw Image Index')),
+    (r'metadata/.*profile_index\..*',       0, ('metadata', 10, 'profile_index',      'Profile Index')),
+    (r'metadata/.*supplemental_index\..*',  0, ('metadata', 11, 'supplemental_index', 'Supplemental Index')),
 ])
 
 ####################################################################################################################################
