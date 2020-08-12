@@ -29,7 +29,7 @@ opus_format = translator.TranslatorByRegex([
 ####################################################################################################################################
 
 opus_type = translator.TranslatorByRegex([
-    (r'volumes/.*\.(TAB|LBL)$', 0, ('Ground Based', 0, 'gb_occ_profile', 'Occultation Profile')),
+    (r'volumes/.*\.(TAB|LBL)$', 0, ('Ground Based', 0, 'gb_occ_profile', 'Occultation Profile', True)),
 ])
 
 ####################################################################################################################################

@@ -11,11 +11,11 @@ import re
 ####################################################################################################################################
 
 opus_type = translator.TranslatorByRegex([
-    (r'volumes/.*_TAU_01KM\.(TAB|LBL)$', 0, ('Cassini RSS', 10, 'corss_occ_01',  'Occultation Profile (1km)')),
-    (r'volumes/.*_TAU_10KM\.(TAB|LBL)$', 0, ('Cassini RSS', 20, 'corss_occ_10',  'Occultation Profile (10km)')),
-    (r'volumes/.*_DLP_500M\.(TAB|LBL)$', 0, ('Cassini RSS', 30, 'corss_occ_dlp', 'Diffraction-Ltd Occultation Profile')),
-    (r'volumes/.*_CAL\.(TAB|LBL)$',      0, ('Cassini RSS', 40, 'corss_occ_cal', 'Occultation Calibration Parameters')),
-    (r'volumes/.*_GEO\.(TAB|LBL)$',      0, ('Cassini RSS', 50, 'corss_occ_geo', 'Occultation Geometry Parameters')),
+    (r'volumes/.*_TAU_01KM\.(TAB|LBL)$', 0, ('Cassini RSS', 10, 'corss_occ_01',  'Occultation Profile (1km)',           True)),
+    (r'volumes/.*_TAU_10KM\.(TAB|LBL)$', 0, ('Cassini RSS', 20, 'corss_occ_10',  'Occultation Profile (10km)',          True)),
+    (r'volumes/.*_DLP_500M\.(TAB|LBL)$', 0, ('Cassini RSS', 30, 'corss_occ_dlp', 'Diffraction-Ltd Occultation Profile', True)),
+    (r'volumes/.*_CAL\.(TAB|LBL)$',      0, ('Cassini RSS', 40, 'corss_occ_cal', 'Occultation Calibration Parameters',  True)),
+    (r'volumes/.*_GEO\.(TAB|LBL)$',      0, ('Cassini RSS', 50, 'corss_occ_geo', 'Occultation Geometry Parameters',     True)),
 ])
 
 ####################################################################################################################################
