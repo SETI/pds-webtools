@@ -386,7 +386,8 @@ class NHxxxx_xxxx(pdsfile.PdsFile):
                 new_header = ('New Horizons',
                               header[1]+50,
                               header[2]+'_alternate',
-                              header[3]+' Alternate Downlink')
+                              header[3]+' Alternate Downlink',
+                              True)
                 if new_header not in pdsfiles:
                     pdsfiles[new_header] = []
                 pdsfiles[new_header].append(sublist)
