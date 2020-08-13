@@ -180,7 +180,7 @@ filespec_to_opus_id = translator.TranslatorByRegex([
 
 opus_type = translator.TranslatorByRegex([
     (r'volumes/.*/C[0-9]{7}\.IMQ$', 0, ('Voyager ISS', 110, 'vgiss-imq', 'Compressed Raw (IMQ)', True)),
-    (r'volumes/.*/C[0-9]{7}\.IBQ$', 0, ('Voyager ISS', 120, 'vgiss-ibq', 'Small Preview (IBQ)',  True)),
+    (r'volumes/.*/C[0-9]{7}\.IBQ$', 0, ('Voyager ISS', 120, 'vgiss-ibq', 'Small Preview (IBQ)', True)),
 ])
 
 ####################################################################################################################################
