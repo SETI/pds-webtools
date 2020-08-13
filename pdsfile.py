@@ -3572,11 +3572,11 @@ class PdsFile(object):
         by a tuple containing this information:
           (group, priority, opus_type, description)
         Examples:
-          ('Cassini ISS',    0, 'coiss_raw',       'Raw image')
-          ('Cassini VIMS', 130, 'covims_full',     'Extra preview (full-size)')
-          ('Cassini CIRS', 618, 'cirs_browse_pan', 'Extra Browse Diagram (Pan)')
-          ('metadata',      40, 'ring_geometry',   'Ring Geometry Index')
-          ('browse',        30, 'browse_medium',   'Browse Image (medium)')
+          ('Cassini ISS',    0, 'coiss_raw',       'Raw image', True)
+          ('Cassini VIMS', 130, 'covims_full',     'Extra preview (full-size)', True)
+          ('Cassini CIRS', 618, 'cirs_browse_pan', 'Extra Browse Diagram (Pan)', True)
+          ('metadata',      40, 'ring_geometry',   'Ring Geometry Index', True)
+          ('browse',        30, 'browse_medium',   'Browse Image (medium)', True)
         These keys are designed such that OPUS results will be returned in the
         sorted order of these keys.
 
