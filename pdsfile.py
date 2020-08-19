@@ -1230,13 +1230,15 @@ class PdsFile(object):
                 if not results:
                     return []
 
-                # Isolate volset/volume names from shelf files
+                # Isolate unique volume names from shelf files
                 filtered = []
                 for result in results:
-                    if result.endswith('_info.shelf'):
-                        filtered.append(result[:-11])  # strip '_info.shelf'
-                    elif result.endswith('_info.pickle'):
-                        filtered.append(result[:-12])
+                    parts = result.split('_info.')
+                    if len(parts) == 1: continue
+
+                    volname = parts[0]
+                    if volname not in filtered:
+                        filtered.append(volname)
 
                 if filtered:
                     return filtered
@@ -2562,7 +2564,8 @@ class PdsFile(object):
         if caching == 'default':
             caching = DEFAULT_CACHING
 
-        if caching == 'all' or (caching == 'dir' and self.isdir):
+        if caching == 'all' or (caching == 'dir' and
+                                (self.isdir or self.is_index)):
 
             # Don't overwrite a virtual directory
             if self.logical_path not in CATEGORIES:
