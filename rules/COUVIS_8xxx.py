@@ -54,6 +54,28 @@ filespec_to_logical_path = translator.TranslatorByRegex([
 ])
 
 ####################################################################################################################################
+# VIEWABLES
+####################################################################################################################################
+
+default_viewables = translator.TranslatorByRegex([
+    (r'.*\.lbl',  re.I, ''),
+
+    (r'.*volumes/(COUVIS_8xxx)/(COUVIS_8...)/(?:data|DATA)/(.*)_TAU\d+KM\.\w+', 0,
+                                                (r'previews/\1/\2/data/\3_full.png',
+                                                 r'previews/\1/\2/data/\3_thumb.jpg',
+                                                 r'previews/\1/\2/data/\3_small.jpg',
+                                                 r'previews/\1/\2/data/\3_med.jpg')),
+])
+
+diagrams_viewables = translator.TranslatorByRegex([
+    (r'.*volumes/(COUVIS_8xxx)/(COUVIS_8...)/(?:data|DATA)/(.*)_TAU\d+KM\.\w+', 0,
+                                                (r'diagrams/\1/\2/data/\3_full.png',
+                                                 r'diagrams/\1/\2/data/\3_thumb.jpg',
+                                                 r'diagrams/\1/\2/data/\3_small.jpg',
+                                                 r'diagrams/\1/\2/data/\3_med.jpg')),
+])
+
+####################################################################################################################################
 # Subclass definition
 ####################################################################################################################################
 
@@ -65,6 +87,11 @@ class COUVIS_8xxx(pdsfile.PdsFile):
     OPUS_TYPE = opus_type + pdsfile.PdsFile.OPUS_TYPE
     OPUS_PRODUCTS = opus_products
     FILESPEC_TO_OPUS_ID = filespec_to_opus_id
+
+    VIEWABLES = {
+        'default': default_viewables,
+        'diagrams': diagrams_viewables,
+    }
 
 pdsfile.PdsFile.FILESPEC_TO_LOGICAL_PATH = filespec_to_logical_path + pdsfile.PdsFile.FILESPEC_TO_LOGICAL_PATH
 
