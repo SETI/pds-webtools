@@ -35,7 +35,7 @@ opus_products = translator.TranslatorByRegex([
                                                            r'volumes/\1_GEO.TAB',
                                                            r'volumes/\1_GEO.LBL']),
 
-    (r'.*volumes/(CORSS_8xxx)/(CORSS_8...)/(data|DATA)/.*_TAU_01KM\.(TAB|LBL)', 0,
+    (r'.*volumes/(CORSS_8xxx)/(CORSS_8...)/(?:data|DATA)/.*_TAU_01KM\.(TAB|LBL)', 0,
                                     [r'metadata/\1/\2/\2_index.lbl',
                                      r'metadata/\1/\2/\2_index.tab',
                                      r'metadata/\1/\2/\2_profile_index.lbl',

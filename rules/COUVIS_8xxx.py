@@ -27,13 +27,21 @@ opus_products = translator.TranslatorByRegex([
                              r'volumes/COUVIS_8xxx/\1/data/\2_TAU10KM.LBL',
                              r'volumes/COUVIS_8xxx/\1/data/\2_TAU10KM.TAB']),
 
-    (r'.*volumes/(COUVIS_8xxx)/(COUVIS_8...)/(data|DATA)/.*_TAU01KM\.(TAB|LBL)', 0,
+    (r'.*volumes/(COUVIS_8xxx)/(COUVIS_8...)/(?:data|DATA)/(.*)_TAU01KM\.(TAB|LBL)', 0,
                             [r'metadata/\1/\2/\2_index.lbl',
                              r'metadata/\1/\2/\2_index.tab',
                              r'metadata/\1/\2/\2_profile_index.lbl',
                              r'metadata/\1/\2/\2_profile_index.tab',
                              r'metadata/\1/\2/\2_supplemental_index.lbl',
-                             r'metadata/\1/\2/\2_supplemental_index.tab']),
+                             r'metadata/\1/\2/\2_supplemental_index.tab',
+                             r'previews/\1/\2/data/\3_full.png',
+                             r'previews/\1/\2/data/\3_thumb.png',
+                             r'previews/\1/\2/data/\3_small.png',
+                             r'previews/\1/\2/data/\3_med.png',
+                             r'diagrams/\1/\2/data/\3_full.png',
+                             r'diagrams/\1/\2/data/\3_thumb.png',
+                             r'diagrams/\1/\2/data/\3_small.png',
+                             r'diagrams/\1/\2/data/\3_med.png']),
 ])
 
 ####################################################################################################################################
@@ -62,17 +70,17 @@ default_viewables = translator.TranslatorByRegex([
 
     (r'.*volumes/(COUVIS_8xxx)/(COUVIS_8...)/(?:data|DATA)/(.*)_TAU\d+KM\.\w+', 0,
                                                 (r'previews/\1/\2/data/\3_full.png',
-                                                 r'previews/\1/\2/data/\3_thumb.jpg',
-                                                 r'previews/\1/\2/data/\3_small.jpg',
-                                                 r'previews/\1/\2/data/\3_med.jpg')),
+                                                 r'previews/\1/\2/data/\3_thumb.png',
+                                                 r'previews/\1/\2/data/\3_small.png',
+                                                 r'previews/\1/\2/data/\3_med.png')),
 ])
 
 diagrams_viewables = translator.TranslatorByRegex([
     (r'.*volumes/(COUVIS_8xxx)/(COUVIS_8...)/(?:data|DATA)/(.*)_TAU\d+KM\.\w+', 0,
                                                 (r'diagrams/\1/\2/data/\3_full.png',
-                                                 r'diagrams/\1/\2/data/\3_thumb.jpg',
-                                                 r'diagrams/\1/\2/data/\3_small.jpg',
-                                                 r'diagrams/\1/\2/data/\3_med.jpg')),
+                                                 r'diagrams/\1/\2/data/\3_thumb.png',
+                                                 r'diagrams/\1/\2/data/\3_small.png',
+                                                 r'diagrams/\1/\2/data/\3_med.png')),
 ])
 
 ####################################################################################################################################
