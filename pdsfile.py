@@ -3639,13 +3639,16 @@ class PdsFile(object):
 
         # Get the info about each labeled product
         for label_pdsfile in label_pdsfiles:
-            # Check if corresponding shelves/links files exist, if not, we
-            # skip this label file. That way, the error handled when calling
-            # the linked_abspaths below will not abort the import process.
+            # Check if the corresponding shelves/links files or link info exist,
+            # if not, we skip this label file. That way, the error handled when
+            # calling the linked_abspaths below will not abort the import
+            # process.
             try:
                 label_pdsfile.shelf_lookup('links')
-            except OSError:
-                print('Cant find links file, check next lable file')
+            except (OSError, KeyError, ValueError):
+                if LOGGER:
+                    label_logical_path = label_pdsfile.logical_path
+                    LOGGER.warn('Missing links info', label_logical_path)
                 continue
             linked_abspaths = set(label_pdsfile.linked_abspaths)
             fmts = [f for f in linked_abspaths if f[-4:] in ('.fmt', '.FMT')]
