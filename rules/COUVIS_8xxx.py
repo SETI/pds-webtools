@@ -86,6 +86,15 @@ diagrams_viewables = translator.TranslatorByRegex([
 ####################################################################################################################################
 # ASSOCIATIONS
 ####################################################################################################################################
+associations_to_volumes = translator.TranslatorByRegex([
+    (r'.*/(COUVIS_8xxx)/(COUVIS_8...)/(?:data|DATA)/(.*)_\w+\.\w+', 0, [r'volumes/\1/\2/data/\3_TAU*KM.TAB',
+                                                                        r'volumes/\1/\2/data/\3_TAU*KM.LBL']),
+
+    (r'.*/(COUVIS_8xxx)/(COUVIS_8...)/(?:data|DATA)(|/\w+)/?',      0,  r'volumes/\1/\2/data'),
+    (r'.*/(COUVIS_8xxx)/(COUVIS_8...)/\w+.\w+',                     0,  r'volumes/\1/\2/data'),
+    (r'.*/(COUVIS_8xxx)/(COUVIS_8...)',                             0,  r'volumes/\1/\2'),
+])
+
 associations_to_previews = translator.TranslatorByRegex([
     (r'.*/(COUVIS_8xxx)/(COUVIS_8...)/(?:data|DATA)/(.*)_\w+\.\w+', 0, [r'previews/\1/\2/data/\3_full.png',
                                                                         r'previews/\1/\2/data/\3_thumb.png',
@@ -93,6 +102,15 @@ associations_to_previews = translator.TranslatorByRegex([
                                                                         r'previews/\1/\2/data/\3_med.png']),
     (r'.*/(COUVIS_8xxx)/(COUVIS_8...)/(?:data|DATA)(|/\w+)$',       0,  r'previews/\1/\2/data'),
     (r'.*/(COUVIS_8xxx)/(COUVIS_8...)',                             0,  r'previews/\1/\2'),
+])
+
+associations_to_diagrams = translator.TranslatorByRegex([
+    (r'.*/(COUVIS_8xxx)/(COUVIS_8...)/(?:data|DATA)/(.*)_\w+\.\w+', 0, [r'diagrams/\1/\2/data/\3_full.png',
+                                                                        r'diagrams/\1/\2/data/\3_thumb.png',
+                                                                        r'diagrams/\1/\2/data/\3_small.png',
+                                                                        r'diagrams/\1/\2/data/\3_med.png']),
+    (r'.*/(COUVIS_8xxx)/(COUVIS_8...)/(?:data|DATA)(|/\w+)$',       0,  r'diagrams/\1/\2/data'),
+    (r'.*/(COUVIS_8xxx)/(COUVIS_8...)',                             0,  r'diagrams/\1/\2'),
 ])
 
 associations_to_metadata = translator.TranslatorByRegex([
@@ -130,9 +148,9 @@ class COUVIS_8xxx(pdsfile.PdsFile):
     }
 
     ASSOCIATIONS = pdsfile.PdsFile.ASSOCIATIONS.copy()
-    # ASSOCIATIONS['volumes']  = associations_to_volumes
+    ASSOCIATIONS['volumes']  = associations_to_volumes
     ASSOCIATIONS['previews'] = associations_to_previews
-    # ASSOCIATIONS['diagrams'] = associations_to_diagrams
+    ASSOCIATIONS['diagrams'] = associations_to_diagrams
     ASSOCIATIONS['metadata'] = associations_to_metadata
 
 pdsfile.PdsFile.FILESPEC_TO_LOGICAL_PATH = filespec_to_logical_path + pdsfile.PdsFile.FILESPEC_TO_LOGICAL_PATH
