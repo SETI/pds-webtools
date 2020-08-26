@@ -3573,13 +3573,13 @@ class PdsFile(object):
     def opus_products(self):
         """For this primary data product or label, return a dictionary keyed
         by a tuple containing this information:
-          (group, priority, opus_type, description)
+          (group, priority, opus_type, description, default_checked)
         Examples:
-          ('Cassini ISS',    0, 'coiss_raw',       'Raw image', True)
-          ('Cassini VIMS', 130, 'covims_full',     'Extra preview (full-size)', True)
+          ('Cassini ISS',    0, 'coiss_raw',       'Raw image',                  True)
+          ('Cassini VIMS', 130, 'covims_full',     'Extra preview (full-size)',  True)
           ('Cassini CIRS', 618, 'cirs_browse_pan', 'Extra Browse Diagram (Pan)', True)
-          ('metadata',      40, 'ring_geometry',   'Ring Geometry Index', True)
-          ('browse',        30, 'browse_medium',   'Browse Image (medium)', True)
+          ('metadata',      40, 'ring_geometry',   'Ring Geometry Index',        True)
+          ('browse',        30, 'browse_medium',   'Browse Image (medium)',      True)
         These keys are designed such that OPUS results will be returned in the
         sorted order of these keys.
 
@@ -3647,8 +3647,8 @@ class PdsFile(object):
                 label_pdsfile.shelf_lookup('links')
             except (OSError, KeyError, ValueError):
                 if LOGGER:
-                    label_logical_path = label_pdsfile.logical_path
-                    LOGGER.warn('Missing links info', label_logical_path)
+                    LOGGER.warn('Missing links info',
+                                label_pdsfile.logical_path)
                 continue
             linked_abspaths = set(label_pdsfile.linked_abspaths)
             fmts = [f for f in linked_abspaths if f[-4:] in ('.fmt', '.FMT')]

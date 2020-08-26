@@ -11,8 +11,8 @@ import re
 ####################################################################################################################################
 
 opus_type = translator.TranslatorByRegex([
-    (r'volumes/.*_TAU_01KM\.(TAB|LBL)$', 0, ('Cassini VIMS', 10, 'covims_occ_01',  'Occultation Profile (1km)', True)),
-    (r'volumes/.*_TAU_10KM\.(TAB|LBL)$', 0, ('Cassini VIMS', 20, 'covims_occ_10',  'Occultation Profile (10km)', True)),
+    (r'volumes/.*_TAU_01KM\.(TAB|LBL)$', 0, ('Cassini VIMS', 10, 'covims_occ_01', 'Occultation Profile (1km)',  True)),
+    (r'volumes/.*_TAU_10KM\.(TAB|LBL)$', 0, ('Cassini VIMS', 20, 'covims_occ_10', 'Occultation Profile (10km)', True)),
 ])
 
 ####################################################################################################################################
