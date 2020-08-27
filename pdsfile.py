@@ -3520,7 +3520,7 @@ class PdsFile(object):
     ############################################################################
 
     @staticmethod
-    def from_filespec(filespec):
+    def from_filespec(filespec, fix_case=False):
         """The PdsFile object based on a volume name plus file specification
         path, without the category or prefix specified.
         """
@@ -3528,8 +3528,7 @@ class PdsFile(object):
         logical_path = PdsFile.FILESPEC_TO_LOGICAL_PATH.first(filespec)
         if not logical_path:
             raise ValueError('Unrecognized file specification: ' + filespec)
-
-        return PdsFile.from_logical_path(logical_path)
+        return PdsFile.from_logical_path(logical_path, fix_case)
 
     @staticmethod
     def from_opus_id(opus_id):

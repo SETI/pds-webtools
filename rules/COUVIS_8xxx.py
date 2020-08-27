@@ -21,13 +21,13 @@ opus_type = translator.TranslatorByRegex([
 
 # Use of explicit file names means we don't need to invoke glob.glob(); this goes much faster
 opus_products = translator.TranslatorByRegex([
-    (r'.*volumes/COUVIS_8xxx/(COUVIS_....)/DATA/(.*)_TAU01KM\.(TAB|LBL)', 0,
+    (r'.*volumes/COUVIS_8xxx/(COUVIS_....)/data/(.*)_TAU01KM\.(TAB|LBL)', 0,
                             [r'volumes/COUVIS_8xxx/\1/data/\2_TAU01KM.TAB',
                              r'volumes/COUVIS_8xxx/\1/data/\2_TAU01KM.LBL',
                              r'volumes/COUVIS_8xxx/\1/data/\2_TAU10KM.LBL',
                              r'volumes/COUVIS_8xxx/\1/data/\2_TAU10KM.TAB']),
 
-    (r'.*volumes/(COUVIS_8xxx)/(COUVIS_8...)/DATA/(.*)_TAU01KM\.(TAB|LBL)', 0,
+    (r'.*volumes/(COUVIS_8xxx)/(COUVIS_8...)/data/(.*)_TAU01KM\.(TAB|LBL)', 0,
                             [r'metadata/\1/\2/\2_index.lbl',
                              r'metadata/\1/\2/\2_index.tab',
                              r'metadata/\1/\2/\2_profile_index.lbl',
@@ -49,7 +49,7 @@ opus_products = translator.TranslatorByRegex([
 ####################################################################################################################################
 
 filespec_to_opus_id = translator.TranslatorByRegex([
-    (r'COUVIS_8001/DATA/UVIS_HSP_(\d{4})_(\d{3})_(\w+)_(I|E)_TAU01KM\..+$', 0, r'co-uvis-occ-\1-\2-\3-\4'),
+    (r'COUVIS_8001/data/UVIS_HSP_(\d{4})_(\d{3})_(\w+)_(I|E)_TAU01KM\..+$', 0, r'co-uvis-occ-\1-\2-\3-\4'),
 ])
 
 ####################################################################################################################################
