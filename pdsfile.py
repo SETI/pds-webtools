@@ -3363,7 +3363,7 @@ class PdsFile(object):
                           self.logical_path + '/' + selection)
 
         if flag == '=':
-            raise IOError('Index selection not found: ' +
+            raise KeyError('Index selection not found: ' +
                           self.logical_path + '/' + selection)
 
         childnames = self.childnames + [selection]
