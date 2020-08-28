@@ -1707,16 +1707,20 @@ class TestPdsFileBlackBox:
     @pytest.mark.parametrize(
         'input_path,category,expected',
         [
-            ('volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/FUV1999_007_16_57.DAT',
+            ('volumes/HSTUx_xxxx/HSTU0_5167/DATA/VISIT_04/U2NO0404T.LBL',
              'metadata',
              # should we have the "/" at the end?
-             PDS_DATA_DIR + '/metadata/COUVIS_0xxx/COUVIS_0001/'),
+             [PDS_DATA_DIR + '/metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab/U2NO0404T',
+              PDS_DATA_DIR + '/metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_hstfiles.tab/U2NO0404T',
+              PDS_DATA_DIR + '/metadata/HSTUx_xxxx/HSTU0_5167/',
+              PDS_DATA_DIR + '/metadata/HSTUx_xxxx/HSTU0_5167',
+             ]),
             ('volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/FUV1999_007_16_57.DAT',
              'archives-volumes',
-             PDS_DATA_DIR + '/archives-volumes/COUVIS_0xxx/COUVIS_0001.tar.gz'),
+             [PDS_DATA_DIR + '/archives-volumes/COUVIS_0xxx/COUVIS_0001.tar.gz']),
             ('volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/FUV1999_007_16_57.DAT',
              'checksums-volumes',
-             PDS_DATA_DIR + '/checksums-volumes/COUVIS_0xxx/COUVIS_0001_md5.txt'),
+             [PDS_DATA_DIR + '/checksums-volumes/COUVIS_0xxx/COUVIS_0001_md5.txt']),
         ]
     )
     def test__associated_paths(self, input_path, category, expected):

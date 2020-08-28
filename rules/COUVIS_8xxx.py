@@ -68,7 +68,7 @@ filespec_to_logical_path = translator.TranslatorByRegex([
 default_viewables = translator.TranslatorByRegex([
     (r'.*\.lbl',  re.I, ''),
 
-    (r'.*volumes/(COUVIS_8xxx)/(COUVIS_8...)/(?:data|DATA)/(.*)_TAU\d+KM\.\w+', 0,
+    (r'.*volumes/(COUVIS_8xxx)/(COUVIS_8...)/data/(.*)_TAU\d+KM\.\w+', 0,
                                                 (r'previews/\1/\2/data/\3_full.png',
                                                  r'previews/\1/\2/data/\3_thumb.png',
                                                  r'previews/\1/\2/data/\3_small.png',
@@ -76,7 +76,7 @@ default_viewables = translator.TranslatorByRegex([
 ])
 
 diagrams_viewables = translator.TranslatorByRegex([
-    (r'.*volumes/(COUVIS_8xxx)/(COUVIS_8...)/(?:data|DATA)/(.*)_TAU\d+KM\.\w+', 0,
+    (r'.*volumes/(COUVIS_8xxx)/(COUVIS_8...)/data/(.*)_TAU\d+KM\.\w+', 0,
                                                 (r'diagrams/\1/\2/data/\3_full.png',
                                                  r'diagrams/\1/\2/data/\3_thumb.png',
                                                  r'diagrams/\1/\2/data/\3_small.png',
@@ -87,46 +87,46 @@ diagrams_viewables = translator.TranslatorByRegex([
 # ASSOCIATIONS
 ####################################################################################################################################
 associations_to_volumes = translator.TranslatorByRegex([
-    (r'.*/(COUVIS_8xxx)/(COUVIS_8...)/(?:data|DATA)/(.*)_\w+\.\w+', 0, [r'volumes/\1/\2/data/\3_TAU*KM.TAB',
-                                                                        r'volumes/\1/\2/data/\3_TAU*KM.LBL']),
+    (r'.*/(COUVIS_8xxx)/(COUVIS_8...)/data/(.*)_\w+\.\w+', 0, [r'volumes/\1/\2/data/\3_TAU*KM.TAB',
+                                                               r'volumes/\1/\2/data/\3_TAU*KM.LBL']),
 
-    (r'.*/(COUVIS_8xxx)/(COUVIS_8...)/(?:data|DATA)(|/\w+)/?',      0,  r'volumes/\1/\2/data'),
-    (r'.*/(COUVIS_8xxx)/(COUVIS_8...)/\w+.\w+',                     0,  r'volumes/\1/\2/data'),
-    (r'.*/(COUVIS_8xxx)/(COUVIS_8...)',                             0,  r'volumes/\1/\2'),
+    (r'.*/(COUVIS_8xxx)/(COUVIS_8...)/data(|/\w+)/?',      0,  r'volumes/\1/\2/data'),
+    (r'.*/(COUVIS_8xxx)/(COUVIS_8...)/\w+.\w+',            0,  r'volumes/\1/\2/data'),
+    (r'.*/(COUVIS_8xxx)/(COUVIS_8...)',                    0,  r'volumes/\1/\2'),
 ])
 
 associations_to_previews = translator.TranslatorByRegex([
-    (r'.*/(COUVIS_8xxx)/(COUVIS_8...)/(?:data|DATA)/(.*)_\w+\.\w+', 0, [r'previews/\1/\2/data/\3_full.png',
-                                                                        r'previews/\1/\2/data/\3_thumb.png',
-                                                                        r'previews/\1/\2/data/\3_small.png',
-                                                                        r'previews/\1/\2/data/\3_med.png']),
-    (r'.*/(COUVIS_8xxx)/(COUVIS_8...)/(?:data|DATA)(|/\w+)$',       0,  r'previews/\1/\2/data'),
-    (r'.*/(COUVIS_8xxx)/(COUVIS_8...)',                             0,  r'previews/\1/\2'),
+    (r'.*/(COUVIS_8xxx)/(COUVIS_8...)/data/(.*)_\w+\.\w+', 0, [r'previews/\1/\2/data/\3_full.png',
+                                                               r'previews/\1/\2/data/\3_thumb.png',
+                                                               r'previews/\1/\2/data/\3_small.png',
+                                                               r'previews/\1/\2/data/\3_med.png']),
+    (r'.*/(COUVIS_8xxx)/(COUVIS_8...)/data(|/\w+)$',       0,  r'previews/\1/\2/data'),
+    (r'.*/(COUVIS_8xxx)/(COUVIS_8...)',                    0,  r'previews/\1/\2'),
 ])
 
 associations_to_diagrams = translator.TranslatorByRegex([
-    (r'.*/(COUVIS_8xxx)/(COUVIS_8...)/(?:data|DATA)/(.*)_\w+\.\w+', 0, [r'diagrams/\1/\2/data/\3_full.png',
-                                                                        r'diagrams/\1/\2/data/\3_thumb.png',
-                                                                        r'diagrams/\1/\2/data/\3_small.png',
-                                                                        r'diagrams/\1/\2/data/\3_med.png']),
-    (r'.*/(COUVIS_8xxx)/(COUVIS_8...)/(?:data|DATA)(|/\w+)$',       0,  r'diagrams/\1/\2/data'),
-    (r'.*/(COUVIS_8xxx)/(COUVIS_8...)',                             0,  r'diagrams/\1/\2'),
+    (r'.*/(COUVIS_8xxx)/(COUVIS_8...)/data/(.*)_\w+\.\w+', 0, [r'diagrams/\1/\2/data/\3_full.png',
+                                                               r'diagrams/\1/\2/data/\3_thumb.png',
+                                                               r'diagrams/\1/\2/data/\3_small.png',
+                                                               r'diagrams/\1/\2/data/\3_med.png']),
+    (r'.*/(COUVIS_8xxx)/(COUVIS_8...)/data(|/\w+)$',       0,  r'diagrams/\1/\2/data'),
+    (r'.*/(COUVIS_8xxx)/(COUVIS_8...)',                    0,  r'diagrams/\1/\2'),
 ])
 
 associations_to_metadata = translator.TranslatorByRegex([
-    (r'.*volumes/(COUVIS_8xxx)/(COUVIS_8...)/(?:data|DATA)/(.*_TAU\d+KM)\.\w+',
+    (r'.*volumes/(COUVIS_8xxx)/(COUVIS_8...)/data/(.*_TAU\d+KM)\.\w+',
                                                                     0, [r'metadata/\1/\2/\2_index.tab/\3',
                                                                         r'metadata/\1/\2']),
-    (r'.*volumes/(COUVIS_8xxx)/(COUVIS_8...)/(?:data|DATA)/(.*_TAU01KM)\.\w+',
+    (r'.*volumes/(COUVIS_8xxx)/(COUVIS_8...)/data/(.*_TAU01KM)\.\w+',
                                                                     0, [r'metadata/\1/\2/\2_profile_index.tab/\3',
                                                                         r'metadata/\1/\2/\2_supplemental_index.tab/\3',
                                                                         r'metadata/\1/\2']),
-    (r'.*/(COUVIS_8xxx)/(COUVIS_8...)/(?:data|DATA)/(.*)_(full|med|small|thumb)\.\w+',
+    (r'.*/(COUVIS_8xxx)/(COUVIS_8...)/data/(.*)_(full|med|small|thumb)\.\w+',
                                                                     0, [r'metadata/\1/\2/\2_profile_index.tab/\3_TAU01KM',
                                                                         r'metadata/\1/\2/\2_supplemental_index.tab/\3_TAU01KM',
                                                                         r'metadata/\1/\2/\2_index.tab/\3_TAU*KM',
                                                                         r'metadata/\1/\2']),
-    (r'.*/(COUVIS_8xxx)/(COUVIS_8...)/(?:data|DATA)(|/\w+)$',       0,  r'metadata/\1/\2'),
+    (r'.*/(COUVIS_8xxx)/(COUVIS_8...)/data(|/\w+)$',                0,  r'metadata/\1/\2'),
 ])
 
 ####################################################################################################################################
