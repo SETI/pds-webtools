@@ -281,7 +281,7 @@ class TestPdsFileBlackBox:
             ('volumes/COCIRS_6xxx/COCIRS_6004/DATA/GEODATA/GEO1004021018_699.TAB',
              ('Cassini CIRS', 110, 'cocirs_geo',  'System Geometry', True)),
             ('previews/VGISS_8xxx/VGISS_8201/DATA/C08966XX/C0896631_thumb.jpg',
-             ('browse', 10, 'browse_thumb', 'Browse Image (thumbnail)', True)),
+             ('browse', 10, 'browse_thumb', 'Browse Image (thumbnail)', False)),
             ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
              ('metadata', 5, 'rms_index', 'RMS Node Augmented Index', False)),
         ]
