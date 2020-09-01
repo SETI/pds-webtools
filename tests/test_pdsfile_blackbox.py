@@ -3073,12 +3073,13 @@ class TestPdsFileHelperBlackBox:
         'input_path,expected',
         [
             (PDS_DATA_DIR + '/volumes/COUVIS_0xxx/COUVIS_0058/DATA/D2017_001/EUV2017_001_03_49.DAT',
-             PDS_DATA_DIR + '/volumes/COUVIS_0xxx/COUVIS_0058/DATA/D2017_001/EUV2017_001_03_49.DAT')
+             '/volumes/COUVIS_0xxx/COUVIS_0058/DATA/D2017_001/EUV2017_001_03_49.DAT')
         ]
     )
     def test_repair_case(self, input_path, expected):
         res = pdsfile.repair_case(abspath=input_path)
-        assert res == expected
+        expected_res = PDS_DATA_DIR[0].upper() + PDS_DATA_DIR[1:] + expected
+        assert res == expected_res
 
     @pytest.mark.parametrize(
         'input_path,expected',
