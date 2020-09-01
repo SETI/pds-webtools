@@ -364,7 +364,7 @@ class NHxxxx_xxxx(pdsfile.PdsFile):
         for header in list(pdsfiles.keys()): # We change pdsfiles in the loop!
             sublists = pdsfiles[header]
             if len(sublists) == 1: continue
-            if header[0] != 'New Horizons': continue
+            if header == '' or header[0] != 'New Horizons': continue
 
             priority = []
             for sublist in sublists:

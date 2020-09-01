@@ -843,6 +843,7 @@ class TestPdsFileBlackBox:
         [
             ('volumes/COISS_2xxx/COISS_2002/data/1460960653_1461048959/N1460960868_1.LBL',
              [
+                'volumes/COISS_2xxx/COISS_2002/label/vicar2.txt',
                 'volumes/COISS_2xxx/COISS_2002/label/prefix2.fmt',
                 'volumes/COISS_2xxx/COISS_2002/label/tlmtab.fmt',
                 'metadata/COISS_2xxx/COISS_2002/COISS_2002_saturn_summary.lbl',
