@@ -496,10 +496,24 @@ class TestPdsFileWhiteBox:
              'U2nO040', '', 'U2nO040'),
         ]
     )
-    def test_find_selected_row_key(self, input_path, selection, flag, expected):
+    def test_find_selected_row_key1(self, input_path, selection, flag, expected):
         target_pdsfile = instantiate_target_pdsfile(input_path)
         res = target_pdsfile.find_selected_row_key(selection, flag)
         assert res == expected
+
+    @pytest.mark.parametrize(
+        'input_path,selection,flag,expected',
+        [
+            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
+             'U2nO040', '=', 'Index selection is ambiguous'),
+        ]
+    )
+    def test_find_selected_row_key2(self, input_path, selection, flag, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        try:
+            res = target_pdsfile.find_selected_row_key(selection, flag)
+        except OSError as e:
+            assert expected in str(e)
 
     @pytest.mark.parametrize(
         'input_path,selection,flag,expected',
