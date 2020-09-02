@@ -874,7 +874,7 @@ class TestPdsFileBlackBox:
         ]
     )
     # Need to find a better way to test this one.
-    def test_opus_products(self, input_path, expected):
+    def test_opus_products1(self, input_path, expected):
         target_pdsfile = instantiate_target_pdsfile(input_path)
         res = target_pdsfile.opus_products()
         for key in res:
@@ -882,6 +882,87 @@ class TestPdsFileBlackBox:
                 for pdsf in files:
                     assert pdsf.exists == True
                     assert pdsf.logical_path in expected
+
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('volumes/HSTIx_xxxx/HSTI1_1559/DATA/VISIT_22/IB4V22GTQ.ASC',
+             {('metadata',
+               6,
+               'hstfiles_index',
+               'HST Files Associations Index',
+               False): [PDS_DATA_DIR + '/metadata/HSTIx_xxxx/HSTI1_1559/HSTI1_1559_hstfiles.tab',
+                        PDS_DATA_DIR + '/metadata/HSTIx_xxxx/HSTI1_1559/HSTI1_1559_hstfiles.lbl'],
+             ('metadata',
+              5,
+              'rms_index',
+              'RMS Node Augmented Index',
+              False): [PDS_DATA_DIR + '/metadata/HSTIx_xxxx/HSTI1_1559/HSTI1_1559_index.tab',
+                       PDS_DATA_DIR + '/metadata/HSTIx_xxxx/HSTI1_1559/HSTI1_1559_index.lbl'],
+             ('HST',
+              10,
+              'hst_text',
+              'FITS Header Text',
+              True): [PDS_DATA_DIR + '/volumes/HSTIx_xxxx/HSTI1_1559/DATA/VISIT_22/IB4V22GTQ.ASC',
+                      PDS_DATA_DIR + '/volumes/HSTIx_xxxx/HSTI1_1559/DATA/VISIT_22/IB4V22GTQ.LBL'],
+             ('HST',
+              20,
+              'hst_tiff',
+              'Raw Data Preview (lossless)',
+              True): [PDS_DATA_DIR + '/volumes/HSTIx_xxxx/HSTI1_1559/DATA/VISIT_22/IB4V22GTQ_RAW.TIF',
+                      PDS_DATA_DIR + '/volumes/HSTIx_xxxx/HSTI1_1559/DATA/VISIT_22/IB4V22GTQ.LBL'],
+             ('HST',
+              30,
+              'hst_raw',
+              'Raw Data Preview',
+              True): [PDS_DATA_DIR + '/volumes/HSTIx_xxxx/HSTI1_1559/DATA/VISIT_22/IB4V22GTQ_RAW.JPG',
+                      PDS_DATA_DIR + '/volumes/HSTIx_xxxx/HSTI1_1559/DATA/VISIT_22/IB4V22GTQ.LBL'],
+             ('HST',
+              40,
+              'hst_calib',
+              'Calibrated Data Preview',
+              True): [PDS_DATA_DIR + '/volumes/HSTIx_xxxx/HSTI1_1559/DATA/VISIT_22/IB4V22GTQ_FLT.JPG',
+                      PDS_DATA_DIR + '/volumes/HSTIx_xxxx/HSTI1_1559/DATA/VISIT_22/IB4V22GTQ.LBL'],
+             ('HST',
+              70,
+              'hst_drizzled',
+              'Calibrated Geometrically Corrected Preview',
+              True): [PDS_DATA_DIR + '/volumes/HSTIx_xxxx/HSTI1_1559/DATA/VISIT_22/IB4V22GTQ_DRZ.JPG',
+                      PDS_DATA_DIR + '/volumes/HSTIx_xxxx/HSTI1_1559/DATA/VISIT_22/IB4V22GTQ.LBL'],
+             ('browse',
+              40,
+              'browse_full',
+              'Browse Image (full)',
+              True): [PDS_DATA_DIR + '/previews/HSTIx_xxxx/HSTI1_1559/DATA/VISIT_22/IB4V22GTQ_full.jpg'],
+             ('browse',
+              30,
+              'browse_medium',
+              'Browse Image (medium)',
+              False): [PDS_DATA_DIR + '/previews/HSTIx_xxxx/HSTI1_1559/DATA/VISIT_22/IB4V22GTQ_med.jpg'],
+             ('browse',
+              20,
+              'browse_small',
+              'Browse Image (small)',
+              False): [PDS_DATA_DIR + '/previews/HSTIx_xxxx/HSTI1_1559/DATA/VISIT_22/IB4V22GTQ_small.jpg'],
+             ('browse',
+              10,
+              'browse_thumb',
+              'Browse Image (thumbnail)',
+              False): [PDS_DATA_DIR + '/previews/HSTIx_xxxx/HSTI1_1559/DATA/VISIT_22/IB4V22GTQ_thumb.jpg']}
+            ),
+        ]
+    )
+    # Need to find a better way to test this one.
+    def test_opus_products2(self, input_path, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        res = target_pdsfile.opus_products()
+        for key in res:
+            assert key in expected
+            for files in res[key]:
+                assert len(files) == len(expected[key])
+                for pdsf in files:
+                    assert pdsf.exists == True
+                    assert pdsf.abspath in expected[key]
 
     ############################################################################
     # Test for associated volumes and volsets
