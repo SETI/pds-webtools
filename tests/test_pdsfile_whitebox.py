@@ -835,7 +835,14 @@ class TestPdsFileWhiteBox:
 
             ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
              'metadata', 'u2no0403t', '',
-             PDS_DATA_DIR + '/metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab'),
+             [
+              PDS_DATA_DIR + '/metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab/U2NO0403T',
+              PDS_DATA_DIR + '/metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_hstfiles.tab/U2NO0403T',
+              PDS_DATA_DIR + '/metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
+              PDS_DATA_DIR + '/metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_hstfiles.tab',
+              PDS_DATA_DIR + '/metadata/HSTUx_xxxx/HSTU0_5167/',
+              PDS_DATA_DIR + '/metadata/HSTUx_xxxx/HSTU0_5167',
+             ]),
         ]
     )
     def test__associated_paths1(self, input_path, category, selection,

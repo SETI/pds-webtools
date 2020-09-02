@@ -1937,7 +1937,14 @@ class PdsFile(object):
                 else:
                     new_list = []
                     for (recno, basename, internal_path) in values:
-                        abspath = volume_path_ + internal_path
+                        if internal_path.startswith('../../'):
+                            abspath = (self.root_ + self.category_ +
+                                       internal_path[6:])
+                        elif internal_path.startswith('../'):
+                            abspath = (self.volset_abspath() + '/' +
+                                       internal_path[3:])
+                        else:
+                            abspath = volume_path_ + internal_path
                         new_list.append((recno, basename, abspath))
                     self._internal_links_filled = new_list
 
