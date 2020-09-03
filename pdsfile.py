@@ -3669,7 +3669,7 @@ class PdsFile(object):
         # Construct the dictionary to return
         opus_pdsfiles = {}
         for pdsf in data_pdsfiles:
-            key = pdsf.opus_type
+            key = opus_type_for_abspath.get(pdsf.abspath, pdsf.opus_type)
             if key not in opus_pdsfiles:
                 opus_pdsfiles[key] = []
 
