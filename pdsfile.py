@@ -3646,6 +3646,17 @@ class PdsFile(object):
         for abspath in abspaths:
             pdsf = PdsFile.from_abspath(abspath)
             if pdsf.islabel:
+                # Check if the corresponding shelves/links files or link info
+                # exist, if not, we skip this label file. That way, the error
+                # handled when calling the linked_abspaths below will not abort
+                # the import process.
+                try:
+                    pdsf.shelf_lookup('links')
+                except (OSError, KeyError, ValueError):
+                    if LOGGER:
+                        LOGGER.warn('Missing links info',
+                                    label_pdsfile.logical_path)
+                    continue
                 links = set(pdsf.linked_abspaths)
                 fmts = [f for f in links if f.lower().endswith('.fmt')]
                 fmts.sort()
