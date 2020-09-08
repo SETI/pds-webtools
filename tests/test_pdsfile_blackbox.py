@@ -842,46 +842,103 @@ class TestPdsFileBlackBox:
         'input_path,expected',
         [
             ('volumes/COISS_2xxx/COISS_2002/data/1460960653_1461048959/N1460960868_1.LBL',
-             [
-                'volumes/COISS_2xxx/COISS_2002/label/vicar2.txt',
-                'volumes/COISS_2xxx/COISS_2002/label/prefix2.fmt',
-                'volumes/COISS_2xxx/COISS_2002/label/tlmtab.fmt',
-                'metadata/COISS_2xxx/COISS_2002/COISS_2002_saturn_summary.lbl',
-                'metadata/COISS_2xxx/COISS_2002/COISS_2002_saturn_summary.tab',
-                'volumes/COISS_2xxx/COISS_2002/data/1460960653_1461048959/N1460960868_1.IMG',
-                'volumes/COISS_2xxx/COISS_2002/data/1460960653_1461048959/N1460960868_1.LBL',
-                'metadata/COISS_2xxx/COISS_2002/COISS_2002_index.tab',
-                'metadata/COISS_2xxx/COISS_2002/COISS_2002_index.lbl',
-                'calibrated/COISS_2xxx/COISS_2002/data/1460960653_1461048959/N1460960868_1_CALIB.IMG',
-                'calibrated/COISS_2xxx/COISS_2002/data/1460960653_1461048959/N1460960868_1_CALIB.LBL',
-                'calibrated/COISS_2xxx_v1.0/COISS_2002/data/1460960653_1461048959/N1460960868_1_CALIB.IMG',
-                'calibrated/COISS_2xxx_v1.0/COISS_2002/data/1460960653_1461048959/N1460960868_1_CALIB.LBL',
-                'metadata/COISS_2xxx/COISS_2002/COISS_2002_moon_summary.tab',
-                'metadata/COISS_2xxx/COISS_2002/COISS_2002_moon_summary.lbl',
-                'metadata/COISS_2xxx/COISS_2002/COISS_2002_inventory.tab',
-                'metadata/COISS_2xxx/COISS_2002/COISS_2002_inventory.lbl',
-                'metadata/COISS_2xxx/COISS_2002/COISS_2002_ring_summary.tab',
-                'metadata/COISS_2xxx/COISS_2002/COISS_2002_ring_summary.lbl',
-                'previews/COISS_2xxx/COISS_2002/data/1460960653_1461048959/N1460960868_1_thumb.jpg',
-                'volumes/COISS_2xxx/COISS_2002/extras/thumbnail/1460960653_1461048959/N1460960868_1.IMG.jpeg_small',
-                'volumes/COISS_2xxx/COISS_2002/extras/browse/1460960653_1461048959/N1460960868_1.IMG.jpeg',
-                'previews/COISS_2xxx/COISS_2002/data/1460960653_1461048959/N1460960868_1_full.png',
-                'volumes/COISS_2xxx/COISS_2002/extras/full/1460960653_1461048959/N1460960868_1.IMG.png',
-                'previews/COISS_2xxx/COISS_2002/data/1460960653_1461048959/N1460960868_1_small.jpg',
-                'previews/COISS_2xxx/COISS_2002/data/1460960653_1461048959/N1460960868_1_med.jpg',
-             ]
+             {('Cassini ISS',
+               0,
+               'coiss_raw',
+               'Raw image',
+               True): [PDS_DATA_DIR + '/volumes/COISS_2xxx/COISS_2002/data/1460960653_1461048959/N1460960868_1.IMG',
+                       PDS_DATA_DIR + '/volumes/COISS_2xxx/COISS_2002/data/1460960653_1461048959/N1460960868_1.LBL',
+                       PDS_DATA_DIR + '/volumes/COISS_2xxx/COISS_2002/label/prefix2.fmt',
+                       PDS_DATA_DIR + '/volumes/COISS_2xxx/COISS_2002/label/tlmtab.fmt'],
+             ('Cassini ISS',
+              110,
+              'coiss_thumb',
+              'Extra preview (thumbnail)',
+              False): [PDS_DATA_DIR + '/volumes/COISS_2xxx/COISS_2002/extras/thumbnail/1460960653_1461048959/N1460960868_1.IMG.jpeg_small'],
+             ('Cassini ISS',
+              120,
+              'coiss_medium',
+              'Extra preview (medium)',
+              False): [PDS_DATA_DIR + '/volumes/COISS_2xxx/COISS_2002/extras/browse/1460960653_1461048959/N1460960868_1.IMG.jpeg'],
+             ('Cassini ISS',
+              130,
+              'coiss_full',
+              'Extra preview (full)',
+              True): [PDS_DATA_DIR + '/volumes/COISS_2xxx/COISS_2002/extras/full/1460960653_1461048959/N1460960868_1.IMG.png'],
+             ('Cassini ISS',
+              10,
+              'coiss_calib',
+              'Calibrated image',
+              True): [PDS_DATA_DIR + '/calibrated/COISS_2xxx/COISS_2002/data/1460960653_1461048959/N1460960868_1_CALIB.IMG',
+                      PDS_DATA_DIR + '/calibrated/COISS_2xxx/COISS_2002/data/1460960653_1461048959/N1460960868_1_CALIB.LBL', PDS_DATA_DIR + '/calibrated/COISS_2xxx_v1.0/COISS_2002/data/1460960653_1461048959/N1460960868_1_CALIB.IMG',
+                      PDS_DATA_DIR + '/calibrated/COISS_2xxx_v1.0/COISS_2002/data/1460960653_1461048959/N1460960868_1_CALIB.LBL'],
+             ('browse',
+              10,
+              'browse_thumb',
+              'Browse Image (thumbnail)',
+              False): [PDS_DATA_DIR + '/previews/COISS_2xxx/COISS_2002/data/1460960653_1461048959/N1460960868_1_thumb.jpg'],
+             ('browse',
+              20,
+              'browse_small',
+              'Browse Image (small)',
+              False): [PDS_DATA_DIR + '/previews/COISS_2xxx/COISS_2002/data/1460960653_1461048959/N1460960868_1_small.jpg'],
+             ('browse',
+              30,
+              'browse_medium',
+              'Browse Image (medium)',
+              False): [PDS_DATA_DIR + '/previews/COISS_2xxx/COISS_2002/data/1460960653_1461048959/N1460960868_1_med.jpg'],
+             ('browse',
+              40,
+              'browse_full',
+              'Browse Image (full)',
+              True): [PDS_DATA_DIR + '/previews/COISS_2xxx/COISS_2002/data/1460960653_1461048959/N1460960868_1_full.png'],
+             ('metadata',
+              20,
+              'planet_geometry',
+              'Planet Geometry Index',
+              False): [PDS_DATA_DIR + '/metadata/COISS_2xxx/COISS_2002/COISS_2002_saturn_summary.tab',
+                       PDS_DATA_DIR + '/metadata/COISS_2xxx/COISS_2002/COISS_2002_saturn_summary.lbl'],
+             ('metadata',
+              30,
+              'moon_geometry',
+              'Moon Geometry Index',
+              False): [PDS_DATA_DIR + '/metadata/COISS_2xxx/COISS_2002/COISS_2002_moon_summary.tab',
+                       PDS_DATA_DIR + '/metadata/COISS_2xxx/COISS_2002/COISS_2002_moon_summary.lbl'],
+             ('metadata',
+              40,
+              'ring_geometry',
+              'Ring Geometry Index',
+              False): [PDS_DATA_DIR + '/metadata/COISS_2xxx/COISS_2002/COISS_2002_ring_summary.tab',
+                       PDS_DATA_DIR + '/metadata/COISS_2xxx/COISS_2002/COISS_2002_ring_summary.lbl'],
+             ('metadata',
+              10,
+              'inventory',
+              'Target Body Inventory',
+              False): [PDS_DATA_DIR + '/metadata/COISS_2xxx/COISS_2002/COISS_2002_inventory.tab',
+                       PDS_DATA_DIR + '/metadata/COISS_2xxx/COISS_2002/COISS_2002_inventory.lbl'],
+             ('metadata',
+              5,
+              'rms_index',
+              'RMS Node Augmented Index',
+              False): [PDS_DATA_DIR + '/metadata/COISS_2xxx/COISS_2002/COISS_2002_index.tab',
+                       PDS_DATA_DIR + '/metadata/COISS_2xxx/COISS_2002/COISS_2002_index.lbl']}
             ),
         ]
     )
-    # Need to find a better way to test this one.
-    def test_opus_products1(self, input_path, expected):
+    def test_opus_products_coiss_2xxx(self, input_path, expected):
         target_pdsfile = instantiate_target_pdsfile(input_path)
         res = target_pdsfile.opus_products()
         for key in res:
+            assert key in expected
+            all_files = []
+            all_files_abspath = []
             for files in res[key]:
-                for pdsf in files:
-                    assert pdsf.exists == True
-                    assert pdsf.logical_path in expected
+                all_files += files
+            assert len(all_files) == len(expected[key])
+            for pdsf in all_files:
+                assert pdsf.abspath in expected[key]
+                all_files_abspath += pdsf.abspath
+            assert all_files_abspath.sort() == expected[key].sort()
 
     @pytest.mark.parametrize(
         'input_path,expected',
@@ -950,6 +1007,26 @@ class TestPdsFileBlackBox:
               'Browse Image (thumbnail)',
               False): [PDS_DATA_DIR + '/previews/HSTIx_xxxx/HSTI1_1559/DATA/VISIT_22/IB4V22GTQ_thumb.jpg']}
             ),
+        ]
+    )
+    def test_opus_products_hstix_xxxx(self, input_path, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        res = target_pdsfile.opus_products()
+        for key in res:
+            assert key in expected
+            all_files = []
+            all_files_abspath = []
+            for files in res[key]:
+                all_files += files
+            assert len(all_files) == len(expected[key])
+            for pdsf in all_files:
+                assert pdsf.abspath in expected[key]
+                all_files_abspath.append(pdsf.abspath)
+            assert all_files_abspath.sort() == expected[key].sort()
+
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
             ('volumes/COVIMS_0xxx/COVIMS_0006/data/2005088T102825_2005089T113931/v1490784910_3_001.qub',
              {('Cassini VIMS',
               0,
@@ -1037,17 +1114,139 @@ class TestPdsFileBlackBox:
             ),
         ]
     )
-    # Need to find a better way to test this one.
-    def test_opus_products2(self, input_path, expected):
+    def test_opus_products_covims_0xxx(self, input_path, expected):
         target_pdsfile = instantiate_target_pdsfile(input_path)
         res = target_pdsfile.opus_products()
         for key in res:
             assert key in expected
+            all_files = []
+            all_files_abspath = []
             for files in res[key]:
-                assert len(files) == len(expected[key])
-                for pdsf in files:
-                    assert pdsf.exists == True
-                    assert pdsf.abspath in expected[key]
+                all_files += files
+            assert len(all_files) == len(expected[key])
+            for pdsf in all_files:
+                assert pdsf.abspath in expected[key]
+                all_files_abspath.append(pdsf.abspath)
+            assert all_files_abspath.sort() == expected[key].sort()
+
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('volumes/COCIRS_5xxx/COCIRS_5408/DATA/POIDATA/POI0408010000_FP1.LBL',
+             {('Cassini CIRS',
+               0,
+               'cocirs_spec',
+               'Calibrated Interferograms',
+               True): [PDS_DATA_DIR + '/volumes/COCIRS_5xxx/COCIRS_5408/DATA/APODSPEC/SPEC0408010000_FP1.DAT',
+               PDS_DATA_DIR + '/volumes/COCIRS_5xxx/COCIRS_5408/DATA/APODSPEC/SPEC0408010000_FP1.LBL'],
+             ('Cassini CIRS',
+              110,
+              'cocirs_geo',
+              'System Geometry',
+              True): [PDS_DATA_DIR + '/volumes/COCIRS_5xxx/COCIRS_5408/DATA/GEODATA/GEO0408010000_699.TAB',
+               PDS_DATA_DIR + '/volumes/COCIRS_5xxx/COCIRS_5408/DATA/GEODATA/GEO0408010000_699.LBL',
+               PDS_DATA_DIR + '/volumes/COCIRS_5xxx/COCIRS_5408/DATA/GEODATA/GEODATA.FMT', PDS_DATA_DIR + '/volumes/COCIRS_5xxx/COCIRS_5408/DATA/GEODATA/GEO0408010000_617.TAB',
+               PDS_DATA_DIR + '/volumes/COCIRS_5xxx/COCIRS_5408/DATA/GEODATA/GEO0408010000_617.LBL',
+               PDS_DATA_DIR + '/volumes/COCIRS_5xxx/COCIRS_5408/DATA/GEODATA/GEODATA.FMT', PDS_DATA_DIR + '/volumes/COCIRS_5xxx/COCIRS_5408/DATA/GEODATA/GEO0408010000_611.TAB',
+               PDS_DATA_DIR + '/volumes/COCIRS_5xxx/COCIRS_5408/DATA/GEODATA/GEO0408010000_611.LBL',
+               PDS_DATA_DIR + '/volumes/COCIRS_5xxx/COCIRS_5408/DATA/GEODATA/GEODATA.FMT'],
+             ('Cassini CIRS',
+              130,
+              'cocirs_poi',
+              'Footprint Geometry on Bodies',
+              True): [PDS_DATA_DIR + '/volumes/COCIRS_5xxx/COCIRS_5408/DATA/POIDATA/POI0408010000_FP1.TAB',
+               PDS_DATA_DIR + '/volumes/COCIRS_5xxx/COCIRS_5408/DATA/POIDATA/POI0408010000_FP1.LBL',
+               PDS_DATA_DIR + '/volumes/COCIRS_5xxx/COCIRS_5408/DATA/POIDATA/POIDATA.FMT'],
+             ('Cassini CIRS',
+              140,
+              'cocirs_rin',
+              'Footprint Geometry on Rings',
+              True): [PDS_DATA_DIR + '/volumes/COCIRS_5xxx/COCIRS_5408/DATA/RINDATA/RIN0408010000_FP1.TAB',
+               PDS_DATA_DIR + '/volumes/COCIRS_5xxx/COCIRS_5408/DATA/RINDATA/RIN0408010000_FP1.LBL',
+               PDS_DATA_DIR + '/volumes/COCIRS_5xxx/COCIRS_5408/DATA/RINDATA/RINDATA.FMT'],
+             ('Cassini CIRS',
+              150,
+              'cocirs_tar',
+              'Target Body Identifications',
+              True): [PDS_DATA_DIR + '/volumes/COCIRS_5xxx/COCIRS_5408/DATA/TARDATA/TAR0408010000_FP1.TAB',
+               PDS_DATA_DIR + '/volumes/COCIRS_5xxx/COCIRS_5408/DATA/TARDATA/TAR0408010000_FP1.LBL',
+               PDS_DATA_DIR + '/volumes/COCIRS_5xxx/COCIRS_5408/DATA/TARDATA/TARDATA.FMT'],
+             ('Cassini CIRS',
+              510,
+              'cocirs_browse_target',
+              'Extra Browse Diagram (Default)',
+              True): [PDS_DATA_DIR + '/volumes/COCIRS_5xxx/COCIRS_5408/BROWSE/TARGETS/IMG0408010000_FP1.PNG',
+               PDS_DATA_DIR + '/volumes/COCIRS_5xxx/COCIRS_5408/BROWSE/TARGETS/IMG0408010000_FP1.LBL'],
+             ('Cassini CIRS',
+              520,
+              'cocirs_browse_saturn',
+              'Extra Browse Diagram (Saturn)',
+              True): [PDS_DATA_DIR + '/volumes/COCIRS_5xxx/COCIRS_5408/BROWSE/SATURN/POI0408010000_FP1.PNG',
+               PDS_DATA_DIR + '/volumes/COCIRS_5xxx/COCIRS_5408/BROWSE/SATURN/POI0408010000_FP1.LBL'],
+             ('Cassini CIRS',
+              530,
+              'cocirs_browse_rings',
+              'Extra Browse Diagram (Rings)',
+              True): [PDS_DATA_DIR + '/volumes/COCIRS_5xxx/COCIRS_5408/BROWSE/S_RINGS/RIN0408010000_FP1.PNG',
+               PDS_DATA_DIR + '/volumes/COCIRS_5xxx/COCIRS_5408/BROWSE/S_RINGS/RIN0408010000_FP1.LBL'],
+             ('diagram',
+              40,
+              'diagram_full',
+              'Browse Diagram (full)',
+              True): [PDS_DATA_DIR + '/diagrams/COCIRS_5xxx/COCIRS_5408/BROWSE/S_RINGS/RIN0408010000_FP1_full.jpg', PDS_DATA_DIR + '/diagrams/COCIRS_5xxx/COCIRS_5408/BROWSE/SATURN/POI0408010000_FP1_full.jpg'],
+             ('diagram',
+              30,
+              'diagram_medium',
+              'Browse Diagram (medium)',
+              False): [PDS_DATA_DIR + '/diagrams/COCIRS_5xxx/COCIRS_5408/BROWSE/S_RINGS/RIN0408010000_FP1_med.jpg', PDS_DATA_DIR + '/diagrams/COCIRS_5xxx/COCIRS_5408/BROWSE/SATURN/POI0408010000_FP1_med.jpg'],
+             ('diagram',
+              20,
+              'diagram_small',
+              'Browse Diagram (small)',
+              False): [PDS_DATA_DIR + '/diagrams/COCIRS_5xxx/COCIRS_5408/BROWSE/S_RINGS/RIN0408010000_FP1_small.jpg', PDS_DATA_DIR + '/diagrams/COCIRS_5xxx/COCIRS_5408/BROWSE/SATURN/POI0408010000_FP1_small.jpg'],
+             ('diagram',
+              10,
+              'diagram_thumb',
+              'Browse Diagram (thumbnail)',
+              False): [PDS_DATA_DIR + '/diagrams/COCIRS_5xxx/COCIRS_5408/BROWSE/S_RINGS/RIN0408010000_FP1_thumb.jpg', PDS_DATA_DIR + '/diagrams/COCIRS_5xxx/COCIRS_5408/BROWSE/SATURN/POI0408010000_FP1_thumb.jpg'],
+             ('browse',
+              30,
+              'browse_medium',
+              'Browse Image (medium)',
+              False): [PDS_DATA_DIR + '/diagrams/COCIRS_5xxx/COCIRS_5408/BROWSE/TARGETS/IMG0408010000_FP1_med.jpg'],
+             ('browse',
+              10,
+              'browse_thumb',
+              'Browse Image (thumbnail)',
+              False): [PDS_DATA_DIR + '/diagrams/COCIRS_5xxx/COCIRS_5408/BROWSE/TARGETS/IMG0408010000_FP1_thumb.jpg'],
+             ('browse',
+              20,
+              'browse_small',
+              'Browse Image (small)',
+              False): [PDS_DATA_DIR + '/diagrams/COCIRS_5xxx/COCIRS_5408/BROWSE/TARGETS/IMG0408010000_FP1_small.jpg'],
+             ('browse',
+              40,
+              'browse_full',
+              'Browse Image (full)',
+              True): [PDS_DATA_DIR + '/diagrams/COCIRS_5xxx/COCIRS_5408/BROWSE/TARGETS/IMG0408010000_FP1_full.jpg']}
+            )
+        ]
+    )
+    def test_opus_products_cocir_0xxx(self, input_path, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        res = target_pdsfile.opus_products()
+        print(res)
+        for key in res:
+            assert key in expected
+            all_files = []
+            all_files_abspath = []
+            for files in res[key]:
+                all_files += files
+            assert len(all_files) == len(expected[key])
+            for pdsf in all_files:
+                assert pdsf.abspath in expected[key]
+                all_files_abspath.append(pdsf.abspath)
+            assert all_files_abspath.sort() == expected[key].sort()
 
     ############################################################################
     # Test for associated volumes and volsets
