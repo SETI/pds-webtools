@@ -602,6 +602,7 @@ class PdsFile(object):
     SPLIT_RULES = pdsfile_rules.SPLIT_RULES
     VIEW_OPTIONS = pdsfile_rules.VIEW_OPTIONS
     VIEWABLES = pdsfile_rules.VIEWABLES
+    LID = pdsfile_rules.LID
 
     OPUS_TYPE = pdsfile_rules.OPUS_TYPE
     OPUS_FORMAT = pdsfile_rules.OPUS_FORMAT
@@ -800,6 +801,8 @@ class PdsFile(object):
         self._volume_publication_date_filled = None
         self._volume_version_id_filled       = None
         self._volume_data_set_ids_filled     = None
+        self._lid_filled                     = None
+        self._data_set_id_filled             = None
         self._version_ranks_filled           = None
         self._exact_archive_url_filled       = None
         self._exact_checksum_url_filled      = None
@@ -920,6 +923,8 @@ class PdsFile(object):
         this._volume_publication_date_filled = ''
         this._volume_version_id_filled       = ''
         this._volume_data_set_ids_filled     = ''
+        this._lid_filled                     = ''
+        this._data_set_id_filled             = ''
         this._version_ranks_filled           = []
         this._exact_archive_url_filled       = ''
         this._exact_checksum_url_filled      = ''
@@ -973,6 +978,8 @@ class PdsFile(object):
         this._volume_publication_date_filled = self.volume_publication_date
         this._volume_version_id_filled       = self.volume_version_id
         this._volume_data_set_ids_filled     = self.volume_data_set_ids
+        this._lid_filled                     = ''
+        this._data_set_id_filled             = self.data_set_id
         this._version_ranks_filled           = self.version_ranks
         this._exact_archive_url_filled       = ''
         this._exact_checksum_url_filled      = ''
@@ -1858,6 +1865,62 @@ class PdsFile(object):
             self._recache()
 
         return self._opus_type_filled
+
+    @property
+    def data_set_id(self):
+        """Return the data set id if the volume only has one data set id. Raise
+        an error when the volume has multiple or zero data set id.
+        """
+        if self._data_set_id_filled is not None:
+            return self._data_set_id_filled
+
+        if len(self.volume_data_set_ids) != 1:
+            raise ValueError('Multiple or no data set id exists for %s' %
+                             self.logical_path)
+        else:
+            self._data_set_id_filled = self.volume_data_set_ids[0]
+
+        self._recache()
+        return self._data_set_id_filled
+
+    @property
+    def lid(self):
+        """Return the lid for data files under volumes directory. Lid is
+        currently available for COISS_[12]xxx and COVIMS_0xxx. If the volume
+        has no lid, it returns ''.
+
+        Format:
+        dataset_id:volume_id:directory_path:file_name
+
+        Examples:
+        'volumes/COISS_2xxx/COISS_2002/data/1460960653_1461048959/
+        N1460960653_1.IMG'
+        -> 'CO-S-ISSNA/ISSWA-2-EDR-V1.0:COISS_2002:data/1460960653_1461048959:
+            N1460960653_1.IMG'
+
+        'volumes/COISS_2xxx/COISS_2002/data/1460960653_1461048959/
+        N1460960653_1.LBL'
+        -> 'CO-S-ISSNA/ISSWA-2-EDR-V1.0:COISS_2002:data/1460960653_1461048959:
+            N1460960653_1.LBL'
+
+        'volumes/COISS_2xxx/COISS_2008/extras/full/1477675247_1477737486/
+        N1477691357_1.IMG.png'
+        -> 'CO-S-ISSNA/ISSWA-2-EDR-V1.0:COISS_2008:
+            extras/full/1477675247_1477737486:N1477691357_1.IMG.png'
+        """
+
+        if self._lid_filled is not None:
+            return self._lid_filled
+
+        if self.LID.first(self.logical_path):
+            self._lid_filled = (self.data_set_id +
+                                self.LID.first(self.logical_path))
+        else:
+            self._lid_filled = ''
+
+        self._recache()
+        return self._lid_filled
+
 
     @property
     def info_basename(self):

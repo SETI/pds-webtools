@@ -219,6 +219,13 @@ opus_id_to_filespec = translator.TranslatorByRegex([
 ])
 
 ####################################################################################################################################
+# LID
+####################################################################################################################################
+lid = translator.TranslatorByRegex([
+    (r'.*volumes/(?:COVIMS_0xxx)/(COVIMS_0...)/(.*)/([^\/].+\..*)$',  0, r':\1:\2:\3'),
+])
+
+####################################################################################################################################
 # Subclass definition
 ####################################################################################################################################
 
@@ -242,6 +249,8 @@ class COVIMS_0xxx(pdsfile.PdsFile):
     ASSOCIATIONS['volumes']  = associations_to_volumes
     ASSOCIATIONS['previews'] = associations_to_previews
     ASSOCIATIONS['metadata'] = associations_to_metadata
+
+    LID = lid
 
     def FILENAME_KEYLEN(self):
         parts = self.basename.split('_')
