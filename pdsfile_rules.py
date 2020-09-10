@@ -467,7 +467,6 @@ FILESPEC_TO_LOGICAL_PATH = translator.TranslatorByRegex([
 ####################################################################################################################################
 # LID
 # The Link between PDS4 and PDS3 data files under volumes/.
-# Only COISS & COVIMS have LIDs for now, rest of volumes will have no LIDs ('')
 ####################################################################################################################################
 LID = translator.TranslatorByRegex([
     (r'.*', 0, ''),

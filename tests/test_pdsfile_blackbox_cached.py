@@ -580,6 +580,7 @@ class TestPdsFileBlackBox:
              'CO-E/V/J/S-VIMS-2-QUBE-V1.0:COVIMS_0006:INDEX:index.tab'),
             ('volumes/COISS_2xxx/COISS_2002/label/prefix.fmt',
              'CO-S-ISSNA/ISSWA-2-EDR-V1.0:COISS_2002:label:prefix.fmt'),
+             # The volume that has no LID
             ('volumes/COCIRS_0xxx/COCIRS_0012/DATA/NAV_DATA/GEO00120100.DAT',
              ''),
         ]
@@ -603,6 +604,7 @@ class TestPdsFileBlackBox:
              'CO-S-ISSNA/ISSWA-2-EDR-V1.0:COISS_2002:extras/thumbnail/1460960653_1461048959:N1460960868_1.IMG.jpeg_small::1.0'),
             ('volumes/COVIMS_0xxx/COVIMS_0001/data/1999010T054026_1999010T060958/v1294638283_1.qub',
              'CO-E/V/J/S-VIMS-2-QUBE-V1.0:COVIMS_0001:data/1999010T054026_1999010T060958:v1294638283_1.qub::1.0'),
+             # The volume that has no LIDVID
             ('volumes/COCIRS_0xxx/COCIRS_0012/DATA/NAV_DATA/GEO00120100.DAT',
              ''),
         ]
@@ -635,6 +637,23 @@ class TestPdsFileBlackBox:
         res2 = target_pdsfile.data_set_id
         assert res1 == expected
         assert res1 == res2
+
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31.DAT',
+             ''),
+        ]
+    )
+    def test_data_set_id_multi_data_set_id(self, input_path, expected):
+        """lid: return self._data_set_id_filled"""
+        try:
+            target_pdsfile = instantiate_target_pdsfile(input_path)
+            res = target_pdsfile.data_set_id
+            # Must raise an exception
+            assert False
+        except ValueError as e:
+            assert 'Multiple or no data set id exists' in str(e)
 
 ################################################################################
 # Blackbox test for internal cached in PdsGroup class

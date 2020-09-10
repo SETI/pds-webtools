@@ -1888,9 +1888,8 @@ class PdsFile(object):
 
     @property
     def lid(self):
-        """Return the lid for data files under volumes directory. Lid is
-        currently available for COISS_[12]xxx and COVIMS_0xxx. If the volume
-        has no lid, it returns ''.
+        """Return the LID for data files under volumes directory. If the volume
+        has no LID, it returns ''.
 
         Format:
         dataset_id:volume_id:directory_path:file_name
@@ -1916,7 +1915,7 @@ class PdsFile(object):
             return self._lid_filled
 
         if self.LID.first(self.logical_path):
-            self._lid_filled = (self.data_set_id +
+            self._lid_filled = (self.data_set_id + ':' +
                                 self.LID.first(self.logical_path))
         else:
             self._lid_filled = ''
@@ -1926,9 +1925,8 @@ class PdsFile(object):
 
     @property
     def lidvid(self):
-        """Return the lidvid for data files under volumes directory. Lidvid is
-        currently available for COISS_[12]xxx and COVIMS_0xxx. If the volume has
-        no lid, it returns ''.
+        """Return the LIDVID for data files under volumes directory. If the
+        volume has no LID, it returns ''.
 
         Format:
         dataset_id:volume_id:directory_path:file_name::vid
@@ -2944,25 +2942,25 @@ class PdsFile(object):
 
     @staticmethod
     def from_lid(lid_str, fix_case=False):
-        """Constructor for a PdsFile from a lid.
+        """Constructor for a PdsFile from a LID.
         lid_str format: dataset_id:volume_id:directory_path:file_name
         """
 
-        lid_component = lid_str.split(":")
+        lid_component = lid_str.split(':')
         if len(lid_component) != 4:
-            raise ValueError('%s is not a valid lid.' % lid_str)
+            raise ValueError('%s is not a valid LID.' % lid_str)
 
         data_set_id = lid_component[0]
         volume_id = lid_component[1]
         volset = volume_id[:-3] + 'xxx'
-        logical_path = f'volumes/{volset}/' + '/'.join(lid_component[1:])
+        logical_path = 'volumes/' + volset + '/' + '/'.join(lid_component[1:])
 
         pdsf = PdsFile.from_logical_path(logical_path, fix_case)
 
         if pdsf.data_set_id != data_set_id:
-            raise ValueError(f'Data set id from lid_str: "{data_set_id}" '+
+            raise ValueError('Data set id from lid_str: ' + data_set_id +
                              'does not match the one from pdsfile: ' +
-                             f'"{pdsf.data_set_id}"')
+                             pdsf.data_set_id)
         return pdsf
 
     @staticmethod

@@ -743,7 +743,7 @@ class TestPdsFileBlackBox:
             res = pdsfile.PdsFile.from_abspath(abspath=input_path)
             assert isinstance(res, pdsfile.PdsFile)
             assert res.abspath == expected
-        except ValueError as err:
+        except ValueError as e:
             assert True # input path is not an absolute path
 
     @pytest.mark.parametrize(
@@ -755,17 +755,44 @@ class TestPdsFileBlackBox:
              'CO-E/V/J-ISSNA/ISSWA-2-EDR-V1.0'),
             ('CO-E/V/J/S-VIMS-2-QUBE-V1.0:COVIMS_0001:data/1999010T054026_1999010T060958:v1294638283_1.qub',
              'CO-E/V/J/S-VIMS-2-QUBE-V1.0'),
+        ]
+    )
+    def test_from_lid_valid_lid(self, input_lid, expected):
+        res = pdsfile.PdsFile.from_lid(input_lid)
+        assert isinstance(res, pdsfile.PdsFile)
+        assert res.data_set_id == expected
+
+    @pytest.mark.parametrize(
+        'input_lid,expected',
+        [
             ('CO-E/V/J/S-VIMS-2-QUBE-V2.0:COVIMS_0001:data/1999010T054026_1999010T060958:v1294638283_1.qub',
              'CO-E/V/J/S-VIMS-2-QUBE-V1.0'),
         ]
     )
-    def test_from_lid(self, input_lid, expected):
+    def test_from_lid_mismatched_lid(self, input_lid, expected):
         try:
             res = pdsfile.PdsFile.from_lid(input_lid)
-            assert isinstance(res, pdsfile.PdsFile)
-            assert res.data_set_id == expected
-        except ValueError as err:
-            assert True # input lid data set id doesn't match the one from res
+            # Must raise an exception
+            assert False
+        except ValueError as e:
+            # input LID data set id doesn't match the one from res
+            assert 'does not match the one from pdsfile:' in str(e)
+
+    @pytest.mark.parametrize(
+        'input_lid,expected',
+        [
+            ('CO-E/V/J/S-VIMS-2-QUBE-V2.0:data/1999010T054026_1999010T060958:v1294638283_1.qub',
+             'CO-E/V/J/S-VIMS-2-QUBE-V1.0'),
+        ]
+    )
+    def test_from_lid_invalid_lid(self, input_lid, expected):
+        try:
+            res = pdsfile.PdsFile.from_lid(input_lid)
+            # Must raise an exception
+            assert False
+        except ValueError as e:
+            # input LID is not a valid LID
+            assert 'is not a valid LID' in str(e)
 
     @pytest.mark.parametrize(
         'input_path,relative_path,expected',
