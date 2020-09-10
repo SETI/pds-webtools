@@ -747,6 +747,27 @@ class TestPdsFileBlackBox:
             assert True # input path is not an absolute path
 
     @pytest.mark.parametrize(
+        'input_lid,expected',
+        [
+            ('CO-S-ISSNA/ISSWA-2-EDR-V1.0:COISS_2002:data/1460960653_1461048959:N1460960868_1.IMG',
+             'CO-S-ISSNA/ISSWA-2-EDR-V1.0'),
+            ('CO-E/V/J-ISSNA/ISSWA-2-EDR-V1.0:COISS_1001:data/1294561143_1295221348:W1294561202_1.LBL',
+             'CO-E/V/J-ISSNA/ISSWA-2-EDR-V1.0'),
+            ('CO-E/V/J/S-VIMS-2-QUBE-V1.0:COVIMS_0001:data/1999010T054026_1999010T060958:v1294638283_1.qub',
+             'CO-E/V/J/S-VIMS-2-QUBE-V1.0'),
+            ('CO-E/V/J/S-VIMS-2-QUBE-V2.0:COVIMS_0001:data/1999010T054026_1999010T060958:v1294638283_1.qub',
+             'CO-E/V/J/S-VIMS-2-QUBE-V1.0'),
+        ]
+    )
+    def test_from_lid(self, input_lid, expected):
+        try:
+            res = pdsfile.PdsFile.from_lid(input_lid)
+            assert isinstance(res, pdsfile.PdsFile)
+            assert res.data_set_id == expected
+        except ValueError as err:
+            assert True # input lid data set id doesn't match the one from res
+
+    @pytest.mark.parametrize(
         'input_path,relative_path,expected',
         [
             ('previews/COUVIS_0xxx_v1/COUVIS_0009/DATA',

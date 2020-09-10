@@ -576,6 +576,10 @@ class TestPdsFileBlackBox:
              'CO-S-ISSNA/ISSWA-2-EDR-V1.0:COISS_2002:extras/thumbnail/1460960653_1461048959:N1460960868_1.IMG.jpeg_small'),
             ('volumes/COVIMS_0xxx/COVIMS_0001/data/1999010T054026_1999010T060958/v1294638283_1.qub',
              'CO-E/V/J/S-VIMS-2-QUBE-V1.0:COVIMS_0001:data/1999010T054026_1999010T060958:v1294638283_1.qub'),
+            ('volumes/COVIMS_0xxx/COVIMS_0006/INDEX/index.tab',
+             'CO-E/V/J/S-VIMS-2-QUBE-V1.0:COVIMS_0006:INDEX:index.tab'),
+            ('volumes/COISS_2xxx/COISS_2002/label/prefix.fmt',
+             'CO-S-ISSNA/ISSWA-2-EDR-V1.0:COISS_2002:label:prefix.fmt'),
         ]
     )
     def test_lid(self, input_path, expected):
