@@ -472,7 +472,3 @@ FILESPEC_TO_LOGICAL_PATH = translator.TranslatorByRegex([
 LID = translator.TranslatorByRegex([
     (r'.*', 0, ''),
 ])
-
-LID_TO_LOGICAL_PATH = translator.TranslatorByRegex([
-    (r'.*', 0, ''),
-])

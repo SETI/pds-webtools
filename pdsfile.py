@@ -2903,6 +2903,29 @@ class PdsFile(object):
                                         must_exist=must_exist)
 
     @staticmethod
+    def from_lid(lid_str, fix_case=False):
+        """Constructor for a PdsFile from a lid.
+        lid_str format: dataset_id:volume_id:directory_path:file_name
+        """
+
+        lid_component = lid_str.split(":")
+        if len(lid_component) != 4:
+            raise ValueError('%s is not a valid lid.' % lid_str)
+
+        data_set_id = lid_component[0]
+        volume_id = lid_component[1]
+        volset = volume_id[:-3] + 'xxx'
+        logical_path = f'volumes/{volset}/' + '/'.join(lid_component[1:])
+
+        pdsf = PdsFile.from_logical_path(logical_path, fix_case)
+
+        if pdsf.data_set_id != data_set_id:
+            raise ValueError(f'Data set id from lid_str: "{data_set_id}" '+
+                             'does not match the one from pdsfile: ' +
+                             f'"{pdsf.data_set_id}"')
+        return pdsf
+
+    @staticmethod
     def from_logical_path(path, fix_case=False, must_exist=False,
                                 caching='default', lifetime=None):
         """Constructor for a PdsFile from a logical path."""
