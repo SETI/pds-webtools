@@ -565,6 +565,48 @@ class TestPdsFileBlackBox:
             for viewable in viewables:
                 assert viewable['url'] in expected
 
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('volumes/COISS_2xxx/COISS_2002/data/1460960653_1461048959/N1460960868_1.IMG',
+             'CO-S-ISSNA/ISSWA-2-EDR-V1.0:COISS_2002:data/1460960653_1461048959:N1460960868_1.IMG'),
+            ('volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.LBL',
+             'CO-E/V/J-ISSNA/ISSWA-2-EDR-V1.0:COISS_1001:data/1294561143_1295221348:W1294561202_1.LBL'),
+            ('volumes/COISS_2xxx/COISS_2002/extras/thumbnail/1460960653_1461048959/N1460960868_1.IMG.jpeg_small',
+             'CO-S-ISSNA/ISSWA-2-EDR-V1.0:COISS_2002:extras/thumbnail/1460960653_1461048959:N1460960868_1.IMG.jpeg_small'),
+            ('volumes/COVIMS_0xxx/COVIMS_0001/data/1999010T054026_1999010T060958/v1294638283_1.qub',
+             'CO-E/V/J/S-VIMS-2-QUBE-V1.0:COVIMS_0001:data/1999010T054026_1999010T060958:v1294638283_1.qub'),
+        ]
+    )
+    def test_lid(self, input_path, expected):
+        """lid: return self._lid_filled"""
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        res1 = target_pdsfile.lid
+        res2 = target_pdsfile.lid
+        assert res1 == expected
+        assert res1 == res2
+
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('volumes/COISS_2xxx/COISS_2002/data/1460960653_1461048959/N1460960868_1.IMG',
+             'CO-S-ISSNA/ISSWA-2-EDR-V1.0:COISS_2002'),
+            ('volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561202_1.LBL',
+             'CO-E/V/J-ISSNA/ISSWA-2-EDR-V1.0'),
+            ('volumes/COISS_2xxx/COISS_2002/extras/thumbnail/1460960653_1461048959/N1460960868_1.IMG.jpeg_small',
+             'CO-S-ISSNA/ISSWA-2-EDR-V1.0'),
+            ('vvolumes/COVIMS_0xxx/COVIMS_0001/data/1999010T054026_1999010T060958/v1294638283_1.qub',
+             'CO-E/V/J/S-VIMS-2-QUBE-V1.0'),
+        ]
+    )
+    def test_data_set_id(self, input_path, expected):
+        """lid: return self._lid_filled"""
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        res1 = target_pdsfile.data_set_id
+        res2 = target_pdsfile.data_set_id
+        assert res1 == expected
+        assert res1 == res2
+
 ################################################################################
 # Blackbox test for internal cached in PdsGroup class
 ################################################################################
