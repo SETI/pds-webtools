@@ -926,19 +926,7 @@ class TestPdsFileBlackBox:
         ]
     )
     def test_opus_products_coiss_2xxx(self, input_path, expected):
-        target_pdsfile = instantiate_target_pdsfile(input_path)
-        res = target_pdsfile.opus_products()
-        for key in res:
-            assert key in expected
-            all_files = []
-            all_files_abspath = []
-            for files in res[key]:
-                all_files += files
-            assert len(all_files) == len(expected[key])
-            for pdsf in all_files:
-                assert pdsf.abspath in expected[key]
-                all_files_abspath += pdsf.abspath
-            assert all_files_abspath.sort() == expected[key].sort()
+        compare_opus_products(input_path, expected)
 
     @pytest.mark.parametrize(
         'input_path,expected',
@@ -1007,22 +995,90 @@ class TestPdsFileBlackBox:
               'Browse Image (thumbnail)',
               False): [PDS_DATA_DIR + '/previews/HSTIx_xxxx/HSTI1_1559/DATA/VISIT_22/IB4V22GTQ_thumb.jpg']}
             ),
+            ('volumes/HSTIx_xxxx/HSTI1_1559/DATA/VISIT_11/IB4V11MNQ.ASC',
+             {('HST',
+               20,
+               'hst_tiff',
+               'Raw Data Preview (lossless)',
+               True): [PDS_DATA_DIR + '/volumes/HSTIx_xxxx/HSTI1_1559/DATA/VISIT_11/IB4V11MNQ_RAW.TIF',
+                       PDS_DATA_DIR + '/volumes/HSTIx_xxxx/HSTI1_1559/DATA/VISIT_11/IB4V11MNQ.LBL',
+                       PDS_DATA_DIR + '/volumes/HSTIx_xxxx_v1.1/HSTI1_1559/DATA/VISIT_11/IB4V11MNQ_RAW.TIF',
+                       PDS_DATA_DIR + '/volumes/HSTIx_xxxx_v1.1/HSTI1_1559/DATA/VISIT_11/IB4V11MNQ.LBL', PDS_DATA_DIR + '/volumes/HSTIx_xxxx_v1.0/HSTI1_1559/DATA/VISIT_11/IB4V11MNQ_RAW.TIF',
+                       PDS_DATA_DIR + '/volumes/HSTIx_xxxx_v1.0/HSTI1_1559/DATA/VISIT_11/IB4V11MNQ.LBL'],
+             ('HST',
+              40,
+              'hst_calib',
+              'Calibrated Data Preview',
+              True): [PDS_DATA_DIR + '/volumes/HSTIx_xxxx/HSTI1_1559/DATA/VISIT_11/IB4V11MNQ_FLT.JPG',
+                      PDS_DATA_DIR + '/volumes/HSTIx_xxxx/HSTI1_1559/DATA/VISIT_11/IB4V11MNQ.LBL',
+                      PDS_DATA_DIR + '/volumes/HSTIx_xxxx_v1.1/HSTI1_1559/DATA/VISIT_11/IB4V11MNQ_FLT.JPG',
+                      PDS_DATA_DIR + '/volumes/HSTIx_xxxx_v1.1/HSTI1_1559/DATA/VISIT_11/IB4V11MNQ.LBL', PDS_DATA_DIR + '/volumes/HSTIx_xxxx_v1.0/HSTI1_1559/DATA/VISIT_11/IB4V11MNQ_FLT.JPG',
+                      PDS_DATA_DIR + '/volumes/HSTIx_xxxx_v1.0/HSTI1_1559/DATA/VISIT_11/IB4V11MNQ.LBL'],
+             ('HST',
+              30,
+              'hst_raw',
+              'Raw Data Preview',
+              True): [PDS_DATA_DIR + '/volumes/HSTIx_xxxx/HSTI1_1559/DATA/VISIT_11/IB4V11MNQ_RAW.JPG',
+                      PDS_DATA_DIR + '/volumes/HSTIx_xxxx/HSTI1_1559/DATA/VISIT_11/IB4V11MNQ.LBL',
+                      PDS_DATA_DIR + '/volumes/HSTIx_xxxx_v1.1/HSTI1_1559/DATA/VISIT_11/IB4V11MNQ_RAW.JPG',
+                      PDS_DATA_DIR + '/volumes/HSTIx_xxxx_v1.1/HSTI1_1559/DATA/VISIT_11/IB4V11MNQ.LBL', PDS_DATA_DIR + '/volumes/HSTIx_xxxx_v1.0/HSTI1_1559/DATA/VISIT_11/IB4V11MNQ_RAW.JPG',
+                      PDS_DATA_DIR + '/volumes/HSTIx_xxxx_v1.0/HSTI1_1559/DATA/VISIT_11/IB4V11MNQ.LBL'],
+             ('HST',
+              70,
+              'hst_drizzled',
+              'Calibrated Geometrically Corrected Preview',
+              True): [PDS_DATA_DIR + '/volumes/HSTIx_xxxx/HSTI1_1559/DATA/VISIT_11/IB4V11MNQ_DRZ.JPG',
+                      PDS_DATA_DIR + '/volumes/HSTIx_xxxx/HSTI1_1559/DATA/VISIT_11/IB4V11MNQ.LBL',
+                      PDS_DATA_DIR + '/volumes/HSTIx_xxxx_v1.1/HSTI1_1559/DATA/VISIT_11/IB4V11MNQ_DRZ.JPG',
+                      PDS_DATA_DIR + '/volumes/HSTIx_xxxx_v1.1/HSTI1_1559/DATA/VISIT_11/IB4V11MNQ.LBL',
+                      PDS_DATA_DIR + '/volumes/HSTIx_xxxx_v1.0/HSTI1_1559/DATA/VISIT_11/IB4V11MNQ_DRZ.JPG',
+                      PDS_DATA_DIR + '/volumes/HSTIx_xxxx_v1.0/HSTI1_1559/DATA/VISIT_11/IB4V11MNQ.LBL'],
+             ('HST',
+              10,
+              'hst_text',
+              'FITS Header Text',
+              True): [PDS_DATA_DIR + '/volumes/HSTIx_xxxx/HSTI1_1559/DATA/VISIT_11/IB4V11MNQ.ASC',
+                      PDS_DATA_DIR + '/volumes/HSTIx_xxxx/HSTI1_1559/DATA/VISIT_11/IB4V11MNQ.LBL',
+                      PDS_DATA_DIR + '/volumes/HSTIx_xxxx_v1.1/HSTI1_1559/DATA/VISIT_11/IB4V11MNQ.ASC',
+                      PDS_DATA_DIR + '/volumes/HSTIx_xxxx_v1.1/HSTI1_1559/DATA/VISIT_11/IB4V11MNQ.LBL', PDS_DATA_DIR + '/volumes/HSTIx_xxxx_v1.0/HSTI1_1559/DATA/VISIT_11/IB4V11MNQ.ASC',
+                      PDS_DATA_DIR + '/volumes/HSTIx_xxxx_v1.0/HSTI1_1559/DATA/VISIT_11/IB4V11MNQ.LBL'],
+             ('browse',
+              10,
+              'browse_thumb',
+              'Browse Image (thumbnail)',
+              False): [PDS_DATA_DIR + '/previews/HSTIx_xxxx/HSTI1_1559/DATA/VISIT_11/IB4V11MNQ_thumb.jpg'],
+             ('browse',
+              20,
+              'browse_small',
+              'Browse Image (small)',
+              False): [PDS_DATA_DIR + '/previews/HSTIx_xxxx/HSTI1_1559/DATA/VISIT_11/IB4V11MNQ_small.jpg'],
+             ('browse',
+              30,
+              'browse_medium',
+              'Browse Image (medium)',
+              False): [PDS_DATA_DIR + '/previews/HSTIx_xxxx/HSTI1_1559/DATA/VISIT_11/IB4V11MNQ_med.jpg'],
+             ('browse',
+              40,
+              'browse_full',
+              'Browse Image (full)',
+              True): [PDS_DATA_DIR + '/previews/HSTIx_xxxx/HSTI1_1559/DATA/VISIT_11/IB4V11MNQ_full.jpg'],
+             ('metadata',
+              5,
+              'rms_index',
+              'RMS Node Augmented Index',
+              False): [PDS_DATA_DIR + '/metadata/HSTIx_xxxx/HSTI1_1559/HSTI1_1559_index.tab',
+                       PDS_DATA_DIR + '/metadata/HSTIx_xxxx/HSTI1_1559/HSTI1_1559_index.lbl'],
+             ('metadata',
+              6,
+              'hstfiles_index',
+              'HST Files Associations Index',
+              False): [PDS_DATA_DIR + '/metadata/HSTIx_xxxx/HSTI1_1559/HSTI1_1559_hstfiles.tab',
+                       PDS_DATA_DIR + '/metadata/HSTIx_xxxx/HSTI1_1559/HSTI1_1559_hstfiles.lbl']}
+            ),
         ]
     )
     def test_opus_products_hstix_xxxx(self, input_path, expected):
-        target_pdsfile = instantiate_target_pdsfile(input_path)
-        res = target_pdsfile.opus_products()
-        for key in res:
-            assert key in expected
-            all_files = []
-            all_files_abspath = []
-            for files in res[key]:
-                all_files += files
-            assert len(all_files) == len(expected[key])
-            for pdsf in all_files:
-                assert pdsf.abspath in expected[key]
-                all_files_abspath.append(pdsf.abspath)
-            assert all_files_abspath.sort() == expected[key].sort()
+        compare_opus_products(input_path, expected)
 
     @pytest.mark.parametrize(
         'input_path,expected',
@@ -1115,19 +1171,7 @@ class TestPdsFileBlackBox:
         ]
     )
     def test_opus_products_covims_0xxx(self, input_path, expected):
-        target_pdsfile = instantiate_target_pdsfile(input_path)
-        res = target_pdsfile.opus_products()
-        for key in res:
-            assert key in expected
-            all_files = []
-            all_files_abspath = []
-            for files in res[key]:
-                all_files += files
-            assert len(all_files) == len(expected[key])
-            for pdsf in all_files:
-                assert pdsf.abspath in expected[key]
-                all_files_abspath.append(pdsf.abspath)
-            assert all_files_abspath.sort() == expected[key].sort()
+        compare_opus_products(input_path, expected)
 
     @pytest.mark.parametrize(
         'input_path,expected',
