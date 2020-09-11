@@ -1624,9 +1624,7 @@ class TestPdsFileBlackBox:
                'rms_index',
                'RMS Node Augmented Index',
                False): [PDS_DATA_DIR + '/metadata/GO_0xxx/GO_0017/GO_0017_index.tab',
-                        PDS_DATA_DIR + '/metadata/GO_0xxx/GO_0017/GO_0017_index.lbl',
-                        PDS_DATA_DIR + '/metadata/GO_0xxx_v1/GO_0017/GO_0017_index.tab',
-                        PDS_DATA_DIR + '/metadata/GO_0xxx_v1/GO_0017/GO_0017_index.lbl']}
+                        PDS_DATA_DIR + '/metadata/GO_0xxx/GO_0017/GO_0017_index.lbl']}
             )
         ]
     )
