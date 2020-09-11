@@ -34,7 +34,7 @@ def get_pdsgroups(paths_group, is_abspath=True):
         pdsgroups_arr.append(pdsgroup)
     return pdsgroups_arr
 
-def compare_opus_products(input_path, expected):
+def opus_products_test(input_path, expected):
     target_pdsfile = instantiate_target_pdsfile(input_path)
     res = target_pdsfile.opus_products()
     msg = (f'Total number of products ({len(res)}) does not match the expected'+
