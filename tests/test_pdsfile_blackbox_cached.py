@@ -653,7 +653,7 @@ class TestPdsFileBlackBox:
             # Must raise an exception
             assert False
         except ValueError as e:
-            assert 'Multiple or no data set id exists' in str(e)
+            assert 'No data set id exists' in str(e)
 
 ################################################################################
 # Blackbox test for internal cached in PdsGroup class

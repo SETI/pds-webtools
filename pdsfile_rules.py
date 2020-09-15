@@ -477,5 +477,5 @@ LID_AFTER_DSID = translator.TranslatorByRegex([
 # This will be used to handle the volume that contains multiple data set ids.
 ####################################################################################################################################
 DATA_SET_ID = translator.TranslatorByRegex([
-    (r'.*', 0, ''),
+    (r'.*', 0, None),
 ])
