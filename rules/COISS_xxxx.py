@@ -321,9 +321,9 @@ opus_id_to_filespec = translator.TranslatorByRegex([
 ])
 
 ####################################################################################################################################
-# LID
+# LID after data set id
 ####################################################################################################################################
-lid = translator.TranslatorByRegex([
+lid_after_dsid = translator.TranslatorByRegex([
     (r'.*volumes/(?:COISS_[12]xxx)/(COISS_[12]...)/(.*)/([^\/].+\..*)$',  0, r'\1:\2:\3'),
 ])
 
@@ -354,7 +354,7 @@ class COISS_xxxx(pdsfile.PdsFile):
     ASSOCIATIONS['previews']   = associations_to_previews
     ASSOCIATIONS['metadata']   = associations_to_metadata
 
-    LID = lid
+    LID_AFTER_DSID = lid_after_dsid
 
     def FILENAME_KEYLEN(self):
         if self.volset[:10] == 'COISS_3xxx':

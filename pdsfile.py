@@ -602,7 +602,8 @@ class PdsFile(object):
     SPLIT_RULES = pdsfile_rules.SPLIT_RULES
     VIEW_OPTIONS = pdsfile_rules.VIEW_OPTIONS
     VIEWABLES = pdsfile_rules.VIEWABLES
-    LID = pdsfile_rules.LID
+    LID_AFTER_DSID = pdsfile_rules.LID_AFTER_DSID
+    DATA_SET_ID = pdsfile_rules.DATA_SET_ID
 
     OPUS_TYPE = pdsfile_rules.OPUS_TYPE
     OPUS_FORMAT = pdsfile_rules.OPUS_FORMAT
@@ -1914,9 +1915,9 @@ class PdsFile(object):
         if self._lid_filled is not None:
             return self._lid_filled
 
-        if self.LID.first(self.logical_path):
-            self._lid_filled = (self.data_set_id + ':' +
-                                self.LID.first(self.logical_path))
+        lid_after_data_set_id = self.LID_AFTER_DSID.first(self.logical_path)
+        if lid_after_data_set_id:
+            self._lid_filled = self.data_set_id + ':' + lid_after_data_set_id
         else:
             self._lid_filled = ''
 
