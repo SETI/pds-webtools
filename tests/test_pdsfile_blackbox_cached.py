@@ -580,8 +580,10 @@ class TestPdsFileBlackBox:
              'CO-E/V/J/S-VIMS-2-QUBE-V1.0:COVIMS_0006:INDEX:index.tab'),
             ('volumes/COISS_2xxx/COISS_2002/label/prefix.fmt',
              'CO-S-ISSNA/ISSWA-2-EDR-V1.0:COISS_2002:label:prefix.fmt'),
-             # The volume that has no LID
             ('volumes/COCIRS_0xxx/COCIRS_0012/DATA/NAV_DATA/GEO00120100.DAT',
+             'CO-J-CIRS-2/3/4-TSDR-V2.0:COCIRS_0012:DATA/NAV_DATA:GEO00120100.DAT'),
+            # The file has no LID.
+            ('previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_010/HDAC1999_010_05_01_thumb.png',
              ''),
         ]
     )
@@ -604,8 +606,10 @@ class TestPdsFileBlackBox:
              'CO-S-ISSNA/ISSWA-2-EDR-V1.0:COISS_2002:extras/thumbnail/1460960653_1461048959:N1460960868_1.IMG.jpeg_small::1.0'),
             ('volumes/COVIMS_0xxx/COVIMS_0001/data/1999010T054026_1999010T060958/v1294638283_1.qub',
              'CO-E/V/J/S-VIMS-2-QUBE-V1.0:COVIMS_0001:data/1999010T054026_1999010T060958:v1294638283_1.qub::1.0'),
-             # The volume that has no LIDVID
             ('volumes/COCIRS_0xxx/COCIRS_0012/DATA/NAV_DATA/GEO00120100.DAT',
+             'CO-J-CIRS-2/3/4-TSDR-V2.0:COCIRS_0012:DATA/NAV_DATA:GEO00120100.DAT::1.0'),
+            # The file has no LID.
+            ('metadata/COISS_2xxx/COISS_2002/COISS_2002_index.ta',
              ''),
         ]
     )

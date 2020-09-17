@@ -983,7 +983,7 @@ class PdsFile(object):
         this._volume_data_set_ids_filled     = self.volume_data_set_ids
         this._lid_filled                     = ''
         this._lidvid_filled                  = ''
-        this._data_set_id_filled             = self.data_set_id
+        this._data_set_id_filled             = None
         this._version_ranks_filled           = self.version_ranks
         this._exact_archive_url_filled       = ''
         this._exact_checksum_url_filled      = ''
@@ -1920,10 +1920,13 @@ class PdsFile(object):
             return self._lid_filled
 
         lid_after_data_set_id = self.LID_AFTER_DSID.first(self.logical_path)
-        if lid_after_data_set_id:
+        if lid_after_data_set_id and self.data_set_id is not None:
             self._lid_filled = self.data_set_id + ':' + lid_after_data_set_id
-        else:
+        elif self.suffix or self.category_ != 'volumes/':
+            # only the latest versions of PDS3 volumes have LIDs
             self._lid_filled = ''
+        # else:
+        # ... construct the LID as data_set_id:volume_name:directory-path:basename
 
         self._recache()
         return self._lid_filled
@@ -1957,7 +1960,8 @@ class PdsFile(object):
             return self._lidvid_filled
 
         if self.lid:
-            self._lidvid_filled = self.lid + "::" + self.volume_version_id
+            # only the last PDS3 version of a product will have a LID.
+            self._lidvid_filled = self.lid + "::1.0"
         else:
             self._lidvid_filled = ''
 
@@ -2946,7 +2950,7 @@ class PdsFile(object):
                                         must_exist=must_exist)
 
     @staticmethod
-    def from_lid(lid_str, fix_case=False):
+    def from_lid(lid_str):
         """Constructor for a PdsFile from a LID.
         lid_str format: dataset_id:volume_id:directory_path:file_name
         """
@@ -2957,10 +2961,9 @@ class PdsFile(object):
 
         data_set_id = lid_component[0]
         volume_id = lid_component[1]
-        volset = volume_id[:-3] + 'xxx'
-        logical_path = 'volumes/' + volset + '/' + '/'.join(lid_component[1:])
+        logical_path_wo_volset = 'volumes/' + '/'.join(lid_component[1:])
 
-        pdsf = PdsFile.from_logical_path(logical_path, fix_case)
+        pdsf = PdsFile.from_path(logical_path_wo_volset)
 
         if pdsf.data_set_id != data_set_id:
             raise ValueError('Data set id from lid_str: ' + data_set_id +

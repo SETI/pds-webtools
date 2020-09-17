@@ -469,13 +469,11 @@ FILESPEC_TO_LOGICAL_PATH = translator.TranslatorByRegex([
 # The Link between PDS4 and PDS3 data files under volumes/.
 ####################################################################################################################################
 LID_AFTER_DSID = translator.TranslatorByRegex([
-    (r'.*', 0, ''),
+    (r'.*volumes/(?:\w+)/(\w+)/(.*)/([^\/].+\..*)$',  0, r'\1:\2:\3'),
 ])
 
 ####################################################################################################################################
 # DATA_SET_ID
 # This will be used to handle the volume that contains multiple data set ids.
 ####################################################################################################################################
-DATA_SET_ID = translator.TranslatorByRegex([
-    (r'.*', 0, None),
-])
+DATA_SET_ID = translator.NullTranslator()
