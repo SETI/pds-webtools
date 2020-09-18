@@ -645,6 +645,8 @@ class TestPdsFileBlackBox:
     @pytest.mark.parametrize(
         'input_path,expected',
         [
+            # Raise a value error for COUVIS_0xxx (multiple data set ids) since
+            # we don't have a properly defined DATA_SET_ID rule for it.
             ('volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31.DAT',
              ''),
         ]
@@ -657,7 +659,7 @@ class TestPdsFileBlackBox:
             # Must raise an exception
             assert False
         except ValueError as e:
-            assert 'No data set id exists' in str(e)
+            assert 'Multiple or no data set id exists' in str(e)
 
 ################################################################################
 # Blackbox test for internal cached in PdsGroup class

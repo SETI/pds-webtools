@@ -1883,7 +1883,7 @@ class PdsFile(object):
             # this case.
             self._data_set_id_filled = self.DATA_SET_ID.first(self.logical_path)
             if self._data_set_id_filled is None:
-                raise ValueError('No data set id exists for %s' %
+                raise ValueError('Multiple or no data set id exists for %s' %
                                  self.logical_path)
         else:
             self._data_set_id_filled = self.volume_data_set_ids[0]

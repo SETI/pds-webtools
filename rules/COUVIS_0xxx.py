@@ -177,17 +177,6 @@ opus_id_to_filespec = translator.TranslatorByRegex([
 ])
 
 ####################################################################################################################################
-# DATA_SET_ID
-####################################################################################################################################
-data_set_id = translator.TranslatorByRegex([
-    # (r'.*volumes/(?:COUVIS_...)/(COUVIS_...)/(.*)/(HDAC|HSP)([0-9]{4}_[0-9]{3}_[0-9]{2}_[0-9]{2}\..*)$', 0, 'CO-J-UVIS-2-SSB-V1.2'),
-    # (r'.*volumes/(?:COUVIS_...)/(COUVIS_...)/(.*)/(FUV|EUV)([0-9]{4}_[0-9]{3}_[0-9]{2}_[0-9]{2}\..*)$',  0, 'CO-J-UVIS-2-SPEC-V1.2'),
-
-    # (r'.*volumes/(?:COUVIS_...)/(COUVIS_...)/(.*)/EUV|FUV|HSP|HDAC)([0-9]{4}_[0-9]{3}_[0-9]{2}_[0-9]{2}\..*)$',  0, r'\1:\2:\3'),
-    # (r'.*volumes/(?:COUVIS_...)/(COUVIS_...)/INDEX/([^\/].+\..*)$',  0, r''),
-])
-
-####################################################################################################################################
 # Subclass definition
 ####################################################################################################################################
 
@@ -212,8 +201,6 @@ class COUVIS_0xxx(pdsfile.PdsFile):
     ASSOCIATIONS['volumes']  = associations_to_volumes
     ASSOCIATIONS['previews'] = associations_to_previews
     ASSOCIATIONS['metadata'] = associations_to_metadata
-
-    DATA_SET_ID = data_set_id
 
 # Global attribute shared by all subclasses
 pdsfile.PdsFile.OPUS_ID_TO_FILESPEC = opus_id_to_filespec + pdsfile.PdsFile.OPUS_ID_TO_FILESPEC
