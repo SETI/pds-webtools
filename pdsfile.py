@@ -1925,8 +1925,6 @@ class PdsFile(object):
         elif self.suffix or self.category_ != 'volumes/':
             # only the latest versions of PDS3 volumes have LIDs
             self._lid_filled = ''
-        # else:
-        # ... construct the LID as data_set_id:volume_name:directory-path:basename
 
         self._recache()
         return self._lid_filled
