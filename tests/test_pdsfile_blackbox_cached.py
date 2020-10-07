@@ -669,11 +669,11 @@ class TestPdsFileBlackBox:
     @pytest.mark.parametrize(
         'input_path,expected',
         [
-            # Raise a value error for COUVIS_0xxx (multiple data set ids) since
+            # Return '' for COUVIS_0xxx (multiple data set ids) since
             # we don't have a properly defined DATA_SET_ID rule for it.
             ('volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31.DAT',
              ''),
-            # Raise a value error for files under volume that have multiple data
+            # Return '' for files under volume that have multiple data
             # set ids.
             ('volumes/EBROCC_xxxx/EBROCC_0001/DATA/DATAINFO.TXT',
              ''),
@@ -681,13 +681,45 @@ class TestPdsFileBlackBox:
     )
     def test_data_set_id_multi_data_set_id(self, input_path, expected):
         """lid: return self._data_set_id_filled"""
-        try:
-            target_pdsfile = instantiate_target_pdsfile(input_path)
-            res = target_pdsfile.data_set_id
-            # Must raise an exception
-            assert False
-        except ValueError as e:
-            assert 'Multiple or no data set id exists' in str(e)
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        res1 = target_pdsfile.data_set_id
+        res2 = target_pdsfile.data_set_id
+        assert res1 == expected
+        assert res1 == res2
+
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31.DAT',
+             ''),
+            ('volumes/EBROCC_xxxx/EBROCC_0001/DATA/DATAINFO.TXT',
+             ''),
+        ]
+    )
+    def test_lid_no_data_set_id(self, input_path, expected):
+        """lid: return self._data_set_id_filled"""
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        res1 = target_pdsfile.lid
+        res2 = target_pdsfile.lid
+        assert res1 == expected
+        assert res1 == res2
+
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31.DAT',
+             ''),
+            ('volumes/EBROCC_xxxx/EBROCC_0001/DATA/DATAINFO.TXT',
+             ''),
+        ]
+    )
+    def test_lidvid_no_data_set_id(self, input_path, expected):
+        """lid: return self._data_set_id_filled"""
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        res1 = target_pdsfile.lidvid
+        res2 = target_pdsfile.lidvid
+        assert res1 == expected
+        assert res1 == res2
 
 ################################################################################
 # Blackbox test for internal cached in PdsGroup class

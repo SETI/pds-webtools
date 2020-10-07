@@ -1872,19 +1872,21 @@ class PdsFile(object):
 
     @property
     def data_set_id(self):
-        """Return the data set id if the volume only has one data set id. Raise
-        an error when the volume has multiple or zero data set id.
+        """Return the data set id if the volume only has one data set id. Return
+        '' when the volume has multiple or zero data set id.
         """
         if self._data_set_id_filled is not None:
             return self._data_set_id_filled
 
-        if len(self.volume_data_set_ids) != 1:
+        # If the volume has no data set id, we will return ''
+        if len(self.volume_data_set_ids) == 0:
+            self._data_set_id_filled = ''
+        elif len(self.volume_data_set_ids) != 1:
             # If the volume has multiple data set ids, the rules will handle
-            # this case.
+            # this case. If there is no match, we will return ''
             self._data_set_id_filled = self.DATA_SET_ID.first(self.logical_path)
             if self._data_set_id_filled is None:
-                raise ValueError('Multiple or no data set id exists for %s' %
-                                 self.logical_path)
+                self._data_set_id_filled = ''
         else:
             self._data_set_id_filled = self.volume_data_set_ids[0]
 
@@ -1920,10 +1922,11 @@ class PdsFile(object):
             return self._lid_filled
 
         lid_after_data_set_id = self.LID_AFTER_DSID.first(self.logical_path)
-        if lid_after_data_set_id and self.data_set_id is not None:
+        # only the latest versions of PDS3 volumes have LIDs
+        if (lid_after_data_set_id and self.data_set_id and
+            not self.suffix and self.category_ == 'volumes/'):
             self._lid_filled = self.data_set_id + ':' + lid_after_data_set_id
-        elif self.suffix or self.category_ != 'volumes/':
-            # only the latest versions of PDS3 volumes have LIDs
+        else:
             self._lid_filled = ''
 
         self._recache()
