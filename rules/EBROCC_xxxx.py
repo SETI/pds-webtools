@@ -94,7 +94,7 @@ opus_type = translator.TranslatorByRegex([
 opus_format = translator.TranslatorByRegex([
     (r'.*\_GEOMETRY.DAT',    0, ('ASCII', 'Text')),
     (r'.*\_(E|IN)GRESS.OUT', 0, ('ASCII', 'Text')),
-    (r'.*\.jpeg_small$', 0, ('Binary', 'JPEG')),
+    (r'.*\.jpeg_small$',     0, ('Binary', 'JPEG')),
 ])
 
 ####################################################################################################################################
@@ -110,7 +110,7 @@ opus_products = translator.TranslatorByRegex([
                                  r'volumes/EBROCC_xxxx\1/\2/SORCDATA\4*',
                                  r'previews/EBROCC_xxxx/\2/DATA\4PD_*.jpg',
                                  r'previews/EBROCC_xxxx/\2/BROWSE\4GB_*.jpg',
-                                 r'metadata/\1/\2/\2_*index.*',
+                                 r'metadata/\2/\2_*index.*',
                                  ]),
 ])
 
@@ -158,7 +158,7 @@ data_set_id = translator.TranslatorByRegex([
 ####################################################################################################################################
 
 filespec_to_volset = translator.TranslatorByRegex([
-    (r'(HST[A-Z])[01]_\d{4}.*', 0, r'HST\1x_xxxx'),
+    (r'EBROCC_0001.*', 0, r'EBROCC_xxxx'),
 ])
 
 ####################################################################################################################################

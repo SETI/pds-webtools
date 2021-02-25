@@ -198,9 +198,9 @@ opus_products = translator.TranslatorByRegex([
                      r'volumes/\1\2/\3/extras/tiff/\4.IMG.tiff',
                      r'calibrated/\1/\3/data/\4_CALIB.*',
                      r'previews/\1/\3/data/\4_*',
-                     r'metadata/\1/\2/\2_*summary.*',
-                     r'metadata/\1/\2/\2_inventory.*',
-                     r'metadata/\1/\2/\2_*index.*',
+                     r'metadata/\1/\3/\3_*summary.*',
+                     r'metadata/\1/\3/\3_inventory.*',
+                     r'metadata/\1/\3/\3_*index.*',
                      ]),
 ])
 
