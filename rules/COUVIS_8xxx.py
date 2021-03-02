@@ -100,7 +100,7 @@ opus_products = translator.TranslatorByRegex([
 ####################################################################################################################################
 
 opus_id = translator.TranslatorByRegex([
-    (r'.*/COUVIS_8xxx.*/(data|DATA/EASYDATA)/UVIS_HSP_(\d{4})_(\d{3})_(\w+)_([IE]).*', 0, r'co-uvis-occ-#LOWER#\2-#LOWER#\3-#LOWER#\4-#LOWER#\5'),
+    (r'.*/COUVIS_8xxx.*/(data|DATA/EASYDATA)/UVIS_HSP_(\d{4})_(\d{3})_(\w+)_([IE]).*', 0, r'co-uvis-occ-#LOWER#\2-\3-\4-\5'),
 ])
 
 ####################################################################################################################################
