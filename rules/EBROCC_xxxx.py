@@ -103,15 +103,15 @@ opus_format = translator.TranslatorByRegex([
 
 opus_products = translator.TranslatorByRegex([
     (r'.*/EBROCC_xxxx(|_v[0-9\.]+)/(EBROCC_....)/(DATA|BROWSE|SORCDATA|GEOMETRY)/(\w+/\w{3}_[EI]).*', 0,
-                                [r'volumes/EBROCC_xxxx\1/\2/DATA\4PD.LBL',
-                                 r'volumes/EBROCC_xxxx\1/\2/DATA\4PD.TAB',
-                                 r'volumes/EBROCC_xxxx\1/\2/BROWSE\4GB.*',
-                                 r'volumes/EBROCC_xxxx\1/\2/GEOMETRY\4GD.*',
-                                 r'volumes/EBROCC_xxxx\1/\2/SORCDATA\4*',
-                                 r'previews/EBROCC_xxxx/\2/DATA\4PD_*.jpg',
-                                 r'previews/EBROCC_xxxx/\2/BROWSE\4GB_*.jpg',
-                                 r'metadata/\2/\2_*index.*',
-                                 ]),
+                    [r'volumes/EBROCC_xxxx*/\2/DATA\4PD.LBL',
+                     r'volumes/EBROCC_xxxx*/\2/DATA\4PD.TAB',
+                     r'volumes/EBROCC_xxxx*/\2/BROWSE\4GB.*',
+                     r'volumes/EBROCC_xxxx*/\2/GEOMETRY\4GD.*',
+                     r'volumes/EBROCC_xxxx*/\2/SORCDATA\4*',
+                     r'previews/EBROCC_xxxx/\2/DATA\4PD_*.jpg',
+                     r'previews/EBROCC_xxxx/\2/BROWSE\4GB_*.jpg',
+                     r'metadata/EBROCC_xxxx/\2_*index.*',
+                     ]),
 ])
 
 ####################################################################################################################################

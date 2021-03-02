@@ -108,7 +108,7 @@ opus_type = translator.TranslatorByRegex([
 
 opus_products = translator.TranslatorByRegex([
     (r'.*volumes/(HST.x_xxxx)(|_v.+)/(HST.._....)/(DATA/VISIT_../.{9}).*', 0,
-                    [r'volumes/\1\2/\3/\4*',
+                    [r'volumes/\1*/\3/\4*',
                      r'previews/\1/\3/\4_*.jpg',
                      r'metadata/\1/\3/\3_index.lbl',
                      r'metadata/\1/\3/\3_index.tab',
