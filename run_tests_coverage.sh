@@ -2,7 +2,7 @@
 echo "Clean up previous coverage record"
 coverage erase
 count=1
-numOfModes=4
+numOfModes=2
 targetFile="pdsfile.py"
 while [ $count -le $numOfModes ]
 do

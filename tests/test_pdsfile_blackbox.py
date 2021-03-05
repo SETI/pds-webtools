@@ -239,11 +239,8 @@ class TestPdsFileBlackBox:
         [
             ('previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31_thumb.png',
              'HDAC1999_007_16_31'),
-            ('volumes/COUVIS_8xxx/COUVIS_8001/data/UVIS_HSP_2017_228_BETORI_I_TAU10KM.lbl',
-             'UVIS_HSP_2017_228_BETORI_I_TAU10KM'),
-            # Not used in OPUS
-            # ('volumes/CORSS_8xxx/CORSS_8001/data/Rev007/Rev007E/Rev007E_RSS_2005_123_K34_E/RSS_2005_123_K34_E_CAL.tab',
-            #  'RSS_2005_123_K34_E_CAL')
+            ('volumes/COUVIS_8xxx/COUVIS_8001/data/UVIS_HSP_2017_228_BETORI_I_TAU10KM.LBL',
+             'UVIS_HSP_2017_228_BETORI_I'),
         ]
     )
     def test_anchor(self, input_path, expected):
