@@ -336,11 +336,11 @@ class TestPdsFileBlackBox:
     @pytest.mark.parametrize(
         'input_path,expected',
         [
-            ('volumes/HSTNx_xxxx/HSTN0_7176/DATA/VISIT_01/N4BI01L4Q.lbl',
+            ('volumes/HSTNx_xxxx/HSTN0_7176/DATA/VISIT_01/N4BI01L4Q.LBL',
              'hst-07176-nicmos-n4bi01l4q'),
             ('volumes/HSTJx_xxxx/HSTJ0_9296/DATA/VISIT_B1/J8M3B1021.lbl',
              'hst-09296-acs-j8m3b1021'),
-            ('volumes/GO_0xxx/GO_0017/J0/OPNAV/C0346405900R.lbl',
+            ('volumes/GO_0xxx/GO_0017/J0/OPNAV/C0346405900R.LBL',
              'go-ssi-c0346405900')
         ]
     )
@@ -420,15 +420,12 @@ class TestPdsFileBlackBox:
         'input_path,expected',
         [
             ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
-             PDS_PDSDATA_PATH + 'shelves/index/metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.shelf')
+             PDS_PDSDATA_PATH + 'shelves/index/metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.pickle')
         ]
     )
     def test_indexshelf_abspath(self, input_path, expected):
         target_pdsfile = instantiate_target_pdsfile(input_path)
-        if pdsfile.USE_PICKLES:
-            assert target_pdsfile.indexshelf_abspath == expected.replace('.shelf', '.pickle')
-        else:
-            assert target_pdsfile.indexshelf_abspath == expected
+        assert target_pdsfile.indexshelf_abspath == expected
 
     @pytest.mark.parametrize(
         'input_path,expected',
