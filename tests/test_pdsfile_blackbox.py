@@ -575,7 +575,7 @@ class TestPdsFileBlackBox:
         'input_path,expected',
         [
             ('volumes/COUVIS_0xxx/COUVIS_0001/DATA/', True),
-            ('volumes', False)
+            ('volumes/COUVIS_0xxx', False)
         ]
     )
     def test_has_neighbor_rule(self, input_path, expected):
@@ -599,7 +599,7 @@ class TestPdsFileBlackBox:
         'input_path,expected',
         [
             ('volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31.LBL',
-             (PDS_PDSDATA_PATH + 'shelves/info/volumes/COUVIS_0xxx/COUVIS_0001_info.shelf',
+             (PDS_PDSDATA_PATH + 'shelves/info/volumes/COUVIS_0xxx/COUVIS_0001_info.pickle',
               'DATA/D1999_007/HDAC1999_007_16_31.LBL'))
         ]
     )
