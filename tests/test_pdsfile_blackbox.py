@@ -876,20 +876,13 @@ class TestPdsFileBlackBox:
         assert res.abspath == expected
 
     @pytest.mark.parametrize(
-        'input_path,interiors,expected',
+        'opus_id,expected',
         [
-            (PDS_DATA_DIR + '/volumes/HSTNx_xxxx/HSTN0_7176/',
-             ['DATA/VISIT_01/N4BI01L4Q.LBL'],
+            ('hst-07176-nicmos-n4bi01l4q',
              PDS_DATA_DIR + '/volumes/HSTNx_xxxx/HSTN0_7176/DATA/VISIT_01/N4BI01L4Q.LBL')
         ]
     )
-    def test_from_opus_id(self, input_path, interiors, expected):
-        pdsfile.PdsFile.load_opus_ids_for_volume_interiors(
-            volume_abspath=input_path, interiors=interiors)
-        abspath = input_path + '/' + interiors[0]
-        target_pdsfile = pdsfile.PdsFile.from_abspath(abspath)
-        opus_id = target_pdsfile.opus_id
-
+    def test_from_opus_id(self, opus_id, expected):
         res = pdsfile.PdsFile.from_opus_id(opus_id=opus_id)
         assert isinstance(res, pdsfile.PdsFile)
         assert res.abspath == expected
@@ -1241,16 +1234,7 @@ class TestPdsFileBlackBox:
                'rms_index',
                'RMS Node Augmented Index',
                False): [PDS_DATA_DIR + '/metadata/COVIMS_0xxx/COVIMS_0006/COVIMS_0006_index.tab',
-                        PDS_DATA_DIR + '/metadata/COVIMS_0xxx/COVIMS_0006/COVIMS_0006_index.lbl'],
-              ('Cassini VIMS',
-               10,
-               'covims_packed',
-               'Packed version of unpacked raw data',
-               True): [PDS_DATA_DIR + '/volumes/COVIMS_0xxx/COVIMS_0006/data/2005088T102825_2005089T113931/v1490784910_3.qub',
-                       PDS_DATA_DIR + '/volumes/COVIMS_0xxx/COVIMS_0006/data/2005088T102825_2005089T113931/v1490784910_3.lbl',
-                       PDS_DATA_DIR + '/volumes/COVIMS_0xxx/COVIMS_0006/label/band_bin_center.fmt',
-                       PDS_DATA_DIR + '/volumes/COVIMS_0xxx/COVIMS_0006/label/core_description.fmt',
-                       PDS_DATA_DIR + '/volumes/COVIMS_0xxx/COVIMS_0006/label/suffix_description.fmt']}
+                        PDS_DATA_DIR + '/metadata/COVIMS_0xxx/COVIMS_0006/COVIMS_0006_index.lbl']}
             ),
         ]
     )
