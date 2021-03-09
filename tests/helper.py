@@ -39,6 +39,8 @@ def opus_products_test(input_path, expected):
     res = target_pdsfile.opus_products()
     msg = (f'Total number of products ({len(res)}) does not match the expected'+
            f' results ({len(expected)})')
+    print("===========")
+    print(res)
     assert len(res) == len(expected), msg
     for key in res:
         assert key in expected
@@ -47,9 +49,16 @@ def opus_products_test(input_path, expected):
         for files in res[key]:
             all_files += files
         msg = f'Total number of files does not match under {key}'
+        if len(all_files) != len(expected[key]):
+            print(len(all_files))
+            print(len(expected[key]))
         assert len(all_files) == len(expected[key]), msg
         for pdsf in all_files:
-            assert pdsf.abspath in expected[key]
+            if pdsf.abspath not in expected[key]:
+                print(pdsf.abspath)
+                print(key)
+            msg = f'{pdsf.logical_path} does not exist under {key}'
+            assert pdsf.abspath in expected[key], msg
             all_files_abspath.append(pdsf.abspath)
         msg = f'Files does not match under {key}'
         assert all_files_abspath.sort() == expected[key].sort(), msg
