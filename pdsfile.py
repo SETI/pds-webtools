@@ -1217,12 +1217,13 @@ class PdsFile(object):
                 starting_pos = bisect.bisect_left(interior_paths, key_prefix)
                 num_key_slashes = len(key.split('/'))
                 for (interior_path, value) in zip(
-                                interior_paths[wildcard_index:],
-                                values[wildcard_index:]):
+                                interior_paths[starting_pos:],
+                                values[starting_pos:]):
                     # If the key prefix doesn't match the interior_path prefix,
                     # then we're done since the filenames are in alphabetical
                     # order.
-                    if key_prefix != interior_path[:wildcard_index]:
+                    if (key_prefix.upper() !=
+                        interior_path[:wildcard_index].upper()):
                         break
                     # Because fnmatch matches strings instead of filesystems,
                     # it has the unfortunate property that match patterns can
@@ -4083,6 +4084,13 @@ class PdsFile(object):
                 shelf = pickle.load(f)
         except Exception as e:
             raise IOError('Unable to open pickle file: %s' % shelf_path)
+
+        # The pickle files do not produce dictionaries that are in
+        # alphabetical order, so we sort them here in case we want to
+        # do a binary search later.
+        keys_vals = list(zip(shelf.keys(), shelf.values()))
+        keys_vals.sort(key=lambda x: x[0])
+        shelf = dict(keys_vals)
 
         # Save the null key values from the info shelves. This can save a lot of
         # shelf open/close operations when we just need info about a volume,
