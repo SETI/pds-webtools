@@ -39,8 +39,6 @@ def opus_products_test(input_path, expected):
     res = target_pdsfile.opus_products()
     msg = (f'Total number of products ({len(res)}) does not match the expected'+
            f' results ({len(expected)})')
-    print("===========")
-    print(res)
     assert len(res) == len(expected), msg
     for key in res:
         assert key in expected
