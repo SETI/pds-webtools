@@ -41,7 +41,7 @@ def opus_products_test(input_path, expected):
            f' results ({len(expected)})')
     assert len(res) == len(expected), msg
     for key in res:
-        assert key in expected
+        assert key in expected, f'"{key}" does not exist'
         all_files = []
         all_files_abspath = []
         for files in res[key]:
