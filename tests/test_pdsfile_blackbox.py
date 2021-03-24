@@ -2386,6 +2386,9 @@ class TestPdsFileBlackBox:
     def test_archive_logpath(self, input_path, task, expected):
         target_pdsfile = instantiate_target_pdsfile(input_path)
         res = target_pdsfile.archive_logpath(task=task)
+        # escape possible "(" & ")" if that exists in PDS_PDSDATA_PATH
+        expected = expected.replace('(', '\(')
+        expected = expected.replace(')', '\)')
         assert re.match(expected, res)
 
     ############################################################################
@@ -2448,6 +2451,9 @@ class TestPdsFileBlackBox:
     def test_log_path_for_volume(self, input_path, expected):
         target_pdsfile = instantiate_target_pdsfile(input_path)
         res = target_pdsfile.log_path_for_volume(id='', task='', dir='')
+        # escape possible "(" & ")" if that exists in PDS_PDSDATA_PATH
+        expected = expected.replace('(', '\(')
+        expected = expected.replace(')', '\)')
         assert re.match(expected, res)
 
     @pytest.mark.parametrize(
@@ -2460,6 +2466,9 @@ class TestPdsFileBlackBox:
     def test_log_path_for_volset(self, input_path, expected):
         target_pdsfile = instantiate_target_pdsfile(input_path)
         res = target_pdsfile.log_path_for_volset()
+        # escape possible "(" & ")" if that exists in PDS_PDSDATA_PATH
+        expected = expected.replace('(', '\(')
+        expected = expected.replace(')', '\)')
         assert re.match(expected, res)
 
     @pytest.mark.parametrize(
@@ -2472,6 +2481,9 @@ class TestPdsFileBlackBox:
     def test_log_path_for_volset2(self, input_path, expected):
         target_pdsfile = instantiate_target_pdsfile(input_path)
         res = target_pdsfile.log_path_for_volset(place='parallel')
+        # escape possible "(" & ")" if that exists in PDS_PDSDATA_PATH
+        expected = expected.replace('(', '\(')
+        expected = expected.replace(')', '\)')
         assert re.match(expected, res)
 
     @pytest.mark.parametrize(
@@ -2484,7 +2496,9 @@ class TestPdsFileBlackBox:
     def test_log_path_for_index(self, input_path, expected):
         target_pdsfile = instantiate_target_pdsfile(input_path)
         res = target_pdsfile.log_path_for_index()
-        print(res)
+        # escape possible "(" & ")" if that exists in PDS_PDSDATA_PATH
+        expected = expected.replace('(', '\(')
+        expected = expected.replace(')', '\)')
         assert re.match(expected, res)
 
     @pytest.mark.parametrize(
@@ -2497,7 +2511,9 @@ class TestPdsFileBlackBox:
     def test_log_path_for_index2(self, input_path, expected):
         target_pdsfile = instantiate_target_pdsfile(input_path)
         res = target_pdsfile.log_path_for_index(place='parallel')
-        print(res)
+        # escape possible "(" & ")" if that exists in PDS_PDSDATA_PATH
+        expected = expected.replace('(', '\(')
+        expected = expected.replace(')', '\)')
         assert re.match(expected, res)
 
     ############################################################################
