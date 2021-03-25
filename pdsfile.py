@@ -3857,6 +3857,9 @@ class PdsFile(object):
                 opus_pdsfiles[key] = []
 
             if pdsf.label_abspath:
+                # print("================")
+                # print(f"pdsf.label_abspath: {pdsf.label_abspath}")
+                # print(label_pdsfiles)
                 sublist = [pdsf] + label_pdsfiles[pdsf.label_abspath]
             else:
                 sublist = [pdsf]

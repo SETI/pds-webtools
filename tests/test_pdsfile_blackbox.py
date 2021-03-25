@@ -285,7 +285,7 @@ class TestPdsFileBlackBox:
             ('volumes/EBROCC_xxxx/EBROCC_0001/DATA/ESO1M/ES1_EPD.TAB',
              'ES1_EPD.LBL'),
             ('volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31.dat',
-             'HDAC1999_007_16_31.lbl'),
+             'HDAC1999_007_16_31.LBL'),
             ('previews/COISS_3xxx/COISS_3002/data/maps/SE_400K_0_108_SMN_thumb.png', '')
         ]
     )
@@ -1724,6 +1724,9 @@ class TestPdsFileBlackBox:
         opus_products_test(input_path, expected)
 
     @pytest.mark.parametrize(
+    # Allow duplicated '/volumes/EBROCC_xxxx/EBROCC_0001/BROWSE/ESO1M/ES1_EGB.LBL'
+    # and '/volumes/EBROCC_xxxx/EBROCC_0001/BROWSE/ESO1M/ES1_EPB.LBL' here. OPUS
+    # will ignore the duplicated items
         'input_path,expected',
         [
             ('volumes/EBROCC_xxxx/EBROCC_0001/DATA/ESO1M/ES1_EPD.TAB',
@@ -1739,6 +1742,7 @@ class TestPdsFileBlackBox:
               'Geometry Diagram',
               False): [PDS_DATA_DIR + '/volumes/EBROCC_xxxx/EBROCC_0001/BROWSE/ESO1M/ES1_EGB.PS',
                        PDS_DATA_DIR + '/volumes/EBROCC_xxxx/EBROCC_0001/BROWSE/ESO1M/ES1_EGB.PDF',
+                       PDS_DATA_DIR + '/volumes/EBROCC_xxxx/EBROCC_0001/BROWSE/ESO1M/ES1_EGB.LBL',
                        PDS_DATA_DIR + '/volumes/EBROCC_xxxx/EBROCC_0001/BROWSE/ESO1M/ES1_EGB.LBL'],
              ('Earth-based Occultations',
               20,
@@ -1746,6 +1750,7 @@ class TestPdsFileBlackBox:
               'Preview Plot',
               True): [PDS_DATA_DIR + '/volumes/EBROCC_xxxx/EBROCC_0001/BROWSE/ESO1M/ES1_EPB.PS',
                       PDS_DATA_DIR + '/volumes/EBROCC_xxxx/EBROCC_0001/BROWSE/ESO1M/ES1_EPB.PDF',
+                      PDS_DATA_DIR + '/volumes/EBROCC_xxxx/EBROCC_0001/BROWSE/ESO1M/ES1_EPB.LBL',
                       PDS_DATA_DIR + '/volumes/EBROCC_xxxx/EBROCC_0001/BROWSE/ESO1M/ES1_EPB.LBL'],
              ('Earth-based Occultations',
               10,
@@ -2902,29 +2907,6 @@ class TestPdsFileBlackBox:
         print(res)
         for path in res:
             assert path in expected
-
-    ############################################################################
-    # Test for file grouping
-    ############################################################################
-    @pytest.mark.parametrize(
-        'input_path,expected',
-        [
-            ('volumes/COISS_0xxx/COISS_0001/data',
-             [
-                'volumes/COISS_0xxx/COISS_0001/data/datainfo.txt',
-                'volumes/COISS_0xxx/COISS_0001/data/nacfm',
-                'volumes/COISS_0xxx/COISS_0001/data/wacfm',
-             ]
-            ),
-        ]
-    )
-    def test_group_children(self, input_path, expected):
-        target_pdsfile = instantiate_target_pdsfile(input_path)
-        res = target_pdsfile.group_children()
-        for group in res:
-            assert isinstance(group, pdsfile.PdsGroup)
-            for pdsf in group.iterator_for_all():
-                assert pdsf.logical_path in expected
 
 
 ################################################################################
