@@ -759,8 +759,8 @@ class TestPdsFileWhiteBox:
         res = target_pdsfile.log_path_for_volume(id='', task='', dir='',
                                                  place='parallel')
         # escape possible "(" & ")" if that exists in PDS_PDSDATA_PATH
-        expected = expected.replace('(', '\(')
-        expected = expected.replace(')', '\)')
+        expected = expected.replace('(', '\\(')
+        expected = expected.replace(')', '\\)')
         assert re.match(expected, res)
 
     @pytest.mark.parametrize(

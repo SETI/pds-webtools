@@ -2387,8 +2387,8 @@ class TestPdsFileBlackBox:
         target_pdsfile = instantiate_target_pdsfile(input_path)
         res = target_pdsfile.archive_logpath(task=task)
         # escape possible "(" & ")" if that exists in PDS_PDSDATA_PATH
-        expected = expected.replace('(', '\(')
-        expected = expected.replace(')', '\)')
+        expected = expected.replace('(', '\\(')
+        expected = expected.replace(')', '\\)')
         assert re.match(expected, res)
 
     ############################################################################
@@ -2398,11 +2398,11 @@ class TestPdsFileBlackBox:
         'input_path,expected',
         [
             ('volumes/VGISS_5xxx/VGISS_5101/DATA/C13854XX/C1385455_RAW.lbl',
-             PDS_PDSDATA_PATH + 'shelves/info/volumes/VGISS_5xxx/VGISS_5101_info.shelf'),
+             PDS_PDSDATA_PATH + 'shelves/info/volumes/VGISS_5xxx/VGISS_5101_info.pickle'),
             ('metadata/NHxxLO_xxxx/NHLALO_1001/NHLALO_1001_inventory.tab',
-             PDS_PDSDATA_PATH + 'shelves/info/metadata/NHxxLO_xxxx/NHLALO_1001_info.shelf'),
+             PDS_PDSDATA_PATH + 'shelves/info/metadata/NHxxLO_xxxx/NHLALO_1001_info.pickle'),
             ('archives-volumes/EBROCC_xxxx/EBROCC_0001.tar.gz',
-             PDS_PDSDATA_PATH + 'shelves/info/archives-volumes/EBROCC_xxxx_info.shelf')
+             PDS_PDSDATA_PATH + 'shelves/info/archives-volumes/EBROCC_xxxx_info.pickle')
         ]
     )
     def test_shelf_path_and_lskip(self, input_path, expected):
@@ -2452,8 +2452,8 @@ class TestPdsFileBlackBox:
         target_pdsfile = instantiate_target_pdsfile(input_path)
         res = target_pdsfile.log_path_for_volume(id='', task='', dir='')
         # escape possible "(" & ")" if that exists in PDS_PDSDATA_PATH
-        expected = expected.replace('(', '\(')
-        expected = expected.replace(')', '\)')
+        expected = expected.replace('(', '\\(')
+        expected = expected.replace(')', '\\)')
         assert re.match(expected, res)
 
     @pytest.mark.parametrize(
@@ -2467,8 +2467,8 @@ class TestPdsFileBlackBox:
         target_pdsfile = instantiate_target_pdsfile(input_path)
         res = target_pdsfile.log_path_for_volset()
         # escape possible "(" & ")" if that exists in PDS_PDSDATA_PATH
-        expected = expected.replace('(', '\(')
-        expected = expected.replace(')', '\)')
+        expected = expected.replace('(', '\\(')
+        expected = expected.replace(')', '\\)')
         assert re.match(expected, res)
 
     @pytest.mark.parametrize(
@@ -2482,8 +2482,8 @@ class TestPdsFileBlackBox:
         target_pdsfile = instantiate_target_pdsfile(input_path)
         res = target_pdsfile.log_path_for_volset(place='parallel')
         # escape possible "(" & ")" if that exists in PDS_PDSDATA_PATH
-        expected = expected.replace('(', '\(')
-        expected = expected.replace(')', '\)')
+        expected = expected.replace('(', '\\(')
+        expected = expected.replace(')', '\\)')
         assert re.match(expected, res)
 
     @pytest.mark.parametrize(
@@ -2497,8 +2497,8 @@ class TestPdsFileBlackBox:
         target_pdsfile = instantiate_target_pdsfile(input_path)
         res = target_pdsfile.log_path_for_index()
         # escape possible "(" & ")" if that exists in PDS_PDSDATA_PATH
-        expected = expected.replace('(', '\(')
-        expected = expected.replace(')', '\)')
+        expected = expected.replace('(', '\\(')
+        expected = expected.replace(')', '\\)')
         assert re.match(expected, res)
 
     @pytest.mark.parametrize(
@@ -2512,36 +2512,9 @@ class TestPdsFileBlackBox:
         target_pdsfile = instantiate_target_pdsfile(input_path)
         res = target_pdsfile.log_path_for_index(place='parallel')
         # escape possible "(" & ")" if that exists in PDS_PDSDATA_PATH
-        expected = expected.replace('(', '\(')
-        expected = expected.replace(')', '\)')
+        expected = expected.replace('(', '\\(')
+        expected = expected.replace(')', '\\)')
         assert re.match(expected, res)
-
-    ############################################################################
-    # Test for OPUS_ID support
-    ############################################################################
-    @pytest.mark.parametrize(
-        'input_path,interiors,expected',
-        [
-            (PDS_DATA_DIR + '/volumes/COISS_1xxx/COISS_1001',
-             ['data/1294561143_1295221348/W1294561202_1.LBL'],
-             PDS_DATA_DIR + '/volumes/COISS_1xxx/COISS_1001'),
-            (PDS_DATA_DIR + '/volumes/COUVIS_0xxx/COUVIS_0001',
-             ['DATA/D1999_007/HDAC1999_007_16_31.DAT'],
-             PDS_DATA_DIR + '/volumes/COUVIS_0xxx/COUVIS_0001'),
-        ]
-    )
-    def test_load_opus_ids_for_volume_interiors(
-            self, input_path, interiors, expected):
-        pdsfile.PdsFile.load_opus_ids_for_volume_interiors(
-            volume_abspath=input_path, interiors=interiors)
-
-        abspath = input_path + '/' + interiors[0]
-        target_pdsfile = pdsfile.PdsFile.from_abspath(abspath)
-        opus_id = target_pdsfile.opus_id
-
-        assert opus_id in pdsfile.PdsFile.OPUS_ID_ABSPATHS
-        assert abspath in pdsfile.PdsFile.OPUS_ID_ABSPATHS[opus_id]
-        assert expected in pdsfile.PdsFile.OPUS_ID_VOLUMES_LOADED
 
     ############################################################################
     # Test for split and sort filenames
@@ -2595,35 +2568,6 @@ class TestPdsFileBlackBox:
         target_pdsfile = instantiate_target_pdsfile(input_path)
         res = target_pdsfile.sort_logical_paths(logical_paths=logical_paths)
         assert res == expected
-
-    @pytest.mark.parametrize(
-        'input_path,logical_paths,expected',
-        [
-            ('previews/COUVIS_0xxx_v1/COUVIS_0009/DATA/D2004_274',
-             [
-                'previews/COUVIS_0xxx_v1/COUVIS_0009/DATA/D2004_274/EUV2004_274_09_50_small.png',
-                'previews/COUVIS_0xxx_v1/COUVIS_0009/DATA/D2004_274/EUV2004_274_01_39_thumb.png',
-                'previews/COUVIS_0xxx_v1/COUVIS_0009/DATA/D2004_274/EUV2004_274_07_10_full.png',
-                'previews/COUVIS_0xxx_v1/COUVIS_0009/DATA/D2004_274/EUV2004_274_02_25_med.png',
-             ],
-             #  Sort by logical_path
-             [
-                'previews/COUVIS_0xxx_v1/COUVIS_0009/DATA/D2004_274/EUV2004_274_01_39_thumb.png',
-                'previews/COUVIS_0xxx_v1/COUVIS_0009/DATA/D2004_274/EUV2004_274_02_25_med.png',
-                'previews/COUVIS_0xxx_v1/COUVIS_0009/DATA/D2004_274/EUV2004_274_07_10_full.png',
-                'previews/COUVIS_0xxx_v1/COUVIS_0009/DATA/D2004_274/EUV2004_274_09_50_small.png',
-             ]),
-        ]
-    )
-    def test_sort_by_logical_path(self, input_path, logical_paths, expected):
-        target_pdsfile = instantiate_target_pdsfile(input_path)
-        files = []
-        for path in logical_paths:
-            files.append(instantiate_target_pdsfile(path))
-        res = target_pdsfile.sort_by_logical_path(pdsfiles=files)
-
-        for idx in range(len(res)):
-            assert res[idx].logical_path == expected[idx]
 
     @pytest.mark.parametrize(
         'input_path,expected',
