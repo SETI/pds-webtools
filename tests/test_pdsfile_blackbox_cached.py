@@ -682,11 +682,11 @@ class TestPdsFileBlackBox:
     def test_data_set_id_multi_data_set_id(self, input_path, expected):
         """lid: return self._data_set_id_filled"""
         target_pdsfile = instantiate_target_pdsfile(input_path)
-        res1 = target_pdsfile.data_set_id
-        res2 = target_pdsfile.data_set_id
         # When SHELVES_ONLY is True, there is no metadata tree for COUVIS and
         # it will have empty row_dicts in DATA_SET_ID of COUVIS_0xxx.py rules.
         if not pdsfile.SHELVES_ONLY:
+            res1 = target_pdsfile.data_set_id
+            res2 = target_pdsfile.data_set_id
             assert res1 == expected
             assert res1 == res2
 
