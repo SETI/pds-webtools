@@ -72,7 +72,7 @@ class TestPdsFileBlackBox:
         'input_path,expected',
         [
             ('metadata/VGISS_7xxx/VGISS_7201/VGISS_7201_inventory.tab',
-             ('VGISS_7201', '_inventory', '.tab')),
+             ('VGISS_7201_inventory', '', '.tab')),
             ('previews/NHxxMV_xxxx/NHLAMV_1001/data/20060321_000526/mc1_0005261846_0x536_eng_1_thumb.jpg',
              ('mc1_0005261846_0x536_eng_1', '_thumb', '.jpg')),
             ('previews/VGISS_7xxx/VGISS_7201/DATA/C24476XX/C2447654_small.jpg',
@@ -334,8 +334,8 @@ class TestPdsFileBlackBox:
     @pytest.mark.parametrize(
         'input_path,expected',
         [
-            ('volumes/COUVIS_8xxx/COUVIS_8001/data/UVIS_HSP_2017_228_BETORI_I_TAU10KM.tab',
-             'UVIS_HSP_2017_228_BETORI_I_TAU10KM.lbl')
+            ('volumes/COUVIS_8xxx/COUVIS_8001/data/UVIS_HSP_2017_228_BETORI_I_TAU10KM.TAB',
+             'UVIS_HSP_2017_228_BETORI_I_TAU10KM.LBL')
         ]
     )
     def test_label_basename(self, input_path, expected):
@@ -672,7 +672,7 @@ class TestPdsFileBlackBox:
             # Return '' for COUVIS_0xxx (multiple data set ids) since
             # we don't have a properly defined DATA_SET_ID rule for it.
             ('volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31.DAT',
-             ''),
+             'CO-J-UVIS-2-SSB-V1.2'),
             # Return '' for files under volume that have multiple data
             # set ids.
             ('volumes/EBROCC_xxxx/EBROCC_0001/DATA/DATAINFO.TXT',
@@ -684,14 +684,17 @@ class TestPdsFileBlackBox:
         target_pdsfile = instantiate_target_pdsfile(input_path)
         res1 = target_pdsfile.data_set_id
         res2 = target_pdsfile.data_set_id
-        assert res1 == expected
-        assert res1 == res2
+        # When SHELVES_ONLY is True, there is no metadata tree for COUVIS and
+        # it will have empty row_dicts in DATA_SET_ID of COUVIS_0xxx.py rules.
+        if not pdsfile.SHELVES_ONLY:
+            assert res1 == expected
+            assert res1 == res2
 
     @pytest.mark.parametrize(
         'input_path,expected',
         [
-            ('volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31.DAT',
-             ''),
+            ('volumes/COCIRS_0xxx/COCIRS_0012/DATA/NAV_DATA/GEO00120100.DAT',
+             'CO-J-CIRS-2/3/4-TSDR-V2.0:COCIRS_0012:DATA/NAV_DATA:GEO00120100.DAT'),
             ('volumes/EBROCC_xxxx/EBROCC_0001/DATA/DATAINFO.TXT',
              ''),
         ]
@@ -707,8 +710,8 @@ class TestPdsFileBlackBox:
     @pytest.mark.parametrize(
         'input_path,expected',
         [
-            ('volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31.DAT',
-             ''),
+            ('volumes/COCIRS_0xxx/COCIRS_0012/DATA/NAV_DATA/GEO00120100.DAT',
+             'CO-J-CIRS-2/3/4-TSDR-V2.0:COCIRS_0012:DATA/NAV_DATA:GEO00120100.DAT::1.0'),
             ('volumes/EBROCC_xxxx/EBROCC_0001/DATA/DATAINFO.TXT',
              ''),
         ]
