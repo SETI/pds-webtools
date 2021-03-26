@@ -1023,6 +1023,6 @@ class TestPdsGroupWhiteBox:
     )
     def test_parent_logical_path(self, input_paths, expected):
         pdsfiles = get_pdsfiles(input_paths)
-        pdsgroup = pdsfile.PdsGroup(pdsfiles=pdsfiles)
-        res = pdsgroup.parent_logical_path
+        target_pdsgroup = pdsgroup.PdsGroup(pdsfiles=pdsfiles)
+        res = target_pdsgroup.parent_logical_path
         assert res == expected

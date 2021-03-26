@@ -759,7 +759,7 @@ class TestPdsGroupBlackBox:
             assert True
         else:
             target_pdsfile = get_pdsfiles(input_paths)
-            target_pdsgroup = pdsfile.PdsGroup(pdsfiles=target_pdsfile)
+            target_pdsgroup = pdsgroup.PdsGroup(pdsfiles=target_pdsfile)
             res1 = target_pdsgroup._iconset
             res2 = target_pdsgroup._iconset
             assert isinstance(res1, pdsviewable.PdsViewSet)
@@ -802,7 +802,7 @@ class TestPdsGroupBlackBox:
             assert True
         else:
             target_pdsfile = get_pdsfiles(input_paths)
-            target_pdsgroup = pdsfile.PdsGroup(pdsfiles=target_pdsfile)
+            target_pdsgroup = pdsgroup.PdsGroup(pdsfiles=target_pdsfile)
             res1 = target_pdsgroup.iconset_open
             res2 = target_pdsgroup.iconset_open
             assert isinstance(res1, pdsviewable.PdsViewSet)
@@ -845,7 +845,7 @@ class TestPdsGroupBlackBox:
             assert True
         else:
             target_pdsfile = get_pdsfiles(input_paths)
-            target_pdsgroup = pdsfile.PdsGroup(pdsfiles=target_pdsfile)
+            target_pdsgroup = pdsgroup.PdsGroup(pdsfiles=target_pdsfile)
             res1 = target_pdsgroup.iconset_closed
             res2 = target_pdsgroup.iconset_closed
             assert isinstance(res1, pdsviewable.PdsViewSet)

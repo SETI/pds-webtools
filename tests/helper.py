@@ -1,5 +1,7 @@
 import os
 import pdsfile
+import pdsgroup
+import pdsgrouptable
 
 PDS_DATA_DIR = os.environ['PDS_DATA_DIR']
 
@@ -30,8 +32,8 @@ def get_pdsgroups(paths_group, is_abspath=True):
     pdsgroups_arr = []
     for paths in paths_group:
         pdsfiles = get_pdsfiles(paths, is_abspath)
-        pdsgroup = pdsfile.PdsGroup(pdsfiles=pdsfiles)
-        pdsgroups_arr.append(pdsgroup)
+        target_pdsgroup = pdsgroup.PdsGroup(pdsfiles=pdsfiles)
+        pdsgroups_arr.append(target_pdsgroup)
     return pdsgroups_arr
 
 def opus_products_test(input_path, expected):

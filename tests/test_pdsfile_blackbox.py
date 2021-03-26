@@ -1,6 +1,8 @@
 import datetime
 import os
 import pdsfile
+import pdsgroup
+import pdsgrouptable
 import pdsviewable
 import pytest
 import re
@@ -2969,9 +2971,9 @@ class TestPdsGroupBlackBox:
     )
     def test_copy(self, input_paths, expected_achor, expected_path):
         pdsfiles = get_pdsfiles(input_paths)
-        res = pdsfile.PdsGroup(pdsfiles=pdsfiles)
+        res = pdsgroup.PdsGroup(pdsfiles=pdsfiles)
         res_copy = res.copy()
-        assert isinstance(res_copy, pdsfile.PdsGroup)
+        assert isinstance(res_copy, pdsgroup.PdsGroup)
         assert res.anchor == expected_achor
         assert res.anchor == res_copy.anchor
         for pdsf in res.iterator_for_all():
@@ -2990,8 +2992,8 @@ class TestPdsGroupBlackBox:
     )
     def test_parent_logical_path(self, input_paths, expected):
         pdsfiles = get_pdsfiles(input_paths)
-        pdsgroup = pdsfile.PdsGroup(pdsfiles=pdsfiles)
-        res = pdsgroup.parent_logical_path
+        target_pdsgroup = pdsgroup.PdsGroup(pdsfiles=pdsfiles)
+        res = target_pdsgroup.parent_logical_path
         assert res == expected
 
     @pytest.mark.parametrize(
@@ -3009,8 +3011,8 @@ class TestPdsGroupBlackBox:
     )
     def test_isdir(self, input_paths, expected):
         pdsfiles = get_pdsfiles(input_paths)
-        pdsgroup = pdsfile.PdsGroup(pdsfiles=pdsfiles)
-        res = pdsgroup.isdir
+        target_pdsgroup = pdsgroup.PdsGroup(pdsfiles=pdsfiles)
+        res = target_pdsgroup.isdir
         assert res == expected
 
     @pytest.mark.parametrize(
@@ -3041,8 +3043,8 @@ class TestPdsGroupBlackBox:
     )
     def test_viewset(self, input_paths, expected):
         pdsfiles = get_pdsfiles(input_paths)
-        pdsgroup = pdsfile.PdsGroup(pdsfiles=pdsfiles)
-        res = pdsgroup.viewset
+        target_pdsgroup = pdsgroup.PdsGroup(pdsfiles=pdsfiles)
+        res = target_pdsgroup.viewset
         assert isinstance(res, pdsviewable.PdsViewSet)
         viewables = res.to_dict()['viewables']
         for viewable in viewables:
@@ -3064,8 +3066,8 @@ class TestPdsGroupBlackBox:
     )
     def test_global_anchor(self, input_paths, expected):
         pdsfiles = get_pdsfiles(input_paths)
-        pdsgroup = pdsfile.PdsGroup(pdsfiles=pdsfiles)
-        res = pdsgroup.global_anchor
+        target_pdsgroup = pdsgroup.PdsGroup(pdsfiles=pdsfiles)
+        res = target_pdsgroup.global_anchor
         assert res == expected
 
     @pytest.mark.parametrize(
@@ -3087,10 +3089,10 @@ class TestPdsGroupBlackBox:
     )
     def test_sort(self, input_paths, expected):
         pdsfiles = get_pdsfiles(input_paths)
-        pdsgroup = pdsfile.PdsGroup(pdsfiles=pdsfiles)
-        pdsgroup.sort()
-        for idx in range(len(pdsgroup.rows)):
-            assert pdsgroup.rows[idx].logical_path == expected[idx]
+        target_pdsgroup = pdsgroup.PdsGroup(pdsfiles=pdsfiles)
+        target_pdsgroup.sort()
+        for idx in range(len(target_pdsgroup.rows)):
+            assert target_pdsgroup.rows[idx].logical_path == expected[idx]
 
     @pytest.mark.parametrize(
         'input_paths,remove_path,expected',
@@ -3115,12 +3117,12 @@ class TestPdsGroupBlackBox:
     )
     def test_remove(self, input_paths, remove_path, expected):
         pdsfiles = get_pdsfiles(input_paths)
-        pdsgroup = pdsfile.PdsGroup(pdsfiles=pdsfiles)
+        target_pdsgroup = pdsgroup.PdsGroup(pdsfiles=pdsfiles)
         pdsf = instantiate_target_pdsfile(remove_path)
-        res = pdsgroup.remove(pdsf=pdsf)
+        res = target_pdsgroup.remove(pdsf=pdsf)
         assert res == expected
         if res:
-            for file in pdsgroup.rows:
+            for file in target_pdsgroup.rows:
                 assert file.logical_path != remove_path
 
     @pytest.mark.parametrize(
@@ -3146,12 +3148,12 @@ class TestPdsGroupBlackBox:
     )
     def test_hide(self, input_paths, hide_path, expected):
         pdsfiles = get_pdsfiles(input_paths)
-        pdsgroup = pdsfile.PdsGroup(pdsfiles=pdsfiles)
+        target_pdsgroup = pdsgroup.PdsGroup(pdsfiles=pdsfiles)
         pdsf = instantiate_target_pdsfile(hide_path)
-        res = pdsgroup.hide(pdsf=pdsf)
+        res = target_pdsgroup.hide(pdsf=pdsf)
         assert res == expected
         if res:
-            assert pdsf.logical_path in pdsgroup.hidden
+            assert pdsf.logical_path in target_pdsgroup.hidden
 
     @pytest.mark.parametrize(
         'input_paths,expected',
@@ -3172,10 +3174,10 @@ class TestPdsGroupBlackBox:
     )
     def test_hide_all(self, input_paths, expected):
         pdsfiles = get_pdsfiles(input_paths)
-        pdsgroup = pdsfile.PdsGroup(pdsfiles=pdsfiles)
-        pdsgroup.hide_all()
+        target_pdsgroup = pdsgroup.PdsGroup(pdsfiles=pdsfiles)
+        target_pdsgroup.hide_all()
         for path in expected:
-            assert path in pdsgroup.hidden
+            assert path in target_pdsgroup.hidden
 
     @pytest.mark.parametrize(
         'input_paths,unhide_path,expected',
@@ -3200,13 +3202,13 @@ class TestPdsGroupBlackBox:
     )
     def test_unhide(self, input_paths, unhide_path, expected):
         pdsfiles = get_pdsfiles(input_paths)
-        pdsgroup = pdsfile.PdsGroup(pdsfiles=pdsfiles)
-        pdsgroup.hide_all()
+        target_pdsgroup = pdsgroup.PdsGroup(pdsfiles=pdsfiles)
+        target_pdsgroup.hide_all()
         pdsf = instantiate_target_pdsfile(unhide_path)
-        res = pdsgroup.unhide(pdsf=pdsf)
+        res = target_pdsgroup.unhide(pdsf=pdsf)
         assert res == expected
         if res:
-            assert pdsf.logical_path not in pdsgroup.hidden
+            assert pdsf.logical_path not in target_pdsgroup.hidden
 
     @pytest.mark.parametrize(
         'input_paths,expected',
@@ -3222,10 +3224,10 @@ class TestPdsGroupBlackBox:
     )
     def test_unhide_all(self, input_paths, expected):
         pdsfiles = get_pdsfiles(input_paths)
-        pdsgroup = pdsfile.PdsGroup(pdsfiles=pdsfiles)
-        pdsgroup.hide_all()
-        pdsgroup.unhide_all()
-        assert len(pdsgroup.hidden) == expected
+        target_pdsgroup = pdsgroup.PdsGroup(pdsfiles=pdsfiles)
+        target_pdsgroup.hide_all()
+        target_pdsgroup.unhide_all()
+        assert len(target_pdsgroup.hidden) == expected
 
     @pytest.mark.parametrize(
         'input_paths,hide_path,expected',
@@ -3246,10 +3248,10 @@ class TestPdsGroupBlackBox:
     )
     def test_iterator(self, input_paths, hide_path, expected):
         pdsfiles = get_pdsfiles(input_paths)
-        pdsgroup = pdsfile.PdsGroup(pdsfiles=pdsfiles)
+        target_pdsgroup = pdsgroup.PdsGroup(pdsfiles=pdsfiles)
         pdsf = instantiate_target_pdsfile(hide_path)
-        pdsgroup.hide(pdsf=pdsf)
-        for pdsf in pdsgroup.iterator():
+        target_pdsgroup.hide(pdsf=pdsf)
+        for pdsf in target_pdsgroup.iterator():
             assert pdsf.logical_path != hide_path
             assert pdsf.logical_path in expected
 
@@ -3272,8 +3274,8 @@ class TestPdsGroupBlackBox:
     )
     def test_iterator_for_all(self, input_paths, expected):
         pdsfiles = get_pdsfiles(input_paths)
-        pdsgroup = pdsfile.PdsGroup(pdsfiles=pdsfiles)
-        for pdsf in pdsgroup.iterator_for_all():
+        target_pdsgroup = pdsgroup.PdsGroup(pdsfiles=pdsfiles)
+        for pdsf in target_pdsgroup.iterator_for_all():
             assert pdsf.logical_path in expected
 
     @pytest.mark.parametrize(
@@ -3293,10 +3295,10 @@ class TestPdsGroupBlackBox:
     )
     def test_iterator_for_hidden(self, input_paths, hide_path, expected):
         pdsfiles = get_pdsfiles(input_paths)
-        pdsgroup = pdsfile.PdsGroup(pdsfiles=pdsfiles)
+        target_pdsgroup = pdsgroup.PdsGroup(pdsfiles=pdsfiles)
         pdsf = instantiate_target_pdsfile(hide_path)
-        pdsgroup.hide(pdsf=pdsf)
-        for pdsf in pdsgroup.iterator_for_hidden():
+        target_pdsgroup.hide(pdsf=pdsf)
+        for pdsf in target_pdsgroup.iterator_for_hidden():
             assert pdsf.logical_path in expected
 
 ################################################################################
@@ -3331,9 +3333,9 @@ class TestPdsGroupTableBlackBox:
     )
     def test_copy(self, input_groups, expected):
         pdsgroups = get_pdsgroups(input_groups)
-        res = pdsfile.PdsGroupTable(pdsgroups=pdsgroups)
+        res = pdsgrouptable.PdsGroupTable(pdsgroups=pdsgroups)
         res_copy = res.copy()
-        assert isinstance(res_copy, pdsfile.PdsGroupTable)
+        assert isinstance(res_copy, pdsgrouptable.PdsGroupTable)
         assert res.parent_logical_path == expected
         assert res.parent_logical_path == res_copy.parent_logical_path
 
@@ -3364,8 +3366,8 @@ class TestPdsGroupTableBlackBox:
     )
     def test_parent_logical_path(self, input_groups, expected):
         pdsgroups = get_pdsgroups(input_groups)
-        res = pdsfile.PdsGroupTable(pdsgroups=pdsgroups)
-        assert isinstance(res, pdsfile.PdsGroupTable)
+        res = pdsgrouptable.PdsGroupTable(pdsgroups=pdsgroups)
+        assert isinstance(res, pdsgrouptable.PdsGroupTable)
         assert res.parent_logical_path == expected
 
     @pytest.mark.parametrize(
@@ -3406,8 +3408,8 @@ class TestPdsGroupTableBlackBox:
     )
     def test_levels(self, input_groups, expected):
         pdsgroups = get_pdsgroups(input_groups)
-        pdsgrouptable = pdsfile.PdsGroupTable(pdsgroups=pdsgroups)
-        res = pdsgrouptable.levels
+        target_pdsgrouptable = pdsgrouptable.PdsGroupTable(pdsgroups=pdsgroups)
+        res = target_pdsgrouptable.levels
         for idx in range(len(res)):
             assert res[idx].logical_path == expected[idx]
 
@@ -3451,9 +3453,9 @@ class TestPdsGroupTableBlackBox:
     )
     def test_levels_plus_one(self, input_groups, expected):
         pdsgroups = get_pdsgroups(input_groups)
-        pdsgrouptable = pdsfile.PdsGroupTable(pdsgroups=pdsgroups)
+        target_pdsgrouptable = pdsgrouptable.PdsGroupTable(pdsgroups=pdsgroups)
         #  first element at the first row of first group + self.levels
-        res = pdsgrouptable.levels_plus_one
+        res = target_pdsgrouptable.levels_plus_one
         for idx in range(len(res)):
             assert res[idx].logical_path == expected[idx]
 
@@ -3494,11 +3496,11 @@ class TestPdsGroupTableBlackBox:
     def test_iterator(self, input_groups, expected):
         pdsgroups = get_pdsgroups(input_groups)
         pdsgroups[0].hide_all()
-        pdsgrouptable = pdsfile.PdsGroupTable(pdsgroups=pdsgroups)
-        res = pdsgrouptable.iterator()
+        target_pdsgrouptable = pdsgrouptable.PdsGroupTable(pdsgroups=pdsgroups)
+        res = target_pdsgrouptable.iterator()
         for table_idx in range(len(res)):
             group = res[table_idx]
-            assert isinstance(group, pdsfile.PdsGroup)
+            assert isinstance(group, pdsgroup.PdsGroup)
             group_list = group.iterator()
             for idx in range(len(group_list)):
                 assert group_list[idx].logical_path == expected[table_idx][idx]
@@ -3547,11 +3549,11 @@ class TestPdsGroupTableBlackBox:
     def test_iterator_for_all(self, input_groups, expected):
         pdsgroups = get_pdsgroups(input_groups)
         pdsgroups[0].hide_all()
-        pdsgrouptable = pdsfile.PdsGroupTable(pdsgroups=pdsgroups)
-        res = pdsgrouptable.iterator_for_all()
+        target_pdsgrouptable = pdsgrouptable.PdsGroupTable(pdsgroups=pdsgroups)
+        res = target_pdsgrouptable.iterator_for_all()
         for table_idx in range(len(res)):
             group = res[table_idx]
-            assert isinstance(group, pdsfile.PdsGroup)
+            assert isinstance(group, pdsgroup.PdsGroup)
             group_list = group.iterator_for_all()
             for idx in range(len(group_list)):
                 print(group_list[idx].logical_path, idx)
@@ -3594,11 +3596,11 @@ class TestPdsGroupTableBlackBox:
     def test_iterator_for_hidden(self, input_groups, expected):
         pdsgroups = get_pdsgroups(input_groups)
         pdsgroups[0].hide_all()
-        pdsgrouptable = pdsfile.PdsGroupTable(pdsgroups=pdsgroups)
-        res = pdsgrouptable.iterator_for_hidden()
+        target_pdsgrouptable = pdsgrouptable.PdsGroupTable(pdsgroups=pdsgroups)
+        res = target_pdsgrouptable.iterator_for_hidden()
         for table_idx in range(len(res)):
             group = res[table_idx]
-            assert isinstance(group, pdsfile.PdsGroup)
+            assert isinstance(group, pdsgroup.PdsGroup)
             group_list = group.iterator_for_hidden()
             for idx in range(len(group_list)):
                 assert group_list[idx].logical_path == expected[table_idx][idx]
@@ -3636,8 +3638,8 @@ class TestPdsGroupTableBlackBox:
     def test_pdsfile_iterator(self, input_groups, expected):
         pdsgroups = get_pdsgroups(input_groups)
         pdsgroups[0].hide_all()
-        pdsgrouptable = pdsfile.PdsGroupTable(pdsgroups=pdsgroups)
-        res = pdsgrouptable.pdsfile_iterator()
+        target_pdsgrouptable = pdsgrouptable.PdsGroupTable(pdsgroups=pdsgroups)
+        res = target_pdsgrouptable.pdsfile_iterator()
         for idx in range(len(res)):
             pdsf = res[idx]
             assert isinstance(pdsf, pdsfile.PdsFile)
@@ -3683,8 +3685,8 @@ class TestPdsGroupTableBlackBox:
     def test_pdsfile_iterator_for_all(self, input_groups, expected):
         pdsgroups = get_pdsgroups(input_groups)
         pdsgroups[0].hide_all()
-        pdsgrouptable = pdsfile.PdsGroupTable(pdsgroups=pdsgroups)
-        res = pdsgrouptable.pdsfile_iterator_for_all()
+        target_pdsgrouptable = pdsgrouptable.PdsGroupTable(pdsgroups=pdsgroups)
+        res = target_pdsgrouptable.pdsfile_iterator_for_all()
         for idx in range(len(res)):
             pdsf = res[idx]
             assert isinstance(pdsf, pdsfile.PdsFile)
@@ -3725,8 +3727,8 @@ class TestPdsGroupTableBlackBox:
     def test_pdsfile_iterator_for_hidden(self, input_groups, expected):
         pdsgroups = get_pdsgroups(input_groups)
         pdsgroups[0].hide_all()
-        pdsgrouptable = pdsfile.PdsGroupTable(pdsgroups=pdsgroups)
-        res = pdsgrouptable.pdsfile_iterator_for_hidden()
+        target_pdsgrouptable = pdsgrouptable.PdsGroupTable(pdsgroups=pdsgroups)
+        res = target_pdsgrouptable.pdsfile_iterator_for_hidden()
         for idx in range(len(res)):
             pdsf = res[idx]
             assert isinstance(pdsf, pdsfile.PdsFile)
@@ -3744,8 +3746,8 @@ class TestPdsGroupTableBlackBox:
     )
     def test___len__(self, input_groups, expected):
         pdsgroups = get_pdsgroups(input_groups)
-        pdsgrouptable = pdsfile.PdsGroupTable(pdsgroups=pdsgroups)
-        res = pdsgrouptable.__len__()
+        target_pdsgrouptable = pdsgrouptable.PdsGroupTable(pdsgroups=pdsgroups)
+        res = target_pdsgrouptable.__len__()
         assert res == expected
 
     @pytest.mark.parametrize(
@@ -3787,11 +3789,11 @@ class TestPdsGroupTableBlackBox:
     )
     def test_insert_group(self, input_groups, new_paths, expected):
         pdsgroups = get_pdsgroups(input_groups)
-        pdsgrouptable = pdsfile.PdsGroupTable(pdsgroups=pdsgroups)
+        target_pdsgrouptable = pdsgrouptable.PdsGroupTable(pdsgroups=pdsgroups)
         pdsfiles = get_pdsfiles(new_paths)
-        group = pdsfile.PdsGroup(pdsfiles=pdsfiles)
-        pdsgrouptable.insert_group(group=group)
-        res = pdsgrouptable.pdsfile_iterator_for_all()
+        group = pdsgroup.PdsGroup(pdsfiles=pdsfiles)
+        target_pdsgrouptable.insert_group(group=group)
+        res = target_pdsgrouptable.pdsfile_iterator_for_all()
         for idx in range(len(res)):
             pdsf = res[idx]
             assert pdsf.logical_path == expected[idx]
@@ -3835,13 +3837,13 @@ class TestPdsGroupTableBlackBox:
     )
     def test_insert_file(self, input_groups, new_paths, expected):
         pdsgroups = get_pdsgroups(input_groups)
-        pdsgrouptable = pdsfile.PdsGroupTable(pdsgroups=pdsgroups)
+        target_pdsgrouptable = pdsgrouptable.PdsGroupTable(pdsgroups=pdsgroups)
 
         for path in new_paths:
             pdsf = instantiate_target_pdsfile(path)
-            pdsgrouptable.insert_file(pdsf=pdsf)
+            target_pdsgrouptable.insert_file(pdsf=pdsf)
 
-        res = pdsgrouptable.pdsfile_iterator_for_all()
+        res = target_pdsgrouptable.pdsfile_iterator_for_all()
         for idx in range(len(res)):
             pdsf = res[idx]
             assert pdsf.logical_path == expected[idx]
@@ -3885,12 +3887,12 @@ class TestPdsGroupTableBlackBox:
     )
     def test_insert(self, input_groups, things, expected):
         pdsgroups = get_pdsgroups(input_groups)
-        pdsgrouptable = pdsfile.PdsGroupTable(pdsgroups=pdsgroups)
+        target_pdsgrouptable = pdsgrouptable.PdsGroupTable(pdsgroups=pdsgroups)
 
         for path in things:
-            pdsgrouptable.insert(things=things)
+            target_pdsgrouptable.insert(things=things)
 
-        res = pdsgrouptable.pdsfile_iterator_for_all()
+        res = target_pdsgrouptable.pdsfile_iterator_for_all()
         for idx in range(len(res)):
             pdsf = res[idx]
             assert pdsf.logical_path == expected[idx]
@@ -3934,10 +3936,10 @@ class TestPdsGroupTableBlackBox:
     )
     def test_sort_in_groups(self, input_groups, expected):
         pdsgroups = get_pdsgroups(input_groups)
-        pdsgrouptable = pdsfile.PdsGroupTable(pdsgroups=pdsgroups)
+        target_pdsgrouptable = pdsgrouptable.PdsGroupTable(pdsgroups=pdsgroups)
         # sort within each group
-        pdsgrouptable.sort_in_groups()
-        res = pdsgrouptable.pdsfile_iterator_for_all()
+        target_pdsgrouptable.sort_in_groups()
+        res = target_pdsgrouptable.pdsfile_iterator_for_all()
         for idx in range(len(res)):
             pdsf = res[idx]
             assert isinstance(pdsf, pdsfile.PdsFile)
@@ -3982,10 +3984,10 @@ class TestPdsGroupTableBlackBox:
     )
     def test_sort_groups(self, input_groups, expected):
         pdsgroups = get_pdsgroups(input_groups)
-        pdsgrouptable = pdsfile.PdsGroupTable(pdsgroups=pdsgroups)
+        target_pdsgrouptable = pdsgrouptable.PdsGroupTable(pdsgroups=pdsgroups)
         # sort between different groups
-        pdsgrouptable.sort_groups()
-        res = pdsgrouptable.pdsfile_iterator_for_all()
+        target_pdsgrouptable.sort_groups()
+        res = target_pdsgrouptable.pdsfile_iterator_for_all()
         for idx in range(len(res)):
             pdsf = res[idx]
             assert isinstance(pdsf, pdsfile.PdsFile)
@@ -4026,10 +4028,10 @@ class TestPdsGroupTableBlackBox:
     )
     def test_hide_pdsfile(self, input_groups, hide_path, expected):
         pdsgroups = get_pdsgroups(input_groups)
-        pdsgrouptable = pdsfile.PdsGroupTable(pdsgroups=pdsgroups)
+        target_pdsgrouptable = pdsgrouptable.PdsGroupTable(pdsgroups=pdsgroups)
         pdsf = instantiate_target_pdsfile(hide_path)
-        res = pdsgrouptable.hide_pdsfile(pdsf=pdsf)
-        hidden_pdsf = pdsgrouptable.pdsfile_iterator_for_hidden()
+        res = target_pdsgrouptable.hide_pdsfile(pdsf=pdsf)
+        hidden_pdsf = target_pdsgrouptable.pdsfile_iterator_for_hidden()
         for pdsf in hidden_pdsf:
             assert pdsf.logical_path == hide_path
         assert res == expected
@@ -4069,10 +4071,10 @@ class TestPdsGroupTableBlackBox:
     )
     def test_remove_pdsfile(self, input_groups, remove_path, expected):
         pdsgroups = get_pdsgroups(input_groups)
-        pdsgrouptable = pdsfile.PdsGroupTable(pdsgroups=pdsgroups)
+        target_pdsgrouptable = pdsgrouptable.PdsGroupTable(pdsgroups=pdsgroups)
         pdsf = instantiate_target_pdsfile(remove_path)
-        res = pdsgrouptable.remove_pdsfile(pdsf=pdsf)
-        pdsfiles = pdsgrouptable.pdsfile_iterator_for_all()
+        res = target_pdsgrouptable.remove_pdsfile(pdsf=pdsf)
+        pdsfiles = target_pdsgrouptable.pdsfile_iterator_for_all()
         for pdsf in pdsfiles:
             assert pdsf.logical_path != remove_path
         assert res == expected
@@ -4106,9 +4108,9 @@ class TestPdsGroupTableBlackBox:
     )
     def test_filter(self, input_groups, regex, expected):
         pdsgroups = get_pdsgroups(input_groups)
-        pdsgrouptable = pdsfile.PdsGroupTable(pdsgroups=pdsgroups)
-        pdsgrouptable.filter(regex=regex)
-        pdsfiles = pdsgrouptable.pdsfile_iterator()
+        target_pdsgrouptable = pdsgrouptable.PdsGroupTable(pdsgroups=pdsgroups)
+        target_pdsgrouptable.filter(regex=regex)
+        pdsfiles = target_pdsgrouptable.pdsfile_iterator()
         for pdsf in pdsfiles:
             assert pdsf.logical_path in expected
 
@@ -4148,9 +4150,9 @@ class TestPdsGroupTableBlackBox:
     )
     def test_tables_from_pdsfiles(self, input_paths, expected):
         pdsfiles = get_pdsfiles(input_paths)
-        tables = pdsfile.PdsGroupTable.tables_from_pdsfiles(pdsfiles=pdsfiles)
+        tables = pdsgrouptable.PdsGroupTable.tables_from_pdsfiles(pdsfiles=pdsfiles)
         for table in tables:
-            assert isinstance(table, pdsfile.PdsGroupTable)
+            assert isinstance(table, pdsgrouptable.PdsGroupTable)
             for group in table.iterator_for_all():
                 for pdsf in group.iterator_for_all():
                     assert pdsf.logical_path in expected
@@ -4190,10 +4192,10 @@ class TestPdsGroupTableBlackBox:
     )
     def test_remove_hidden(self, input_groups, hide_path, expected):
         pdsgroups = get_pdsgroups(input_groups)
-        pdsgrouptable = pdsfile.PdsGroupTable(pdsgroups=pdsgroups)
+        target_pdsgrouptable = pdsgrouptable.PdsGroupTable(pdsgroups=pdsgroups)
         pdsf = instantiate_target_pdsfile(hide_path)
-        pdsgrouptable.hide_pdsfile(pdsf=pdsf)
-        new_table = pdsgrouptable.remove_hidden()
+        target_pdsgrouptable.hide_pdsfile(pdsf=pdsf)
+        new_table = target_pdsgrouptable.remove_hidden()
         hidden_pdsf = new_table.pdsfile_iterator_for_hidden()
         assert len(hidden_pdsf) == expected
 
@@ -4222,14 +4224,14 @@ class TestPdsGroupTableBlackBox:
     )
     def test_merge_index_row_tables(self, input_groups1, input_groups2, expected):
         pdsgroups1 = get_pdsgroups(input_groups1)
-        pdsgrouptable1 = pdsfile.PdsGroupTable(pdsgroups=pdsgroups1)
+        pdsgrouptable1 = pdsgrouptable.PdsGroupTable(pdsgroups=pdsgroups1)
         pdsgroups2 = get_pdsgroups(input_groups2)
-        pdsgrouptable2 = pdsfile.PdsGroupTable(pdsgroups=pdsgroups2)
+        pdsgrouptable2 = pdsgrouptable.PdsGroupTable(pdsgroups=pdsgroups2)
         tables = [pdsgrouptable1, pdsgrouptable2]
 
-        new_tables = pdsfile.PdsGroupTable.merge_index_row_tables(tables=tables)
+        new_tables = pdsgrouptable.PdsGroupTable.merge_index_row_tables(tables=tables)
         for table in tables:
-            assert isinstance(table, pdsfile.PdsGroupTable)
+            assert isinstance(table, pdsgrouptable.PdsGroupTable)
             for pdsf in table.pdsfile_iterator():
                 assert pdsf.logical_path in expected
 
