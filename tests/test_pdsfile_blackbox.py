@@ -2919,6 +2919,33 @@ class TestPdsFileBlackBox:
         for path in res:
             assert path in expected
 
+    @pytest.mark.parametrize(
+        'input_path,expected_path',
+        [
+            ('volumes/COCIRS_0xxx/COCIRS_0012/DATA/NAV_DATA/GEO00120100.DAT',
+             [PDS_DATA_DIR + '/volumes/COCIRS_0xxx/COCIRS_0012/DATA/NAV_DATA/GEO00120100.DAT']),
+
+        ]
+    )
+    def test_copy(self, input_path, expected_path):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        pdsf_copy = target_pdsfile.copy()
+        assert pdsf_copy.abspath in expected_path
+
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31_thumb.png',
+             'previews-COUVIS_0xxx-COUVIS_0001-DATA-D1999_007-HDAC1999_007_16_31'),
+            ('previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/',
+             'previews-COUVIS_0xxx-COUVIS_0001-DATA-D1999_007')
+        ]
+    )
+    def test_global_anchor(self, input_path, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        res = target_pdsfile.global_anchor
+        assert res == expected
+
 
 ################################################################################
 # Blackbox test for functions & properties in PdsGroup class
