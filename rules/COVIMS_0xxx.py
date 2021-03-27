@@ -247,7 +247,7 @@ opus_id_to_primary_logical_path = translator.TranslatorByRegex([
     (r'co-vims-(v135.{7})(|_.{3})',     0,  r'volumes/COVIMS_0xxx/COVIMS_0002/data/*/\1_*\2.qub'),
     (r'co-vims-(v13[0-4].{7})(|_.{3})', 0,  r'volumes/COVIMS_0xxx/COVIMS_0001/data/*/\1_*\2.qub'),
     (r'co-vims-(v12..{7})(|_.{3})',     0,  r'volumes/COVIMS_0xxx/COVIMS_0001/data/*/\1_*\2.qub'),
-]),
+])
 
 ####################################################################################################################################
 # Subclass definition

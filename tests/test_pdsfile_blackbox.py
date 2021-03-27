@@ -879,13 +879,71 @@ class TestPdsFileBlackBox:
         assert res.abspath == expected
 
     @pytest.mark.parametrize(
+        'input_id,expected',
+        [
+            ('co-cirs-0408010000-fp1',
+             'volumes/COCIRS_5xxx/COCIRS_5408/DATA/APODSPEC/SPEC0408010000_FP1.DAT'),
+            ('co-iss-w1294561143',
+             'volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561143_1.IMG'),
+            ('co-uvis-hdac1999_007_16_33',
+             'volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_33.DAT'),
+            ('co-vims-v1490784910_001',
+             'volumes/COVIMS_0xxx/COVIMS_0006/data/2005088T102825_2005089T113931/v1490784910_3_001.qub'),
+            ('go-ssi-c0346405900',
+             'volumes/GO_0xxx/GO_0017/J0/OPNAV/C0346405900R.IMG'),
+            ('vg-iss-1-j-c1385455',
+             'volumes/VGISS_5xxx/VGISS_5101/DATA/C13854XX/C1385455_RAW.IMG'),
+            ('hst-09296-acs-j8m3b1021',
+             'volumes/HSTJx_xxxx/HSTJ0_9296/DATA/VISIT_B1/J8M3B1021.LBL'),
+            ('hst-11559-wfc3-ib4v11mnq',
+             'volumes/HSTIx_xxxx/HSTI1_1559/DATA/VISIT_11/IB4V11MNQ.LBL'),
+            ('hst-07176-nicmos-n4bi01l4q',
+             'volumes/HSTNx_xxxx/HSTN0_7176/DATA/VISIT_01/N4BI01L4Q.LBL'),
+            ('hst-07308-stis-o43b05c1q',
+             'volumes/HSTOx_xxxx/HSTO0_7308/DATA/VISIT_05/O43B05C1Q.LBL'),
+            ('hst-05167-wfpc2-u2no0404t',
+             'volumes/HSTUx_xxxx/HSTU0_5167/DATA/VISIT_04/U2NO0404T.LBL'),
+            ('nh-lorri-lor_0003103486',
+             'volumes/NHxxLO_xxxx/NHLALO_1001/data/20060224_000310/lor_0003103486_0x630_eng.fit'),
+            ('eso1m-apph-occ-1989-184-28sgr-e',
+             'volumes/EBROCC_xxxx/EBROCC_0001/DATA/ESO1M/ES1_EPD.TAB'),
+            ('eso22m-apph-occ-1989-184-28sgr-i',
+             'volumes/EBROCC_xxxx/EBROCC_0001/DATA/ESO22M/ES2_IPD.TAB'),
+            ('lick1m-ccdc-occ-1989-184-28sgr-e',
+             'volumes/EBROCC_xxxx/EBROCC_0001/DATA/LICK1M/LIC_EPD.TAB'),
+            ('irtf-urac-occ-1989-184-28sgr-i',
+             'volumes/EBROCC_xxxx/EBROCC_0001/DATA/IRTF/IRT_IPD.TAB'),
+            ('pal200-circ-occ-1989-184-28sgr-i',
+             'volumes/EBROCC_xxxx/EBROCC_0001/DATA/PAL200/PAL_IPD.TAB'),
+            ('mcd27m-iirar-occ-1989-184-28sgr-i',
+             'volumes/EBROCC_xxxx/EBROCC_0001/DATA/MCD27M/MCD_IPD.TAB'),
+
+            # ('nh-mvic-mc0_0032528036',
+            # 'volumes/NHxxMV_xxxx/NHJUMV_1001/data/20070131_003252/mc0_0032528036_0x536_eng_1.fit'),
+            # ('nh-mvic-mc0_0005261846',
+            # 'volumes/NHxxMV_xxxx/NHLAMV_1001/data/20060321_000526/mc0_0005261846_0x536_eng_1.fit'),
+            # ('co-rss-occ-2005-159-rev009-k55-e',
+            #  'volumes/CORSS_8xxx/CORSS_8001/data/Rev009/Rev009E/Rev009E_RSS_2005_159_K55_E/RSS_2005_159_K55_E_TAU_01KM.TAB'),
+
+        ]
+    )
+    def test_from_opus_id1(self, input_id, expected):
+        target_pdsfile1 = pdsfile.PdsFile.from_opus_id(input_id)
+        logical_path1 = target_pdsfile1.logical_path
+        target_pdsfile2 = instantiate_target_pdsfile(
+            logical_path1, is_abspath=False)
+        assert logical_path1 == expected
+        assert target_pdsfile1.opus_id == input_id
+        assert target_pdsfile2.opus_id == input_id
+
+    @pytest.mark.parametrize(
         'opus_id,expected',
         [
             ('hst-07176-nicmos-n4bi01l4q',
              PDS_DATA_DIR + '/volumes/HSTNx_xxxx/HSTN0_7176/DATA/VISIT_01/N4BI01L4Q.LBL')
         ]
     )
-    def test_from_opus_id(self, opus_id, expected):
+    def test_from_opus_id2(self, opus_id, expected):
         res = pdsfile.PdsFile.from_opus_id(opus_id=opus_id)
         assert isinstance(res, pdsfile.PdsFile)
         assert res.abspath == expected
