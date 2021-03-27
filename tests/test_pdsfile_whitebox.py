@@ -228,7 +228,7 @@ class TestPdsFileWhiteBox:
             ('diagrams/COCIRS_6xxx/COCIRS_6004',
              'Diagrams for Cassini CIRS data, reformatted, 2010-04-01 to 2010-04-30 (SC clock 1648773882-1651332653)'),
             ('calibrated/COISS_1xxx/COISS_1001',
-             'Calibrated Cassini ISS Jupiter images 1999-01-09 to 2000-10-31 (SC clock 1294562621-1351672562)')
+             'Cassini ISS Jupiter calibrated images 1999-01-09 to 2000-10-31 (SC clock 1294562621-1351672562)')
         ]
     )
     def test_description1(self, input_path, expected):

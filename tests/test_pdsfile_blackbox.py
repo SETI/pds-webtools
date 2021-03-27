@@ -320,12 +320,12 @@ class TestPdsFileBlackBox:
              ]),
             ('previews/GO_0xxx/GO_0017/J0/OPNAV/C0346405900R_med.jpg',
              [
-                'Galileo Jupiter images 1996-06-03 to 1996-12-14T (SC clock 03464059-03740374)',
+                'Galileo Jupiter preview image 1996-06-03 to 1996-12-14 (SC clock 03464059-03740374)',
                 'VOLUME'
              ]),
             ('metadata/COVIMS_0xxx/COVIMS_0001',
              [
-                'Cassini VIMS near IR image cubes 1999-01-10 to 2000-09-18 (SC clock 1294638283-1347975444)',
+                'Cassini VIMS metadata 1999-01-10 to 2000-09-18 (SC clock 1294638283-1347975444)',
                 'VOLUME'
              ])
         ]
@@ -588,8 +588,8 @@ class TestPdsFileBlackBox:
     @pytest.mark.parametrize(
         'input_path,expected',
         [
-            ('previews/COUVIS_0xxx_v1/COUVIS_0009/DATA/D2004_274/EUV2004_274_01_39_thumb.png',
-             'e7cd7ebeaec6ad7bc5f37befdf366632')
+            ('previews/COUVIS_0xxx/COUVIS_0009/DATA/D2004_274/EUV2004_274_01_39_thumb.png',
+             'f43e6fe3d9eb02ed72e0aba47be443f2')
         ]
     )
     def test_checksum(self, input_path, expected):

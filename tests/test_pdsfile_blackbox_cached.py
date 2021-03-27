@@ -181,8 +181,8 @@ class TestPdsFileBlackBox:
              )),
             ('metadata/COVIMS_0xxx/COVIMS_0001',
              (
-                'Cassini VIMS near IR image cubes 1999-01-10 to 2000-09-18 (SC clock 1294638283-1347975444)',
-                'VOLUME', '1.0', '2005-07-01', ['CO-E/V/J/S-VIMS-2-QUBE-V1.0']
+                'Cassini VIMS metadata 1999-01-10 to 2000-09-18 (SC clock 1294638283-1347975444)',
+                'VOLUME', '1.2', '2021-01-25', []
              )),
         ]
     )
