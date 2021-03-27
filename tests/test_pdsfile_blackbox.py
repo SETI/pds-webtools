@@ -2648,7 +2648,7 @@ class TestPdsFileBlackBox:
     @pytest.mark.parametrize(
         'input_path,expected',
         [
-            ('previews/COUVIS_0xxx_v1/COUVIS_0009/DATA/D2004_274',
+            ('previews/COUVIS_0xxx/COUVIS_0009/DATA/D2004_274',
              [
                 # Sorted order
                 'EUV2004_274_01_39_thumb.png',
@@ -2670,7 +2670,7 @@ class TestPdsFileBlackBox:
     @pytest.mark.parametrize(
         'input_path,expected',
         [
-            ('previews/COUVIS_0xxx_v1/COUVIS_0009/DATA/D2004_274',
+            ('previews/COUVIS_0xxx/COUVIS_0009/DATA/D2004_274',
              [
                 # Sorted order
                 'EUV2004_274_01_39_thumb.png',
