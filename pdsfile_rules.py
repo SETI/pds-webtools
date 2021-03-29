@@ -105,7 +105,7 @@ DESCRIPTION_AND_ICON = translator.TranslatorByRegex([
     (r'previews/.*_full\.(jpg|png)',      0, ('Full-resolution preview image',  'BROWSE')),
     (r'previews/.*',                      0, ('Preview images',                 'BROWDIR')),
 
-    # Diagrams 
+    # Diagrams
     (r'diagrams/.*_thumb\.(jpg|png)',     0, ('Thumbnail observation diagram',  'DIAGRAM')),
     (r'diagrams/.*_small\.(jpg|png)',     0, ('Small observation diagram',      'DIAGRAM')),
     (r'diagrams/.*_med\.(jpg|png)',       0, ('Medium observation diagram',     'DIAGRAM')),
@@ -134,6 +134,13 @@ DESCRIPTION_AND_ICON = translator.TranslatorByRegex([
     (r'.*/extras(/\w+)*',               re.I, ('Supplemental files',            'EXTRADIR')),
 
     # Document directories
+    (r'.*/document/data.*sis\.[^L].*',  re.I, ('Data Format Description',       'INFO'    )),
+    (r'.*/document/dp.*sis\.[^L].*',    re.I, ('Data Format Description',       'INFO'    )),
+    (r'.*/document/.*edr.*sis\.[^L].*', re.I, ('Data Format Description',       'INFO'    )),
+    (r'.*/document/ar.*sis\.[^L].*',    re.I, ('PDS3 Archive Description',      'INFO'    )),
+    (r'.*/document/vol.*sis\.[^L].*',   re.I, ('PDS3 Archive Description',      'INFO'    )),
+    (r'.*/document/cd.*sis\.[^L].*',    re.I, ('PDS3 Archive Description',      'INFO'    )),
+    (r'.*/document/.*sis\.[^L].*',      re.I, ('PDS3 Archive Description',      'INFO'    )),
     (r'.*/document/.*\.(txt|asc)',      re.I, ('Text document',                 'INFO'    )),
     (r'.*/document(/\w+)*(|/)',         re.I, ('Documentation',                 'INFODIR' )),
     (r'.*/document/.*\.(gif|jpg|jpeg|tif|tiff|png)',
@@ -158,6 +165,7 @@ DESCRIPTION_AND_ICON = translator.TranslatorByRegex([
     (r'.*/catalog/DATASET\.CAT',        re.I, ('Data set description',          'INFO'    )),
     (r'.*/catalog/.*DS\.CAT',           re.I, ('Data set description',          'INFO'    )),
     (r'.*/catalog/.*DSCOLL\.CAT',       re.I, ('Collection description',        'INFO'    )),
+    (r'.*/catalog/DS.*\.CAT',           re.I, ('Data set description',          'INFO'    )),
     (r'.*/catalog/.*(HOST|SC)\.CAT',    re.I, ('Instrument host description',   'INFO'    )),
     (r'.*/catalog/PERS\w*\.CAT',        re.I, ('Personnel summary',             'INFO'    )),
     (r'.*/catalog/MISSION\.CAT',        re.I, ('Mission description',           'INFO'    )),
@@ -240,12 +248,51 @@ DESCRIPTION_AND_ICON = translator.TranslatorByRegex([
 ####################################################################################################################################
 
 ASSOCIATIONS = {
-    'volumes'   : translator.NullTranslator(),
+    'volumes'   : translator.TranslatorByRegex([
+        (r'volumes/(\w+/\w+)/\w*data.*', 0,
+                [r'volumes/\1/document',
+                 r'volumes/\1/catalog',
+                 r'volumes/\1/aareadme.txt',
+                 r'volumes/\1/errata.txt',
+                 r'volumes/\1/voldesc.cat',
+                ]),
+        (r'volumes/(\w+/\w+)/\w*DATA.*', 0,
+                [r'volumes/\1/DOCUMENT',
+                 r'volumes/\1/CATALOG',
+                 r'volumes/\1/AAREADME.TXT',
+                 r'volumes/\1/ERRATA.TXT',
+                 r'volumes/\1/VOLDESC.CAT',
+                ]),
+        ]),
     'previews'  : translator.NullTranslator(),
     'calibrated': translator.NullTranslator(),
     'diagrams'  : translator.NullTranslator(),
-    'metadata'  : translator.NullTranslator(),
+    'metadata'  : translator.TranslatorByRegex([
+        (r'metadata/(\w+)/.*', re.I, r'metadata/\1/AAREADME.txt')]),
 }
+
+####################################################################################################################################
+# VERSIONS
+#
+# Defines a list of files defining all the versions of a given product, given the product's logical path.
+####################################################################################################################################
+
+VERSIONS = translator.TranslatorByRegex([
+
+    # Match any file with the same path , ignoring for the version number suffix on the volset ID
+    (r'([a-z-]+/[A-Z][A-Z0-9x]{1,5}_[0-9x]{4})(|_[\w\.]+)(|/.*)', 0, r'\1*\3'),
+    (r'(checksums-archives)-([a-z]+)/([A-Z][A-Z0-9x]{1,5}_[0-9x]{4})(|_[\w\.]+)_\2(_md5\.txt|\.tar\.gz)', 0, r'\1-\2/\3*_\2\5'),
+    (r'(checksums-archives-volumes/[A-Z][A-Z0-9x]{1,5}_[0-9x]{4})(|_[\w\.]+)(_md5\.txt|\.tar\.gz)', 0, r'\1*\3'),
+
+    # For category-level directories
+    (r'([a-z-]+)', 0, r'\1'),
+
+    # Match *inventory.csv with *inventory.tab inside a metadata tree
+    (r'(metadata/[A-Z][A-Z0-9x]{1,5}_[0-9x]{4})(|_v[0-9\.]+)/(.*inventory)\.(tab|csv)', 0,
+            [r'\1*\3.tab',
+             r'\1*\3.csv',
+            ]),
+])
 
 ####################################################################################################################################
 # VIEWABLES
@@ -255,6 +302,10 @@ ASSOCIATIONS = {
 ####################################################################################################################################
 
 VIEWABLES = {'default': translator.NullTranslator()}
+
+VIEWABLE_TOOLTIPS = {
+    'default': 'Default browse product for this observation',
+}
 
 ####################################################################################################################################
 # VIEW_OPTIONS
@@ -402,24 +453,24 @@ OPUS_TYPE = translator.TranslatorByRegex([
 ####################################################################################################################################
 
 OPUS_FORMAT = translator.TranslatorByRegex([
-    (r'.*\.LBL',     re.I, ('ASCII',  'PDS3 Label')),
-    (r'.*\.TAB',     re.I, ('ASCII',  'Table')),
-    (r'.*\.FMT',     re.I, ('ASCII',  'PDS3 Format File')),
-    (r'.*\.CSV',     re.I, ('ASCII',  'Comma-Separated Values')),
-    (r'.*\.TXT',     re.I, ('ASCII',  'Text')),
-    (r'.*\.ASC',     re.I, ('ASCII',  'Text')),
-    (r'.*\.FIT(|S)', re.I, ('Binary', 'FITS')),
-    (r'.*\.TIF(|F)', re.I, ('Binary', 'TIFF')),
-    (r'.*\.JPE?G',   re.I, ('Binary', 'JPEG')),
-    (r'.*\.GIF',     re.I, ('Binary', 'GIF')),
-    (r'.*\.PNG',     re.I, ('Binary', 'PNG')),
-    (r'.*\.PDF',     re.I, ('Binary', 'PDF')),
-    (r'.*\.E?PS',    re.I, ('Binary', 'Postscript')),
-    (r'.*\.BSP',     re.I, ('Binary', 'SPICE SPK')),
-    (r'.*\.BC',      re.I, ('Binary', 'SPICE CK')),
-    (r'.*\.TPC',     re.I, ('ASCII',  'SPICE PCK')),
-    (r'.*\.TLS',     re.I, ('ASCII',  'SPICE LSK')),
-    (r'.*\.TI',      re.I, ('ASCII',  'SPICE IK')),
+    (r'.*\.LBL',   re.I, ('ASCII',  'PDS3 Label')),
+    (r'.*\.TAB',   re.I, ('ASCII',  'Table')),
+    (r'.*\.FMT',   re.I, ('ASCII',  'PDS3 Format File')),
+    (r'.*\.CSV',   re.I, ('ASCII',  'Comma-Separated Values')),
+    (r'.*\.TXT',   re.I, ('ASCII',  'Text')),
+    (r'.*\.ASC',   re.I, ('ASCII',  'Text')),
+    (r'.*\.FITS?', re.I, ('Binary', 'FITS')),
+    (r'.*\.TIFF?', re.I, ('Binary', 'TIFF')),
+    (r'.*\.JPE?G', re.I, ('Binary', 'JPEG')),
+    (r'.*\.GIF',   re.I, ('Binary', 'GIF')),
+    (r'.*\.PNG',   re.I, ('Binary', 'PNG')),
+    (r'.*\.PDF',   re.I, ('Binary', 'PDF')),
+    (r'.*\.E?PS',  re.I, ('Binary', 'Postscript')),
+    (r'.*\.BSP',   re.I, ('Binary', 'SPICE SPK')),
+    (r'.*\.BC',    re.I, ('Binary', 'SPICE CK')),
+    (r'.*\.TPC',   re.I, ('ASCII',  'SPICE PCK')),
+    (r'.*\.TLS',   re.I, ('ASCII',  'SPICE LSK')),
+    (r'.*\.TI',    re.I, ('ASCII',  'SPICE IK')),
 ])
 
 ####################################################################################################################################

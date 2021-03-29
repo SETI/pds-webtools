@@ -20,8 +20,7 @@ try: # pragma: no cover
 except ImportError: # pragma: no cover
     HAS_PYLIBMC = False
 
-import pdsfile_rules        # Default rules
-import rules                # Rules unique to each volume set
+import pdsfile_rules        # Default parsing rules
 import pdscache
 import pdsviewable
 import pdstable
@@ -61,6 +60,9 @@ VOLNAME_PLUS_REGEX_I = re.compile(VOLNAME_PLUS_REGEX.pattern, re.I)
 # Groups are (volname, suffix, extension)
 # Example: "VGISS_5101_previews_md5.txt" -> ("VGISS_5101", "_previews",
 #                                            "_md5.txt")
+
+VIEWABLE_ANCHOR_REGEX = re.compile(r'(.*/\w+_)[a-z]+\.(jpg|png)')
+# path/A1234566_thumb.jpg -> path/A1234566
 
 LOGFILE_TIME_FMT = '%Y-%m-%dT%H-%M-%S'
 
@@ -137,15 +139,25 @@ def set_logger(logger):
 _GLOB_CACHE_SIZE = 200
 _PATH_EXISTS_CACHE_SIZE = 200
 SHELVES_ONLY = False
+FS_IS_CASE_INSENSITIVE = True
+# The above just a guess until preload. Certain unexpected behavior can arise
+# when the file system is case-insensitive, such as glob.glob matching files
+# that it really shouldn't. We only do the extra work to fix this if we know,
+# or believe, that the file system is case-insensitive. Note also that when
+# SHELVES_ONLY is True, the file system is effectively case-sensitive because
+# we only use file names and paths found in the shelf files.
 
 def use_shelves_only(status=True):
     """Call before preload(). Status=True to identify files based on their
     presence in the infoshelf files rather than searching the holdings directory
     and it subdirectories."""
 
-    global SHELVES_ONLY
+    global SHELVES_ONLY, FS_IS_CASE_INSENSITIVE
 
     SHELVES_ONLY = status
+
+    if SHELVES_ONLY:
+        FS_IS_CASE_INSENSITIVE = False
 
 ################################################################################
 # How to handle missing shelf files
@@ -234,7 +246,7 @@ DEFAULT_CACHING = 'dir'     # 'dir', 'all' or 'none';
                             # use 'dir' for Viewmaster without MemCache;
                             # use 'all' for Viewmaster with MemCache;
 
-PRELOAD_TRIES = 4
+PRELOAD_TRIES = 3
 
 def preload(holdings_list, port=0, clear=False):
     """Cache the top-level directories, starting from the given holdings
@@ -249,6 +261,8 @@ def preload(holdings_list, port=0, clear=False):
     """
 
     global CACHE, MEMCACHE_PORT, DEFAULT_CACHING, LOCAL_PRELOADED, PRELOAD_TRIES
+    global FS_IS_CASE_INSENSITIVE
+
 
     # Convert holdings to a list of absolute paths
     if not isinstance(holdings_list, (list,tuple)):
@@ -285,7 +299,7 @@ def preload(holdings_list, port=0, clear=False):
                     LOGGER.warn(('Failed to connect PdsFile Memcache [%s]; ' +
                                    'trying again in %d sec') %
                                   (MEMCACHE_PORT, 2**k))
-                time.sleep(2.**k)       # wait 1, 2, 4, 8 sec
+                time.sleep(2.**k)       # try then wait 1 sec, then 2 sec
 
             else:       # give up after four tries
                 if LOGGER:
@@ -458,6 +472,19 @@ def preload(holdings_list, port=0, clear=False):
     if LOGGER:
         LOGGER.info('PdsFile preloading completed')
 
+    # Determine if the file system is case-sensitive
+    # If any physical volume is case-insensitive, then we treat the whole file
+    # system as case-insensitive.
+    if SHELVES_ONLY:
+        FS_IS_CASE_INSENSITIVE = False
+    else:
+        FS_IS_CASE_INSENSITIVE = False
+        for holdings_dir in LOCAL_PRELOADED:
+            testfile = os.path.join(holdings_dir, 'VoLuMeS')
+            if os.path.exists(testfile):
+                FS_IS_CASE_INSENSITIVE = True
+                break
+
 def is_preloading():
     return CACHE.get_now('$PRELOADING')
 
@@ -538,6 +565,10 @@ def load_volume_info(holdings):
 
     volinfo_path = _clean_join(os.path.split(holdings)[0], 'volinfo')
 
+    volinfo_dict = {}
+    dsids_vs_key = {}
+    keys_without_dsids = []
+
     children = os.listdir(volinfo_path)
     for child in children:
         if not child.endswith('.tab'): continue
@@ -555,10 +586,40 @@ def load_volume_info(holdings):
 
             # Fill in icon type if missing
             if parts[2] == '':
-                parts[2] = 'VOLUME' if '/' in parts[0] else 'VOLDIR'
+                if parts[0].lower().endswith('.txt'):
+                    parts[2] = 'INFO'
+                elif '/' in parts[0]:
+                    parts[2] = 'VOLUME'
+                else:
+                    parts[2] = 'VOLDIR'
+
+            key = parts[0].lower()
+            dsids = list(parts[5:])
+            if dsids:
+                dsids_vs_key[key] = dsids
+            else:
+                keys_without_dsids.append(key)
 
             volinfo = (parts[1], parts[2], parts[3], parts[4], list(parts[5:]))
-            CACHE.set('$VOLINFO-' + parts[0].lower(), volinfo, lifetime=0)
+            volinfo_dict[key] = volinfo
+
+    # Fill in data set IDs wherever possible
+    for key in keys_without_dsids:
+        (category, _, remainder) = key.partition('/')
+        if category in VOLTYPES:
+            (volset_with_suffix, _, remainder) = remainder.partition('/')
+            volset = '_'.join(volset_with_suffix.split('_')[:2])
+            alt_keys = (volset + '/' + remainder,
+                        'volumes/' + volset + '/' + remainder)
+            for alt_key in alt_keys:
+                if alt_key in dsids_vs_key:
+                    volinfo_dict[key] = (volinfo_dict[key][:-1] +
+                                         (dsids_vs_key[alt_key],))
+                    break
+
+    # Load the cache now
+    for key,volinfo in volinfo_dict.items():
+        CACHE.set('$VOLINFO-' + key, volinfo, lifetime=0)
 
     if LOGGER:
         LOGGER.info('Volume info loaded', volinfo_path)
@@ -578,6 +639,7 @@ class PdsFile(object):
     # Default translators, can be overridden by volset-specific subclasses
     DESCRIPTION_AND_ICON = pdsfile_rules.DESCRIPTION_AND_ICON
     ASSOCIATIONS = pdsfile_rules.ASSOCIATIONS
+    VERSIONS = pdsfile_rules.VERSIONS
     INFO_FILE_BASENAMES = pdsfile_rules.INFO_FILE_BASENAMES
     NEIGHBORS = pdsfile_rules.NEIGHBORS
     SORT_KEY = pdsfile_rules.SORT_KEY
@@ -653,30 +715,33 @@ class PdsFile(object):
         self.html_root_   = ''      # 'holdings/', 'holdings2/', etc.
 
         self.category_    = ''      # Always checksums_ + archives_ + voltype_
-        self.checksums_   = ''
-        self.archives_    = ''
-        self.voltype_     = ''
+        self.checksums_   = ''      # Either 'checksums-' or ''
+        self.archives_    = ''      # Either 'archives-' or ''
+        self.voltype_     = ''      # One of 'volumes', 'metadata', etc.
 
-        self.volset_      = ''
-        self.volset       = ''
-        self.suffix       = ''
+        self.volset_      = ''      # Volset name + suffix + '/'
+        self.volset       = ''      # Volset name, suffix stripped
+        self.suffix       = ''      # Volset suffix alone
         self.version_message = ''
-        self.version_rank = 0
-        self.version_id   = ''
+        self.version_rank = 0       # int; 'v1.2.3' -> 10203; 999999 for latest
+        self.version_id   = ''      # E.g., 'v1.2.3'; version number of volume
 
-        self.volname_     = ''
-        self.volname      = ''
+        self.volname_     = ''      # Volume name + '/'
+        self.volname      = ''      # Volume name alone
 
-        self.interior     = ''
+        self.interior     = ''      # Path starting inside volume directory
 
-        self.is_index_row = False
+        self.is_index_row = False   # True for a "fake" PdsFile describing one
+                                    # or more rows inside an index table
         self.row_dicts    = []      # List of row dictionaries if this is an
                                     # index row.
         self.column_names = []      # Ordered list of column names for an index
                                     # row or its parent.
 
-        self.permanent    = False
-        self.is_merged    = False
+        self.permanent    = False   # If True, never to be removed from cache
+        self.is_merged    = False   # If True, a category directory with
+                                    # contents merged from multiple phsical
+                                    # directories
 
         self._exists_filled         = None
         self._islabel_filled        = None
@@ -685,7 +750,7 @@ class PdsFile(object):
         self._global_anchor_filled  = None
         self._childnames_filled     = None
         self._childnames_lc_filled  = None
-        self._info_filled           = None  # bytes, child_count, modtime,
+        self._info_filled           = None  # (bytes, child_count, modtime,
                                             # checksum, size)
         self._date_filled           = None
         self._formatted_size_filled = None
@@ -694,6 +759,7 @@ class PdsFile(object):
         self._label_basename_filled = None
         self._viewset_filled        = None
         self._local_viewset_filled  = None
+        self._all_viewsets_filled   = None
         self._iconset_filled        = None
         self._internal_links_filled = None
         self._mime_type_filled      = None
@@ -703,6 +769,7 @@ class PdsFile(object):
         self._view_options_filled   = None  # (grid, multipage, continuous)
         self._volume_info_filled    = None  # (desc, icon type, version ID,
                                             #  pub date, list of dataset IDs)
+        self._all_version_abspaths  = None
         self._description_and_icon_filled    = None
         self._volume_publication_date_filled = None
         self._volume_version_id_filled       = None
@@ -818,6 +885,7 @@ class PdsFile(object):
         this._label_basename_filled = ''
         this._viewset_filled        = False
         this._local_viewset_filled  = False
+        this._all_viewsets_filled   = {}
         this._iconset_filled        = None
         this._internal_links_filled = []
         this._mime_type_filled      = ''
@@ -826,6 +894,7 @@ class PdsFile(object):
         this._opus_format_filled    = ''
         this._view_options_filled   = (False, False, False)
         this._volume_info_filled    = None
+        this._all_version_abspaths  = None
         this._description_and_icon_filled    = None
         this._volume_publication_date_filled = ''
         this._volume_version_id_filled       = ''
@@ -874,6 +943,7 @@ class PdsFile(object):
         this._label_basename_filled = ''
         this._viewset_filled        = False
         this._local_viewset_filled  = False
+        this._all_viewsets_filled   = {}
         this._iconset_filled        = None
         this._internal_links_filled = []
         this._mime_type_filled      = 'text/plain'
@@ -882,6 +952,7 @@ class PdsFile(object):
         this._opus_format_filled    = ''
         this._view_options_filled   = (False, False, False)
         this._volume_info_filled    = self._volume_info
+        this._all_version_abspaths  = None
         this._description_and_icon_filled    = None
         this._volume_publication_date_filled = self.volume_publication_date
         this._volume_version_id_filled       = self.volume_version_id
@@ -1006,7 +1077,7 @@ class PdsFile(object):
                 if testpath and PdsFile.os_path_exists(testpath):
                     return True
 
-        if force_case_sensitive:
+        if force_case_sensitive and FS_IS_CASE_INSENSITIVE:
             test = os.path.exists(abspath)
             if not test:
                 return False
@@ -1184,12 +1255,29 @@ class PdsFile(object):
                 if c != '.DS_Store' and not c.startswith('._')]
 
     @staticmethod
-    def glob_glob(abspath):
+    def glob_glob(abspath, force_case_sensitive=False):
         """Works the same as glob.glob(), but uses shelf files instead of
-        accessing the filesystem directly."""
+        accessing the filesystem directly.
+
+        Note: This function is case-insensitive under SHELVES_ONLY. Otherwise,
+        its behavior matches that of the file system. For Macs, this usually
+        means that it is case insensitive. If force_case_sensitive=True, then
+        file paths will only match if the case is exact.
+        """
 
         if not SHELVES_ONLY:
-            return _clean_glob(abspath)
+            results = _clean_glob(abspath)
+
+            if force_case_sensitive and FS_IS_CASE_INSENSITIVE:
+                filtered_results = []
+                for result in results:
+                    result = repair_case(result)
+                    if fnmatch.fnmatchcase(result, abspath):
+                        filtered_results.append(result)
+                return filtered_results
+
+            else:
+                return results
 
         # Find the shelf file if any
         abspath = abspath.rstrip('/')
@@ -1530,8 +1618,9 @@ class PdsFile(object):
             self._info_filled = (0, 0, None, '', (0,0))
 
         # For volsets that are not archives, fill in the needed info directly
-        # from the filesystem
-        elif not self.archives_ and self.volset and not self.volname:
+        # from the file system
+        elif (not self.archives_ and self.volset and not self.volname and
+              not self.basename.lower().endswith('.txt')):
             child_count = len(self.childnames)
 
             latest_modtime = datetime.datetime.min
@@ -1604,8 +1693,8 @@ class PdsFile(object):
                     self._info_filled = (file_bytes, 0, modtime, '', (0,0))
 
             else:
-                # Note: timestring will be blank for empty directories and for
-                # directories containing only empty directories
+                # Note that timestring will be blank for empty directories and
+                # for directories containing only empty directories
                 if timestring:
                     # Interpret the modtime
                     yr = int(timestring[ 0:4])
@@ -1751,6 +1840,17 @@ class PdsFile(object):
         if self._description_and_icon_filled is not None:
             return self._description_and_icon_filled[0]
 
+        # Sometimes, the description of an AAREADME file is in a volinfo file
+        if self.basename.lower() == 'aareadme.txt':
+            try:
+                info = CACHE['$VOLINFO-' + self.logical_path.lower()]
+            except KeyError:
+                pass
+            else:
+                self._description_and_icon_filled = (info[0], info[1])
+                self._recache()
+                return self._description_and_icon_filled[0]
+
         if self.is_volume() or self.is_volset():
             pair = self._volume_info[:2]
 
@@ -1869,20 +1969,21 @@ class PdsFile(object):
 
     @property
     def data_set_id(self):
-        """Return the data set id if the volume only has one data set id. Return
-        '' when the volume has multiple or zero data set id.
-        """
+        """PDS3 DATA_SET_ID for the file, if it has one; otherwise, blank."""
+
         if self._data_set_id_filled is not None:
             return self._data_set_id_filled
 
-        # If the volume has no data set id, we will return ''
+        # If the volume has no data set id, return ''
         if len(self.volume_data_set_ids) == 0:
             self._data_set_id_filled = ''
 
-        elif len(self.volume_data_set_ids) != 1:
+        # If the volume has just one, this is it
+        elif len(self.volume_data_set_ids) == 1:
+            self._data_set_id_filled = self.volume_data_set_ids[0]
 
-            # If the volume has multiple data set ids, the rules will handle
-            # this case. If there is no match, we will return ''
+        # If the volume has more than one, we need the rule
+        else:
             if callable(self.DATA_SET_ID):
                 self._data_set_id_filled = self.DATA_SET_ID()
             else:
@@ -1891,8 +1992,6 @@ class PdsFile(object):
 
             if self._data_set_id_filled is None:
                 self._data_set_id_filled = ''
-        else:
-            self._data_set_id_filled = self.volume_data_set_ids[0]
 
         self._recache()
         return self._data_set_id_filled
@@ -1996,9 +2095,17 @@ class PdsFile(object):
             elif self.label_basename:
                 self._info_basename_filled = self.label_basename
 
-            # Otherwise, there is no info file so change None to ''
-            else:
-                self._info_basename_filled = ''
+        # On failure, look for a volset-level AAREADME file
+        # Note that this requires a physical check of the volumes tree because
+        # these files do not appear in infoshelf files.
+        if not self._info_basename_filled:
+            if self.is_volume_dir() and os.path.exists(self.abspath +
+                                                     '/../AAREADME.txt'):
+                self._info_basename_filled = 'AAREADME.txt'
+
+        # Otherwise, there is no info file so change None to ''
+        if not self._info_basename_filled:
+            self._info_basename_filled = ''
 
         self._recache()
         return self._info_basename_filled
@@ -2225,6 +2332,53 @@ class PdsFile(object):
         return self._local_viewset_filled
 
     @property
+    def all_viewsets(self):
+        """A dictionary of every available PdsViewSet for this object.
+        """
+
+        if not self._all_viewsets_filled:
+
+            viewset_dict = {}
+
+            if self.isdir:
+                if self.viewset:
+                    viewset_dict['default'] = self.viewset
+
+                # Get viewables for this directory
+                for key in self.VIEWABLES:
+                    if key != 'default':
+                        viewset = self.viewset_lookup(key)
+                        if viewset:
+                            viewset_dict[key] = viewset
+
+                # Add the unique viewsets of the children
+                for c in self.childnames[:20]:      # first 20 should be enough
+                    child = self.child(c)
+                    for key in child.VIEWABLES:
+                        if key not in viewset_dict and key != 'default':
+                            viewset = child.viewset_lookup(key)
+                            if viewset:
+                                viewset_dict[key] = viewset
+
+            # Otherwise, include every defined viewset starting with "default"
+            else:
+                if self.local_viewset:
+                    viewset_dict['default'] = self.local_viewset
+                elif self.viewset:
+                    viewset_dict['default'] = self.viewset
+
+                for key in self.VIEWABLES:
+                    if key != 'default':
+                        viewset = self.viewset_lookup(key)
+                        if viewset:
+                            viewset_dict[key] = viewset
+
+            self._all_viewsets_filled = viewset_dict
+            self._recache()
+
+        return self._all_viewsets_filled
+
+    @property
     def _iconset(self):
         """Internal method to return the PdsViewSet for this object's icon
         whether it is to be displayed in a closed or open state."""
@@ -2232,10 +2386,9 @@ class PdsFile(object):
         if self._iconset_filled is not None:
             return self._iconset_filled[0]
 
-        self._iconset_filled = [pdsviewable.ICON_SET_BY_TYPE[self.icon_type,
-                                                             False],
-                                pdsviewable.ICON_SET_BY_TYPE[self.icon_type,
-                                                             True]]
+        self._iconset_filled = [
+                    pdsviewable.ICON_SET_BY_TYPE[self.icon_type, False],
+                    pdsviewable.ICON_SET_BY_TYPE[self.icon_type, True ]]
 
         self._recache()
         return self._iconset_filled[0]
@@ -2307,7 +2460,8 @@ class PdsFile(object):
 
     @property
     def version_ranks(self):
-        """A list of the numeric version ranks associated with this file.
+        """A list of the numeric version ranks associated with the volume on
+        which this file resides.
 
         This is an integer that always sorts versions from oldest to newest."""
 
@@ -2507,6 +2661,96 @@ class PdsFile(object):
 
         return (version_rank, version_message, version_id)
 
+    @staticmethod
+    def version_suffix(rank):
+
+        if rank < 990000:
+            part1 = rank // 10000
+            temp = rank - 10000 * part1
+            part2 = temp // 100
+            part3 = (temp - 100 * part2)
+
+            if part3:
+                return f'_v{part1}.{part2}.{part3}'
+            elif part2:
+                return f'_v{part1}.{part2}'
+            else:
+                return f'_v{part1}'
+
+        if rank == 999999:
+            return ''
+        elif rank == 990100:
+            return '_in_prep'
+        elif rank == 990200:
+            return '_prelim'
+        elif rank == 990300:
+            return '_peer_review'
+        elif rank == 990400:
+            return '_lien_resolution'
+        else:
+            raise ValueError(f'Unrecognized version rank {rank}')
+
+    def all_versions(self):
+        """A dictionary containing all existing versions of this PdsFile, keyed
+        by the version ranks of the volumes on which they reside."""
+
+        # We only cache the abspaths, not the PdsFiles, because the cache cannot
+        # properly maintan links between PdsFiles
+        if self._all_version_abspaths is not None:
+            version_dict = {}
+            for rank, abspath in self._all_version_abspaths.items():
+                version_dict[rank] = PdsFile.from_abspath(abspath)
+
+            return version_dict
+
+        # Initialize the dictionaries with this
+        version_dict = {self.version_rank: self}
+        version_abspaths = {self.version_rank: self.abspath}
+
+        # Search for versions using all match patterns
+        patterns = self.VERSIONS.all(self.logical_path)
+        abspaths = []
+        for pattern in patterns:
+            if pattern:
+                abspaths += PdsFile.glob_glob(self.root_ + pattern,
+                                              force_case_sensitive=True)
+
+        abspaths = set(abspaths)        # remove duplicates
+        abspaths = [p for p in abspaths if p != self.abspath]   # remove self
+
+        pdsfiles = PdsFile.pdsfiles_for_abspaths(abspaths, must_exist=True)
+
+        # Fill in the dictionaries
+        for pdsf in pdsfiles:
+            key = pdsf.version_rank
+            if key in version_dict:
+                if LOGGER:
+                    LOGGER.warn('Duplicate version of ' +
+                                version_dict[key].logical_path,
+                                pdsf.logical_path)
+            else:
+                version_dict[key] = pdsf
+                version_abspaths[key] = pdsf.abspath
+
+        # Save the same abspath dictionary inside all the versions
+        for pdsf in version_dict.values():
+            pdsf._all_version_abspaths = version_abspaths
+            pdsf._recache()
+
+        return version_dict
+
+    @property
+    def all_version_abspaths(self):
+        """A dictionary containing the abspaths for all existing versions of
+        this PdsFile, keyed by the version ranks of the volumes on which they
+        reside."""
+
+        if self._all_version_abspaths is None:
+            _ = self.all_versions()     # This has the side-effect of filling
+                                        # _all_version_abspaths
+
+        return self._all_version_abspaths
+
     def viewset_lookup(self, name='default'):
         """Return the PdsViewSet associated with this file. If multiple
         PdsViewSets are available, they can be selected by name; "default" is
@@ -2515,14 +2759,24 @@ class PdsFile(object):
         if not self.exists: return None
 
         # Check for associated viewables
-        patterns = self.VIEWABLES[name].first(self.logical_path)
+        patterns = self.VIEWABLES[name].all(self.logical_path)
         if patterns:
             if not isinstance(patterns, (list,tuple)):
                 patterns = [patterns]
 
+            # Remove an empty pattern
+            patterns = [p for p in patterns if p]
+
             abspaths = []
             for pattern in patterns:
                 abspaths += PdsFile.glob_glob(self.root_ + pattern)
+
+            # Just use the first set of abspaths if there is more than one
+            if abspaths:
+                match = VIEWABLE_ANCHOR_REGEX.fullmatch(abspaths[0])
+                if match:
+                    anchor = match.group(1)
+                    abspaths = [p for p in abspaths if p.startswith(anchor)]
 
             # Treat a viewable named "full" as special
             full_abspath = ''
@@ -2583,43 +2837,28 @@ class PdsFile(object):
     # Utilities
     ############################################################################
 
-    def volume_pdsfile(self):
-        """PdsFile object for the root volume."""
+    def volume_pdsfile(self, category=None, rank=None):
+        """PdsFile object for the root volume file or directory associated with
+        this or another category and this or another version. It returns None
+        if the file does not exist.
+        """
 
-        abspath = self.volume_abspath()
-        if abspath:
+        abspath = self.volume_abspath(category, rank)
+        if abspath and PdsFile.os_path_exists(abspath):
             return PdsFile.from_abspath(abspath)
-        else:
-            raise ValueError('No associated volume for ' + self.abspath)
 
-    def volume_pdsdir(self):
-        """PdsFile object for the root volume, if it is a directory."""
+        return None
 
-        pdsf = self.volume_pdsfile()
-        if pdsf.isdir:
-            return pdsf
-        else:
-            raise ValueError('No associated volume directory for ' +
-                             self.abspath)
+    def volset_pdsfile(self, category=None, rank=None):
+        """PdsFile object for the root volume set for this or another category
+        and this or another version. It returns None if the file does not exist.
+        """
 
-    def volset_pdsfile(self):
-        """PdsFile object for the root volume set."""
-
-        abspath = self.volset_abspath()
-        if abspath:
+        abspath = self.volset_abspath(category, rank)
+        if abspath and PdsFile.os_path_exists(abspath):
             return PdsFile.from_abspath(abspath)
-        else:
-            raise ValueError('No associated volume set for ' + self.abspath)
 
-    def volset_pdsdir(self):
-        """PdsFile object for the root volume set."""
-
-        pdsf = self.volset_pdsfile()
-        if pdsf.isdir:
-            return pdsf
-        else:
-            raise ValueError('No associated volume set directory for ' +
-                             self.abspath)
+        return None
 
     def is_volume_dir(self):
         """True if this is the root level directory of a volume."""
@@ -2650,30 +2889,82 @@ class PdsFile(object):
         """True if this is a category-level directory (i.e., above volset)."""
         return (self.volset == '')
 
-    def volume_abspath(self):
-        """Return the absolute path to the volume associated with this object.
+    def volume_abspath(self, category=None, rank=None):
+        """The absolute path to the volume file or directory associated with
+        this object. It can be in this category or another, and also of this
+        version rank or another. No check is performed to see if the specified
+        file exists.
         """
 
         if not self.volname:
-            return None
-        elif self.volname_:
-            return ''.join([self.root_, self.category_, self.volset_,
-                            self.volname])
-        else:
-            return ''.join([self.root_, self.category_, self.volset_,
-                            self.interior])
+            return ''
 
-    def volset_abspath(self):
-        """Return the absolute path to the volset associated with this object.
+        if category:
+            category_ = category.rstrip('/') + '/'
+        else:
+            category_ = self.category_
+
+        parts = category_.split('-')
+        if len(parts) == 3:         # if checksums-archives-something
+            return ''
+
+        if rank:
+            suffix = PdsFile.version_suffix(rank)
+        elif parts[-1] == self.voltype_:
+            suffix = self.suffix    # if voltype is unchanged, keep the version
+        else:
+            suffix = ''             # otherwise, use the most recent version
+
+        if len(parts) == 2:
+            if parts[-1] == 'volumes/':
+                insert = ''
+            else:
+                insert = '_' + parts[-1][:-1]
+
+            if parts[0] == 'checksums':
+                ext = '_md5.txt'
+            else:
+                ext = '.tar.gz'
+        else:
+            insert = ''
+            ext = ''
+
+        return (self.root_ + category_ + self.volset + suffix + '/' +
+                self.volname + insert + ext)
+
+    def volset_abspath(self, category=None, rank=None):
+        """The absolute path to a volset file or directory associated with this
+        object. It can be in this category or another, and also of this version
+        rank or another. No check is performed to see if the specified file
+        exists.
         """
 
         if not self.volset:
             return None
-        elif self.volset_:
-            return ''.join([self.root_, self.category_, self.volset,
-                            self.suffix])
+
+        if category:
+            category_ = category.rstrip('/') + '/'
         else:
-            return ''.join([self.root_, self.category_, self.interior])
+            category_ = self.category_
+
+        parts = category_.split('-')
+
+        if rank:
+            suffix = PdsFile.version_suffix(rank)
+        elif parts[-1] == self.voltype_:
+            suffix = self.suffix    # if voltype is unchanged, keep the version
+        else:
+            suffix = ''             # otherwise, use the most recent version
+
+        if len(parts) == 3:         # if checksums-archives-something
+            if parts[-1] == 'volumes/':
+                ext = '_md5.txt'
+            else:
+                ext = '_' + parts[-1][:-1] + '_md5.txt'
+        else:
+            ext = ''
+
+        return (self.root_ + category_ + self.volset + suffix + ext)
 
     ############################################################################
     # Support for alternative constructors
@@ -3603,23 +3894,18 @@ class PdsFile(object):
 
             row_range = (min(rows), max(rows)+1)
 
-            # With the SHELVES_ONLY option, we can't fill in row_dicts
-            if SHELVES_ONLY:
-                row_dicts = []
-            else:
-                table = pdstable.PdsTable(self.label_abspath,
-                                          self.index_pdslabel,
-                                          row_range=row_range)
-                table_dicts = table.dicts_by_row()
+            table = pdstable.PdsTable(self.label_abspath, self.index_pdslabel,
+                                      row_range=row_range)
+            table_dicts = table.dicts_by_row()
 
-                # Fill in the column names if necessary
-                if not self.column_names:
-                    self.column_names = [c.name for
-                                         c in table.info.column_info_list]
+            # Fill in the column names if necessary
+            if not self.column_names:
+                self.column_names = [c.name for
+                                     c in table.info.column_info_list]
 
-                row_dicts = []
-                for k in rows:
-                    row_dicts.append(table_dicts[k - row_range[0]])
+            row_dicts = []
+            for k in rows:
+                row_dicts.append(table_dicts[k - row_range[0]])
 
             pdsf = self.new_index_row_pdsfile(key, row_dicts)
             pdsf._exists_filled = True
@@ -3654,10 +3940,7 @@ class PdsFile(object):
                 return ('', '')
 
             volume_key = ''
-            for guess in ('VOLUME_ID',
-                          'VOLUME ID',
-                          'VOLUME_NAME',
-                          'VOLUME NAME'):
+            for guess in pdstable.VOLUME_ID_COLUMN_NAMES:
                 if guess in row_dict:
                     volume_key = guess
 
@@ -3680,10 +3963,11 @@ class PdsFile(object):
                 return ''
 
             if volume_key:
-                parts = [self.volset_abspath().replace('metadata', 'volumes'),
-                         row_dict[volume_key], row_dict[filespec_key]]
+                parts = [self.volset_abspath('volumes'),
+                         row_dict[volume_key],
+                         row_dict[filespec_key]]
             else:
-                parts = [self.volume_abspath().replace('metadata', 'volumes'),
+                parts = [self.volume_abspath('volumes'),
                          row_dict[filespec_key]]
 
             return '/'.join(parts)
@@ -3821,7 +4105,7 @@ class PdsFile(object):
 
             abspaths += these_abspaths
 
-        # Get PdsFiles for abspaths, organized by labels vs. datafiles.
+        # Get PdsFiles for abspaths, organized by labels vs. datafiles
         # label_files[label_abspath] = [label_pdsfile, fmt1_pdsfile, ...]
         # data_files is a list
         label_pdsfiles = {}
@@ -4681,24 +4965,16 @@ class PdsFile(object):
 
         if not self.volset: return []   # Not for merged directory paths
 
-        return self._associated_paths(category, must_exist=must_exist,
-                                                use_abspaths=False)
+        abspaths = self.associated_abspaths(category, must_exist=must_exist)
+        return PdsFile.logicals_for_abspaths(abspaths)
 
     def associated_abspaths(self, category, must_exist=True):
-
-        return self._associated_paths(category, must_exist=must_exist,
-                                                use_abspaths=True)
-
-    def _associated_paths(self, category, must_exist=True,
-                                          use_abspaths=True):
-        """A list of logical or absolute paths to files in the specified
-        category.
+        """A list of logical or absolute paths to associated files in the
+        specified category.
 
         Inputs:
             category        the category of the associated paths.
             must_exist      True to return only paths that exist.
-            use_abspaths    True to return absolute paths; False to return
-                            logical paths.
         """
 
         category = category.strip('/')
@@ -4731,12 +5007,9 @@ class PdsFile(object):
                     pass
 
             # Remove duplicates
-            abspaths = list(set(new_abspaths))
-
-            if use_abspaths:
-                return abspaths
-            else:
-                return PdsFile.logicals_for_abspaths(abspaths)
+            abspaths = [p for (k,p) in enumerate(abspaths)
+                        if p not in abspaths[:k]]
+            return abspaths
 
         # Handle archives by finding associated files in subcategory
         if category.startswith('archives-'):
@@ -4756,26 +5029,19 @@ class PdsFile(object):
                     pass
 
             # Remove duplicates
-            abspaths = list(set(new_abspaths))
-
-            if use_abspaths:
-                return abspaths
-            else:
-                return PdsFile.logicals_for_abspaths(abspaths)
+            abspaths = [p for (k,p) in enumerate(abspaths)
+                        if p not in abspaths[:k]]
+            return abspaths
 
         # No more recursive calls...
 
-        # Check for any association defined by rules
+        # Check for any associations defined by rules
         logical_paths = self.ASSOCIATIONS[category].all(self.logical_path)
         patterns = PdsFile.abspaths_for_logicals(logical_paths)
 
         # If no rules apply, search in the parallel directory tree
         if not patterns:
-            if category == self.volset_[:-1]:
-                pdsf = self.associated_parallel(category)
-            else:
-                pdsf = self.associated_parallel(category, rank='latest')
-
+            pdsf = self.associated_parallel(category)
             if pdsf:
                 patterns = [pdsf.abspath]
             else:
@@ -4814,149 +5080,158 @@ class PdsFile(object):
             abspaths += test_abspaths
 
         # Remove duplicates
-        abspaths = list(set(abspaths))
-
-        if use_abspaths:
-            return abspaths
-        else:
-            return PdsFile.logicals_for_abspaths(abspaths)
+        abspaths = [p for (k,p) in enumerate(abspaths) if p not in abspaths[:k]]
+        return abspaths
 
     def associated_parallel(self, category=None, rank=None):
-        """Rank can be number or 'latest', 'previous', 'next'; None for rank of
-        this."""
+        """The "most similar" absolute path in a parallel directory tree,
+        specified by category and/or version rank. If the rank is unspecified,
+        it will match the rank of self when the voltype of the new category is
+        a match of self; otherwise, it will return the latest version.
 
+        In addition to numeric values for the rank, values of "next",
+        "previous", and "latest" can also be used when the voltype of the
+        returned object matches that of this object.
+        """
+
+        def _cache_and_return(pdsf):
+            """For internal use. Convert to PdsFile if necessary, cache under
+            one or two ranks (rank and rankstr), return. Also, if pdsf matches
+            self, cache and return None instead.
+            """
+
+            # Interpret the pdsf and get the abspath (both might be None)
+            if isinstance(pdsf, str):
+                abspath = pdsf
+                pdsf = PdsFile.from_abspath(abspath)
+            elif pdsf is None:
+                abspath = None
+            else:
+                abspath = pdsf.abspath
+
+            # Confirm existence; otherwise replace with None
+            if pdsf and not pdsf.exists:
+                pdsf = None
+                abspath = None
+
+            # Cache under rank and (maybe) rankstr
+            self._associated_parallels_filled[category, rank] = abspath
+
+            if rankstr:
+                self._associated_parallels_filled[category, rankstr] = abspath
+
+            if rank is None and pdsf is not None:
+                self._associated_parallels_filled[category,
+                                                  pdsf.version_rank] = abspath
+
+            # Re-cache this and return result
+            self._recache()
+            return pdsf
+
+        # Interpret the category
         if category is None:
-            category = self.category_
+            category = self.category_[:-1]
+            voltype = self.voltype_[:-1]
+        else:
+            category = category.rstrip('/')
+            voltype = category.rpartition('-')[-1]
 
-        category = category.rstrip('/')
+        # Handle category-level parallel
+        if self.is_category_dir():
+            return PdsFile.from_logical_path(category)
 
         # Create the cached dictionary if necessary
         if self._associated_parallels_filled is None:
             self._associated_parallels_filled = {}
 
         # Return from dictionary if already available
-        if rank is None and category in self._associated_parallels_filled:
-            path = self._associated_parallels_filled[category]
-            return PdsFile.from_logical_path(path)
-
         if (category, rank) in self._associated_parallels_filled:
-            path = self._associated_parallels_filled[category, rank]
-            if path is None:
-                return None
-            return PdsFile.from_logical_path(path)
+            abspath = self._associated_parallels_filled[category, rank]
+            return PdsFile.from_abspath(abspath) if abspath else None
 
-        # Handle special case of a merged directory
-        if not self.volset:
-            target = CACHE.get(category)    # None if key not found
-
-            if target is None:
-                path = None
-            else:
-                path = target.logical_path
-
-            self._associated_parallels_filled[category] = path
-            self._associated_parallels_filled[category,     None] = path
-            self._associated_parallels_filled[category, 'latest'] = path
-            self._associated_parallels_filled[category,   999999] = path
-            self._associated_parallels_filled[category,        0] = path
-            self._associated_parallels_filled[category, 'previous'] = None
-            self._associated_parallels_filled[category,     'next'] = None
-
-            self._recache()
-            if (category, rank) in self._associated_parallels_filled:
-                return target
-            else:
-                return None
+        # Rank = 'latest' is the default when the voltype changes
+        if voltype != self.voltype_[:-1] and rank == 'latest':
+            rank = None
 
         # Interpret the rank
-        original_rank = rank
-        if rank is None:
-            rank = self.version_rank
-        elif rank == 'latest':
-            rank = self.version_ranks[-1]
-        elif isinstance(rank, str):
-            try:
-                k = self.version_ranks.index(self.version_rank)
-                if rank == 'previous':
-                    if k > 0:
-                        rank = self.version_ranks[k-1]
-                    else:
-                        raise IndexError('')
-                elif rank == 'next':
-                    rank = self.version_ranks[k+1]
+        if isinstance(rank, str):
+            rankstr = rank
 
-            except (IndexError, ValueError, IOError):
-                self._associated_parallels_filled[category,rank] = None
-                self._associated_parallels_filled[category,original_rank] = None
-                self._recache()
-                return None
+            if voltype != self.voltype_[:-1]:
+                raise ValueError(f'rank "{rank}" not supported')
 
-        # If interpreted rank is in dictionary, return lookup
-        if (category, rank) in self._associated_parallels_filled:
-            self._associated_parallels_filled[category, original_rank] = \
-                            self._associated_parallels_filled[category, rank]
-            path = self._associated_parallels_filled[category, rank]
-            if path:
-                return PdsFile.from_logical_path(path)
+            this_rank = self.version_rank
+            all_ranks = list(self.all_version_abspaths.keys())
+            all_ranks.sort()
+            this_index = all_ranks.index(this_rank)
+            if rank == 'latest':
+                new_index = len(all_ranks) - 1
+            elif rank == 'previous':
+                new_index = max(this_index - 1, 0)
+            elif rank == 'next':
+                new_index = min(this_index + 1, len(all_ranks) - 1)
             else:
-                return None
+                raise ValueError(f'unrecognized rank value "{rank}"')
 
-        # Search down from top for parallel file
-        parts = []
-        if self.volname:
-            volkey = self.volname.lower()
-            if self.interior:
-                parts = self.interior.split('/')
-        elif self.volset:
-            volkey = self.volset.lower()
+            rank = all_ranks[new_index]
+    
+            if (category, rank) in self._associated_parallels_filled:
+                abspath = self._associated_parallels_filled[category, rank]
+                return PdsFile.from_abspath(abspath) if abspath else None
+
         else:
-            volkey = None
+            rankstr = ''
 
-        try:
-            target_abspath = CACHE['$VOLS-' + category + '/'][volkey][rank]
-        except KeyError:
-            target = None
-        else:
-            try:
-                target = PdsFile.from_abspath(target_abspath)
-            except IOError:
-                target = None
+        # Handle a volset-level parallel
+        if not self.volname:
+            parallel = self.volset_pdsfile(category, rank)
+            return _cache_and_return(parallel)
 
-        if target is None:
-            self._associated_parallels_filled[category, rank] = None
-            self._associated_parallels_filled[category, original_rank] = None
-            self._recache()
-            return None
+        # If category is unchanged, use all_versions() instead
+        if category == self.category_[:-1]:
+            if rank is None:
+                rank = max(self.all_version_abspaths.keys())
+            return _cache_and_return(self.all_versions().get(rank,None))
 
-        if target.isdir:
-            for part in parts:
-                try:
-                    child = target.child(part, fix_case=True)
-                except IOError:
-                    break
+        # Prepare for parallel volume tree comparion
+        old_root = self.volume_pdsfile()
+        new_root = self.volume_pdsfile(category, rank)
 
-                if PdsFile.os_path_exists(child.abspath):
-                    target = child
-                else:
-                    break
+        if not new_root:
+            # If there's no volume-level match, try the volset-leve match
+            # This happens for category = 'checksums-archives-whatever'
+            return _cache_and_return(self.volset_pdsfile(category, rank))
 
-            # Last item might match by anchor
-            if parts and part == parts[-1]:
-                childnames = target.childnames_by_anchor(self.anchor)
-                if childnames:
-                    target = target.child(childnames[0])
+        if new_root.abspath == old_root.abspath:
+            return _cache_and_return(self)
 
-        path = target.logical_path
-        self._associated_parallels_filled[category, rank] = path
-        self._associated_parallels_filled[category, original_rank] = path
-        self._recache()
-        return target
+        if not new_root.isdir:                      # can't match any deeper
+            return _cache_and_return(new_root)
+
+        if not self.interior:                       # no reason to go deeper
+            return _cache_and_return(new_root)
+
+        # Search down from the volume root for the longest parallel file path
+        abspath = new_root.abspath + '/' + self.interior
+        while abspath:
+            if PdsFile.os_path_exists(abspath):
+                return _cache_and_return(abspath)
+            abspath = abspath.rpartition('/')[0]
+
+        return _cache_and_return(None)              # This should never happen
 
 ################################################################################
 # Initialize the global registry of subclasses
 ################################################################################
 
 PdsFile.SUBCLASSES['default'] = PdsFile
+
+################################################################################
+# This import must wait until after the PdsFile class has been fully initialized
+################################################################################
+
+from rules import *     # Data set-specific rules are implemented as subclasses
+                        # of PdsFile
 
 ################################################################################
 # After the constructors are defined, always create and cache permanent,
@@ -5069,7 +5344,7 @@ def logical_path_from_abspath(abspath):
     if parts[1]:
         return parts[2]
 
-    raise ValueError('Not an absolute path: ', abspath)
+    raise ValueError('Not a compatible with a logical path: ', abspath)
 
 LOCAL_HOLDINGS_DIRS = None  # Global will contain all the physical holdings
                             # directories on the system.
@@ -5136,61 +5411,5 @@ def selected_path_from_path(path, abspaths=True):
             return path
         else:
             return logical_path_from_abspath(path)
-
-################################################################################
-# PdsFile subclass support. Only imported when needed.
-################################################################################
-
-def FROM_RULES_IMPORT_STAR():
-#     from rules import *           # Illegal in Python (It's a long story.)
-
-    import rules.ASTROM_xxxx
-    import rules.COCIRS_xxxx
-    import rules.COISS_xxxx
-    import rules.CORSS_8xxx
-    import rules.CORSS_8xxx
-    import rules.COSP_xxxx
-    import rules.COUVIS_0xxx
-    import rules.COUVIS_8xxx
-    import rules.COVIMS_0xxx
-    import rules.COVIMS_8xxx
-    import rules.EBROCC_xxxx
-    import rules.GO_0xxx
-    import rules.HSTxx_xxxx
-    import rules.NHSP_xxxx
-    import rules.NHxxxx_xxxx
-    import rules.RES_xxxx
-    import rules.RPX_xxxx
-    import rules.VG_0xxx
-    import rules.VG_20xx
-    import rules.VG_28xx
-    import rules.VGIRIS_xxxx
-    import rules.VGISS_xxxx
-
-def reload_rules(): # pragma: no cover
-    reload(rules.ASTROM_xxxx)
-    reload(rules.COCIRS_xxxx)
-    reload(rules.COISS_xxxx)
-    reload(rules.CORSS_8xxx)
-    reload(rules.COSP_xxxx)
-    reload(rules.COUVIS_0xxx)
-    reload(rules.COUVIS_8xxx)
-    reload(rules.COVIMS_0xxx)
-    reload(rules.COVIMS_8xxx)
-    reload(rules.EBROCC_xxxx)
-    reload(rules.GO_0xxx)
-    reload(rules.HSTxx_xxxx)
-    reload(rules.NHSP_xxxx)
-    reload(rules.NHxxxx_xxxx)
-    reload(rules.RES_xxxx)
-    reload(rules.RPX_xxxx)
-    reload(rules.VG_0xxx)
-    reload(rules.VG_20xx)
-    reload(rules.VG_28xx)
-    reload(rules.VGIRIS_xxxx)
-    reload(rules.VGISS_xxxx)
-
-# from rules import *
-FROM_RULES_IMPORT_STAR()
 
 ################################################################################
