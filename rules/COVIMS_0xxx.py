@@ -23,6 +23,8 @@ description_and_icon_by_regex = translator.TranslatorByRegex([
     (r'.*/thumbnail/.*\.(gif|jpg|jpeg|jpeg_small|tif|tiff|png)', re.I, ('Small browse image',          'BROWSE'  )),
     (r'.*/tiff(/\w+)*',                                          re.I, ('Full-size browse images',     'BROWDIR' )),
     (r'.*/tiff/.*\.(gif|jpg|jpeg|jpeg_small|tif|tiff|png)',      re.I, ('Full-size browse image',      'BROWSE'  )),
+
+    (r'previews/COVIMS_0xxx/AAREADME.pdf', re.I, ('How to interpret VIMS preview images', 'INFO')),
 ])
 
 ####################################################################################################################################

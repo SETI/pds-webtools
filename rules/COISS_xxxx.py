@@ -11,8 +11,8 @@ import re
 ####################################################################################################################################
 
 description_and_icon_by_regex = translator.TranslatorByRegex([
-    (r'volumes/.*/data/.*/N[0-9_]+\.img',                       0, ('Narrow-angle image, VICAR',     'IMAGE'   )),
-    (r'volumes/.*/data/.*/W[0-9_]+\.img',                       0, ('Wide-angle image, VICAR',       'IMAGE'   )),
+    (r'volumes/.*/data/.*/N[0-9_]+\.IMG',                       0, ('Narrow-angle image, VICAR',     'IMAGE'   )),
+    (r'volumes/.*/data/.*/W[0-9_]+\.IMG',                       0, ('Wide-angle image, VICAR',       'IMAGE'   )),
     (r'volumes/.*/data/.*/extras(/\w+)*(|/)',                   0, ('Preview image collection',      'BROWDIR' )),
     (r'volumes/.*/data/.*/extras/.*\.(jpeg|jpeg_small|tiff)',   0, ('Preview image',                 'BROWSE'  )),
     (r'volumes/.*/COISS_0011/document/.*/[0-9]+\.[0-9]+(|/)',   0, ('Calibration report',            'INFODIR' )),
@@ -25,6 +25,15 @@ description_and_icon_by_regex = translator.TranslatorByRegex([
                                                                 0, ('Small browse image',            'BROWSE'  )),
     (r'.*/(tiff|full)(/\w+)*',                                  0, ('Full-size browse images',       'BROWDIR' )),
     (r'.*/(tiff|full)/.*\.(tif|tiff|png)',                      0, ('Full-size browse image',        'BROWSE'  )),
+    (r'volumes/COISS_0xxx.*/COISS_0011/document/report',        0, ('&#11013; <b>ISS Calibration Report</b>',
+                                                                                                     'INFO')),
+    (r'(volumes/COISS_0xxx.*/COISS_0011/document/report/index.html)', 0,
+            ('&#11013; <b>CLICK "index.html"</b> to view the ISS Calibration Report', 'INFO')),
+    (r'volumes/COISS_0xxx.*/COISS_0011/document/.*user_guide.*\.pdf',
+                                                                0, ('&#11013; <b>ISS User Guide</b>','INFO')),
+    (r'volumes/COISS_0xxx.*/COISS_0011/extras',                 0, ('CISSCAL calibration software',  'CODE')),
+    (r'volumes/COISS_0xxx.*/COISS_0011/extras/cisscal',         0, ('CISSCAL source code (IDL)',     'CODE')),
+    (r'volumes/COISS_0xxx.*/COISS_0011/extras/cisscal\.tar\.gz',0, ('CISSCAL source code (download)', 'TARBALL')),
 ])
 
 ####################################################################################################################################
@@ -106,10 +115,12 @@ associations_to_volumes = translator.TranslatorByRegex([
 ])
 
 associations_to_calibrated = translator.TranslatorByRegex([
-    (r'.*/(COISS_[12]xxx)(|_v[0-9\.]+)/(COISS_..../data/\w+/[NW][0-9]{10}_[0-9]+).*', 0,
-            [r'calibrated/\1/\3_CALIB.IMG',
-             r'calibrated/\1/\3_CALIB.LBL',
+    (r'.*/(COISS_[12]xxx)(|_v[0-9\.]+)/(COISS_....)/(data|extras/\w+)/(\w+/[NW][0-9]{10}_[0-9]+).*', 0,
+            [r'calibrated/\1/\3/data/\5_CALIB.IMG',
+             r'calibrated/\1/\3/data/\5_CALIB.LBL',
             ]),
+    (r'.*/(COISS_[12]xxx)(|_v[0-9\.]+)/(COISS_....)/(data|extras/\w+)(|/\w+)', 0,
+            r'calibrated/\1/\3/data\5'),
     (r'.*/(COISS_[12])999.*', 0,
             r'calibrated/\1xxx'),
 ])
@@ -123,6 +134,8 @@ associations_to_previews = translator.TranslatorByRegex([
              r'previews/\1/\3/data/\5_small.jpg',
              r'previews/\1/\3/data/\5_thumb.jpg',
             ]),
+    (r'.*/(COISS_[12]xxx)(|_v[0-9\.]+)/(COISS_....)/(data|extras/\w+)(|/\w+)', 0,
+            r'previews/\1/\3/data\5'),
     (r'.*/(COISS_[12])999.*', 0,
             r'previews/\1xxx'),
 
@@ -159,6 +172,14 @@ associations_to_metadata = translator.TranslatorByRegex([
             ]),
 ])
 
+associations_to_documents = translator.TranslatorByRegex([
+    (r'(volumes|calibrated)/COISS_[12]xxx/COISS_.....*', 0,
+            [r'volumes/COISS_0xxx/COISS_0011/document/report',
+             r'volumes/COISS_0xxx/COISS_0011/document/iss_data_user_guide*.pdf',
+             r'volumes/COISS_0xxx/COISS_0011/extras',
+            ]),
+])
+
 ####################################################################################################################################
 # VIEW_OPTIONS (grid_view_allowed, multipage_view_allowed, continuous_view_allowed)
 ####################################################################################################################################
@@ -173,8 +194,9 @@ view_options = translator.TranslatorByRegex([
 ####################################################################################################################################
 
 neighbors = translator.TranslatorByRegex([
-    (r'(.*/COISS_[12]xxx.*)/COISS_..../(data|extras/w+)/\w+', 0, r'\1/*/\2/*'),
-    (r'(.*/COISS_[12]xxx.*)/COISS_..../(data|extras/w+)',     0, r'\1/*/\2'),
+    (r'(.*)/COISS_[12]xxx(.*)/COISS_..../(data|extras/\w+)/\w+', 0, r'\1/COISS_[12]xxx\2/*/\3/*'),
+    (r'(.*)/COISS_[12]xxx(.*)/COISS_..../(data|extras/\w+)',     0, r'\1/COISS_[12]xxx\2/*/\3'),
+    (r'(.*)/COISS_[12]xxx(.*)/COISS_....',                       0, r'\1/COISS_[12]xxx\2/*'),
 
     (r'volumes/COISS_0xxx(|_v[0-9\.]+)/COISS_..../data',               0, r'volumes/COISS_0xxx\1/*/data'),
     (r'volumes/COISS_0xxx(|_v[0-9\.]+)/COISS_..../data/(\w+)',         0, r'volumes/COISS_0xxx\1/*/data/\2'),
@@ -194,6 +216,9 @@ sort_key = translator.TranslatorByRegex([
     (r'([NW])([0-9]{10})(.*)_small.jpg', 0, r'\2\1\3_3small.jpg'),
     (r'([NW])([0-9]{10})(.*)_thumb.jpg', 0, r'\2\1\3_4thumb.jpg'),
     (r'([NW])([0-9]{10})(.*)', 0, r'\2\1\3'),
+
+    # Used inside COISS_0011/document/report
+    ('index.html', 0, '000index.html'),
 ])
 
 ####################################################################################################################################
@@ -357,6 +382,7 @@ class COISS_xxxx(pdsfile.PdsFile):
     ASSOCIATIONS['calibrated'] += associations_to_calibrated
     ASSOCIATIONS['previews']   += associations_to_previews
     ASSOCIATIONS['metadata']   += associations_to_metadata
+    ASSOCIATIONS['documents']  += associations_to_documents
 
     def FILENAME_KEYLEN(self):
         if self.volset[:10] == 'COISS_3xxx':

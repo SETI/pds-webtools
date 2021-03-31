@@ -33,6 +33,17 @@ class PdsGroup(object):
     def __len__(self):
         return len(self.rows) - len(self.hidden)
 
+    def __repr__(self):
+        if self.rows:
+            path = self.rows[0].logical_path
+
+            if len(self.rows) >= 2:
+                return f'PdsGroup({path},...[{len(self.rows)}])'
+            else:
+                return f'PdsGroup({path})'
+        else:
+            return f'PdsGroup()'
+
     def copy(self):
         this = PdsGroup()
         this.parent_pdsf = self.parent_pdsf

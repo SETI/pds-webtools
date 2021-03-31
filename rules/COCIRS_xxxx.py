@@ -382,7 +382,7 @@ associations_to_diagrams = translator.TranslatorByRegex([
 versions = translator.TranslatorByRegex([
     (r'(volumes/COCIRS_[01]xxx).*/(COCIRS_....)/DATA/(TSDR/|)(APODSPEC|\w+DATA|UNCALIBR)(|/\w+\.\w+)', 0,
             [r'\1*/\2/DATA/\4\5',
-             r'\1*/\2/DATA/TSDR\4\4',
+             r'\1*/\2/DATA/TSDR/\4\5',
             ]),
 ])
 

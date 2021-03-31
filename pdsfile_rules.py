@@ -114,7 +114,7 @@ DESCRIPTION_AND_ICON = translator.TranslatorByRegex([
 
     # Standard information files
     (r'.*/aareadme\.(txt|vms)',         re.I, ('Read Me First!',                'INFO'    )),
-    (r'.*/voldesc\.(cat|sfd)',          re.I, ('Volume description',            'INFO'    )),
+    (r'.*/voldesc\.(cat|sfd)',          re.I, ('PDS3 volume description',       'INFO'    )),
     (r'.*/errata\.txt',                 re.I, ('Errata file',                   'INFO'    )),
     (r'.*info\.txt',                    re.I, ('Info about this directory',     'INFO'    )),
     (r'.*/vicar2.txt',                  re.I, ('VICAR documentation',           'INFO'    )),
@@ -213,7 +213,7 @@ DESCRIPTION_AND_ICON = translator.TranslatorByRegex([
     (r'.*\.(c|q)ub',                    re.I, ('Spectral image cube',           'CUBE'    )),
     (r'.*\.fmt',                        re.I, ('PDS3 label include file',       'LABEL'   )),
     (r'.*\.txt',                        re.I, ('Text file',                     'INFO'    )),
-    (r'.*\.tar.gz',                     re.I, ('Compressed tar archive',        'TARBALL' )),
+    (r'.*\.tar\.gz',                    re.I, ('Compressed tar archive',        'TARBALL' )),
     (r'.*\.tar',                        re.I, ('Tar archive',                   'TARBALL' )),
     (r'.*\.zip',                        re.I, ('Zip archive',                   'TARBALL' )),
     (r'.*\.(jpg|jpeg|jpeg_small)',      re.I, ('JPEG viewable image',           'BROWSE'  )),
@@ -248,27 +248,32 @@ DESCRIPTION_AND_ICON = translator.TranslatorByRegex([
 ####################################################################################################################################
 
 ASSOCIATIONS = {
-    'volumes'   : translator.TranslatorByRegex([
-        (r'volumes/(\w+/\w+)/\w*data.*', 0,
-                [r'volumes/\1/document',
-                 r'volumes/\1/catalog',
-                 r'volumes/\1/aareadme.txt',
-                 r'volumes/\1/errata.txt',
-                 r'volumes/\1/voldesc.cat',
-                ]),
-        (r'volumes/(\w+/\w+)/\w*DATA.*', 0,
-                [r'volumes/\1/DOCUMENT',
-                 r'volumes/\1/CATALOG',
-                 r'volumes/\1/AAREADME.TXT',
-                 r'volumes/\1/ERRATA.TXT',
-                 r'volumes/\1/VOLDESC.CAT',
-                ]),
-        ]),
+    'volumes'   : translator.NullTranslator(),
     'previews'  : translator.NullTranslator(),
     'calibrated': translator.NullTranslator(),
     'diagrams'  : translator.NullTranslator(),
     'metadata'  : translator.TranslatorByRegex([
         (r'metadata/(\w+)/.*', re.I, r'metadata/\1/AAREADME.txt')]),
+
+    'documents' : translator.TranslatorByRegex([
+        (r'volumes/([\w\.]+/\w+)(|/.*)', 0,
+                [r'volumes/\1/document',
+                 r'volumes/\1/catalog',
+                 r'volumes/\1/aareadme.txt',
+                 r'volumes/\1/errata.txt',
+                 r'volumes/\1/voldesc.cat',
+                 r'volumes/\1/DOCUMENT',
+                 r'volumes/\1/CATALOG',
+                 r'volumes/\1/AAREADME.TXT',
+                 r'volumes/\1/ERRATA.TXT',
+                 r'volumes/\1/VOLDESC.CAT',
+                 r'volumes/\1/VOLDESC.SFD',
+                ]),
+        (r'previews/(\w+)(|/.*)', 0,
+                [r'previews/\1/AAREADME.pdf',
+                 r'previews/\1/AAREADME.txt',
+                ]),
+        ]),
 }
 
 ####################################################################################################################################
@@ -339,6 +344,7 @@ INFO_FILE_BASENAMES = translator.TranslatorByRegex([
     (r'(\w+INFO\.txt)',         re.I, r'\1'),
     (r'(\w+INF\.txt)',          re.I, r'\1'),
     (r'(AAREADME\.txt)',        re.I, r'\1'),
+    (r'(README\.txt)',          re.I, r'\1'),
 ])
 
 ####################################################################################################################################

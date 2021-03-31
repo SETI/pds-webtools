@@ -31,6 +31,8 @@ description_and_icon_by_regex = translator.TranslatorByRegex([
     (r'previews/.*/Rev\d\d\dC?[IE]_med\.jpg',     re.I, ('Medium observation diagram',   'DIAGRAM')),
     (r'previews/.*/Rev\d\d\dC?[IE]_small\.jpg',   re.I, ('Small observation diagram',    'DIAGRAM')),
     (r'previews/.*/Rev\d\d\dC?[IE]_thumb\.jpg',   re.I, ('Thumbnail obervation diagram', 'DIAGRAM')),
+
+    (r'volumes/.*/document/archived_rss_ring_profiles.*\.pdf', 0, ('&#11013; <b>Calibration Procedures</b>', 'INFO')),
 ])
 
 ####################################################################################################################################
@@ -266,6 +268,13 @@ associations_to_metadata = translator.TranslatorByRegex([
             ]),
 ])
 
+associations_to_documents = translator.TranslatorByRegex([
+    (r'volumes/CORSS_8xxx(.*)/CORSS_8001.*', 0,
+            [r'volumes/CORSS_8xxx\1/CORSS_8001/document/archived_rss_ring_profiles_2018.pdf',
+             r'volumes/CORSS_8xxx\1/CORSS_8001/document/archived_rss_ring_profiles.pdf',
+            ]),
+])
+
 ####################################################################################################################################
 # VERSIONS
 ####################################################################################################################################
@@ -402,9 +411,9 @@ opus_products = translator.TranslatorByRegex([
 
 opus_id = translator.TranslatorByRegex([
     (r'.*/CORSS_8xxx.*/CORSS_8.../(data|browse).*/(Rev...C?)[IE]_RSS_(....)_(...)_(...)_([IE]).*', 0,
-                    r'co-rss-occ-\3-\4-#LOWER#\2-\5-\6'),
+            r'co-rss-occ-\3-\4-#LOWER#\2-\5-\6'),
     (r'.*/CORSS_8xxx_v1/CORSS_8.../EASYDATA.*/Rev(\d\d)(C?)[IE]_RSS_(....)_(...)_(...)_([IE]).*', 0,
-                    r'co-rss-occ-\3-\4-#LOWER#rev0\1\2-\5-\6'),
+            r'co-rss-occ-\3-\4-#LOWER#rev0\1\2-\5-\6'),
 ])
 
 ####################################################################################################################################
@@ -412,9 +421,10 @@ opus_id = translator.TranslatorByRegex([
 ####################################################################################################################################
 
 opus_id_to_primary_logical_path = translator.TranslatorByRegex([
-  (r'co-rss-occ-rev(...)(c?)(i|e)-(\d{4})-(\d{3})-(\w{3})', 0,
-    [r'volumes/CORSS_8xxx/CORSS_8001/data/Rev\1/Rev\1#UPPER#\2\3#MIXED#/Rev\1#UPPER#\2\3_RSS_\4_\5_\6_\3/RSS_\4_\5_\6_\3_TAU_01KM.TAB',
-     r'volumes/CORSS_8xxx/CORSS_8001/data/Rev\1/Rev\1#UPPER#\2\3#MIXED#/Rev\1#UPPER#\2\3_RSS_\4_\5_\6_\3/RSS_\4_\5_\6_\3_TAU_*00M.TAB']),
+  (r'co-rss-occ-(\d{4})-(\d{3})-rev(...)(c?)-(...)-(i|e)', 0,
+    [r'volumes/CORSS_8xxx/CORSS_8001/data/Rev\3/Rev\3#UPPER#\4\6/#MIXED#Rev\3#UPPER#\4\6_RSS_\1_\2_\5_\6/RSS_\1_\2_\5_\6_TAU_01KM.TAB',
+     r'volumes/CORSS_8xxx/CORSS_8001/data/Rev\3/Rev\3#UPPER#\4\6/#MIXED#Rev\3#UPPER#\4\6_RSS_\1_\2_\5_\6/RSS_\1_\2_\5_\6_TAU_*00M.TAB',
+    ]),
 ])
 
 ####################################################################################################################################
@@ -455,10 +465,11 @@ class CORSS_8xxx(pdsfile.PdsFile):
     }
 
     ASSOCIATIONS = pdsfile.PdsFile.ASSOCIATIONS.copy()
-    ASSOCIATIONS['volumes']  += associations_to_volumes
-    ASSOCIATIONS['previews'] += associations_to_previews
-    ASSOCIATIONS['diagrams'] += associations_to_diagrams
-    ASSOCIATIONS['metadata'] += associations_to_metadata
+    ASSOCIATIONS['volumes']   += associations_to_volumes
+    ASSOCIATIONS['previews']  += associations_to_previews
+    ASSOCIATIONS['diagrams']  += associations_to_diagrams
+    ASSOCIATIONS['metadata']  += associations_to_metadata
+    ASSOCIATIONS['documents'] += associations_to_documents
 
     VERSIONS = versions + pdsfile.PdsFile.VERSIONS
 

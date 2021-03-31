@@ -66,13 +66,6 @@ associations_to_volumes = translator.TranslatorByRegex([
     (r'volumes/VG_0xxx/VG_003[0-2]/.*/(C[0-9]{5})([0-9]{2})\.(IMQ|IBG)', 0, r'volumes/VGISS_6xxx/VGISS_61??/DATA/\1XX/\1\2_*'),
     (r'volumes/VG_0xxx/VG_0033/.*/(C[0-9]{5})([0-9]{2})\.(IMQ|IBG)',     0, r'volumes/VGISS_6xxx/VGISS_6???/DATA/\1XX/\1\2_*'),
     (r'volumes/VG_0xxx/VG_003[4-8]/.*/(C[0-9]{5})([0-9]{2})\.(IMQ|IBG)', 0, r'volumes/VGISS_6xxx/VGISS_62??/DATA/\1XX/\1\2_*'),
-
-    (r'volumes/(\w+/\w+)/(?!AAREADME|BROWSE|DOCUMENT|INDEX|LABEL|SOFTWARE|VOLDESC)\w+', 0,
-            [r'volumes/\1/DOCUMENT',
-             r'volumes/\1/AAREADME.TXT',
-             r'volumes/\1/ERRATA.TXT',
-             r'volumes/\1/VOLDESC.SFD',
-            ]),
 ])
 
 associations_to_previews = translator.TranslatorByRegex([

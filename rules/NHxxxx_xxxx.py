@@ -93,6 +93,13 @@ description_and_icon_by_regex = translator.TranslatorByRegex([
     (r'.*/calib/c?flat.*\.fit'      , re.I, ('Flat field image',                        'IMAGE'   )),
     (r'.*/calib/dead.*\.fit'        , re.I, ('Dead pixel image',                        'IMAGE'   )),
     (r'.*/calib/hot.*\.fit'         , re.I, ('Hot pixel image',                         'IMAGE'   )),
+
+    (r'volumes/.*/document/lorri_ssr\.pdf', 0, ('&#11013; <b>LORRI Description (Space Science Reviews)</b>',
+                                                                                        'INFO')),
+    (r'volumes/.*/document/ralph_ssr\.pdf', 0, ('&#11013; <b>Ralph Description (Space Science Reviews)</b>',
+                                                                                        'INFO')),
+    (r'volumes/.*/document/payload_ssr\.pdf', 0, ('&#11013; <b>Payload Description (Space Science Reviews)</b>',
+                                                                                        'INFO')),
 ])
 
 ####################################################################################################################################
@@ -134,7 +141,6 @@ calibrated_viewables = translator.TranslatorByRegex([
 ####################################################################################################################################
 
 associations_to_volumes = translator.TranslatorByRegex([
-
     (r'.*/(NHxx.._xxxx)(|_v[0-9\.]+)/(NH....)_[12](...)/data/(\w+/[a-z0-9]{3}_[0-9]{10})_0x.*', re.I,
             [r'volumes/\1\2/\3_1\4/data/#LOWER#\5*',
              r'volumes/\1\2/\3_1\4/DATA/#UPPER#\5*',    # NHxxMV_xxxx_v1/NHJUMV_1001 is upper case
@@ -171,6 +177,14 @@ associations_to_metadata = translator.TranslatorByRegex([
              r'metadata/\1/\3/\3_charon_summary.tab/#LOWER#\4_\5',
              r'metadata/\1/\3/\3_pluto_summary.tab/#LOWER#\4_\5',
              r'metadata/\1/\3/\3_jupiter_summary.tab/#LOWER#\4_\5',
+            ]),
+])
+
+associations_to_documents = translator.TranslatorByRegex([
+    (r'(volumes/.*/NH...._.001).*', 0,
+            [r'\1/document/lorri_ssr.pdf',
+             r'\1/document/ralph_ssr.pdf',
+             r'\1/document/payload_ssr.pdf',
             ]),
 ])
 
@@ -411,9 +425,10 @@ class NHxxxx_xxxx(pdsfile.PdsFile):
     }
 
     ASSOCIATIONS = pdsfile.PdsFile.ASSOCIATIONS.copy()
-    ASSOCIATIONS['volumes']  += associations_to_volumes
-    ASSOCIATIONS['previews'] += associations_to_previews
-    ASSOCIATIONS['metadata'] += associations_to_metadata
+    ASSOCIATIONS['volumes']   += associations_to_volumes
+    ASSOCIATIONS['previews']  += associations_to_previews
+    ASSOCIATIONS['metadata']  += associations_to_metadata
+    ASSOCIATIONS['documents'] += associations_to_documents
 
     VERSIONS = versions + pdsfile.PdsFile.VERSIONS
 
