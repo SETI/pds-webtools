@@ -456,9 +456,9 @@ opus_id = translator.TranslatorByRegex([
 ####################################################################################################################################
 
 opus_id_to_primary_logical_path = translator.TranslatorByRegex([
-  (r'co-rss-occ-rev(...)(c?)(i|e)-(\d{4})-(\d{3})-(\w{3})', 0,
-    [r'volumes/CORSS_8xxx/CORSS_8001/data/Rev\1/Rev\1#UPPER#\2\3#MIXED#/Rev\1#UPPER#\2\3_RSS_\4_\5_\6_\3/RSS_\4_\5_\6_\3_TAU_01KM.TAB',
-     r'volumes/CORSS_8xxx/CORSS_8001/data/Rev\1/Rev\1#UPPER#\2\3#MIXED#/Rev\1#UPPER#\2\3_RSS_\4_\5_\6_\3/RSS_\4_\5_\6_\3_TAU_*00M.TAB']),
+  (r'co-rss-occ-(\d{4})-(\d{3})-rev(...)(c?)-(\w{3})-(i|e)', 0,
+    [r'volumes/CORSS_8xxx/CORSS_8001/data/Rev\3/Rev\3#UPPER#\4\6#MIXED#/Rev\3#UPPER#\4\6_RSS_\1_\2_\5_\6/RSS_\1_\2_\5_\6_TAU_01KM.TAB',
+    r'volumes/CORSS_8xxx/CORSS_8001/data/Rev\3/Rev\3#UPPER#\4\6#MIXED#/Rev\3#UPPER#\4\6_RSS_\1_\2_\5_\6/RSS_\1_\2_\5_\6_TAU_*00M.TAB']),
 ])
 
 ####################################################################################################################################

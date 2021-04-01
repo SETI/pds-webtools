@@ -917,13 +917,13 @@ class TestPdsFileBlackBox:
              'volumes/EBROCC_xxxx/EBROCC_0001/DATA/PAL200/PAL_IPD.TAB'),
             ('mcd27m-iirar-occ-1989-184-28sgr-i',
              'volumes/EBROCC_xxxx/EBROCC_0001/DATA/MCD27M/MCD_IPD.TAB'),
+            ('co-rss-occ-2005-159-rev009-k55-e',
+             'volumes/CORSS_8xxx/CORSS_8001/data/Rev009/Rev009E/Rev009E_RSS_2005_159_K55_E/RSS_2005_159_K55_E_TAU_01KM.TAB'),
 
             # ('nh-mvic-mc0_0032528036',
             # 'volumes/NHxxMV_xxxx/NHJUMV_1001/data/20070131_003252/mc0_0032528036_0x536_eng_1.fit'),
             # ('nh-mvic-mc0_0005261846',
             # 'volumes/NHxxMV_xxxx/NHLAMV_1001/data/20060321_000526/mc0_0005261846_0x536_eng_1.fit'),
-            # ('co-rss-occ-2005-159-rev009-k55-e',
-            #  'volumes/CORSS_8xxx/CORSS_8001/data/Rev009/Rev009E/Rev009E_RSS_2005_159_K55_E/RSS_2005_159_K55_E_TAU_01KM.TAB'),
 
         ]
     )
