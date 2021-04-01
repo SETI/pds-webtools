@@ -269,7 +269,7 @@ class PdsGroupTable(object):
             if pdsf.abspath in exclusions: continue
 
             parent_pdsf = pdsf.parent()
-            parent_path = parent_pdsf.logical_path
+            parent_path = parent_pdsf.logical_path if parent_pdsf else ''
 
             if parent_path not in table_dict:
                 table_dict[parent_path] = PdsGroupTable(parent=parent_pdsf)

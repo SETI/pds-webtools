@@ -574,6 +574,7 @@ def load_volume_info(holdings):
 
     children = os.listdir(volinfo_path)
     for child in children:
+        if child.startswith('.'): continue
         if not child.endswith('.tab'): continue
 
         table_path = _clean_join(volinfo_path, child)
@@ -1269,39 +1270,23 @@ class PdsFile(object):
         """
 
         if not SHELVES_ONLY:
-            results = _clean_glob(abspath)
-
-            if force_case_sensitive and FS_IS_CASE_INSENSITIVE:
-                filtered_results = []
-                for result in results:
-                    result = repair_case(result)
-                    if fnmatch.fnmatchcase(result, abspath):
-                        filtered_results.append(result)
-                return filtered_results
-
-            else:
-                return results
+            results = _clean_glob(abspath, force_case_sensitive)
+            return results
 
         # Find the shelf file if any
         abspath = abspath.rstrip('/')
-        (shelf_path, key) = PdsFile.shelf_path_and_key_for_abspath(abspath,
-                                                                   'info')
+        (pattern, key) = PdsFile.shelf_path_and_key_for_abspath(abspath, 'info')
 
-        # Handle wildcards in the shelf path, if any
-        if _needs_glob(shelf_path):
-            shelf_paths = _clean_glob(shelf_path)
+        if _needs_glob(pattern):
+            shelf_paths = _clean_glob(pattern)
+        elif os.path.exists(pattern):
+            shelf_paths = [pattern]
         else:
-            shelf_paths = [shelf_path]
+            shelf_paths = []
 
         # Gather the matching entries in each shelf
         abspaths = []
         for shelf_path in shelf_paths:
-            if not os.path.exists(shelf_path):
-                if LOGGER:
-                    LOGGER.warn('Missing info shelf for ' + abspath,
-                                shelf_path)
-                continue
-
             shelf = PdsFile._get_shelf(shelf_path)
             parts = shelf_path.split('/shelves/info/')
             assert len(parts) == 2
@@ -5297,11 +5282,21 @@ def _clean_abspath(path):
     return abspath
 
 @functools.lru_cache(maxsize=_GLOB_CACHE_SIZE)
-def _clean_glob(pattern):
-    matches = glob.glob(pattern)
+def _clean_glob(pattern, force_case_sensitive=False):
+    results = glob.glob(pattern)
     if os.sep == '\\':
-        matches = [x.replace('\\', '/') for x in matches]
-    return matches
+        results = [x.replace('\\', '/') for x in matches]
+
+    if force_case_sensitive and FS_IS_CASE_INSENSITIVE:
+        filtered_results = []
+        for result in results:
+            result = repair_case(result)
+            if fnmatch.fnmatchcase(result, pattern):
+                filtered_results.append(result)
+        return filtered_results
+
+    else:
+        return results
 
 def _needs_glob(pattern):
     """True if this expression contains wildcards"""

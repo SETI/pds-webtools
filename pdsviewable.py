@@ -5,6 +5,8 @@
 import os
 from PIL import Image
 
+import pdslogger
+
 ################################################################################
 # Class definitions
 ################################################################################
@@ -354,7 +356,7 @@ ICON_DIR_VS_SIZE = [( 30, 'png-30/'),
 
 ICON_SET_BY_TYPE = {}
 
-def load_icons(path, url, color='blue'):
+def load_icons(path, url, color='blue', logger=None):
     """Loads icons for use by PdsViewable.iconset_for()."""
 
     for (icon_type, icon_info) in ICON_FILENAME_VS_TYPE.items():
@@ -378,11 +380,17 @@ def load_icons(path, url, color='blue'):
                 relpath = color + '/' + icon_dir_ + basename
                 abspath = icon_path_ + relpath
 
-                im = Image.open(abspath)
-                (width, height) = im.size
-                im.close()
-
-                bytecount = os.stat(abspath).st_size
+                try:
+                    im = Image.open(abspath)
+                except FileNotFoundError:
+                    (width, height) = (size, size)
+                    bytecount = 0
+                    if logger:
+                        logger.error('Missing icon file', abspath)
+                else:
+                    (width, height) = im.size
+                    im.close()
+                    bytecount = os.stat(abspath).st_size
 
                 pdsview = PdsViewable(icon_path_ + relpath, icon_url_ + relpath,
                                       width, height, icon_type + ' icon',
