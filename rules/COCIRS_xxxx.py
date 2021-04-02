@@ -72,6 +72,9 @@ description_and_icon_by_regex = translator.TranslatorByRegex([
     (r'volumes/.*/GEODATA/.*616\.TAB', 0, ('Body viewing geometry (Prometheus)', 'INDEX')),
     (r'volumes/.*/GEODATA/.*617\.TAB', 0, ('Body viewing geometry (Pandora)',    'INDEX')),
     (r'volumes/.*/GEODATA/.*618\.TAB', 0, ('Body viewing geometry (Pan)',        'INDEX')),
+
+    (r'volumes/.*/DOCUMENT/CIRS-USER-GUIDE.PDF',
+                                       0, ('&#11013; <b>CIRS User Guide</b>',    'INFO')),
 ])
 
 ####################################################################################################################################
@@ -372,6 +375,11 @@ associations_to_diagrams = translator.TranslatorByRegex([
             r'diagrams/\1/BROWSE'),
     (r'volumes/(COCIRS_[56]xxx.*/COCIRS_[56]...)/DATA/RINDATA', 0,
             r'diagrams/\1/BROWSE/S_RINGS'),
+])
+
+associations_to_documents = translator.TranslatorByRegex([
+    (r'(volumes/COCIRS_[01]xxx.*/COCIRS_[01]...).*', 0,
+            r'\1/DOCUMENT/CIRS-USER-GUIDE.PDF'),
 ])
 
 ####################################################################################################################################
@@ -687,9 +695,10 @@ class COCIRS_xxxx(pdsfile.PdsFile):
     }
 
     ASSOCIATIONS = pdsfile.PdsFile.ASSOCIATIONS.copy()
-    ASSOCIATIONS['volumes']  += associations_to_volumes
-    ASSOCIATIONS['previews'] += associations_to_previews
-    ASSOCIATIONS['diagrams'] += associations_to_diagrams
+    ASSOCIATIONS['volumes']   += associations_to_volumes
+    ASSOCIATIONS['previews']  += associations_to_previews
+    ASSOCIATIONS['diagrams']  += associations_to_diagrams
+    ASSOCIATIONS['documents'] += associations_to_documents
 
     VERSIONS = versions + pdsfile.PdsFile.VERSIONS
 

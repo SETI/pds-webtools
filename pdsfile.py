@@ -212,6 +212,8 @@ def require_shelves(status=True):
 #       Returns the PdsFile object associated with the given path, if it has
 #       been cached.
 
+DEFAULT_FILE_CACHE_LIFETIME = 12 * 60 * 60      # 12 hours
+
 def cache_lifetime(arg):
     """Used by caches. Given any object, it returns the default lifetime in
     seconds. A returned lifetime of zero means keep forever."""
@@ -228,12 +230,12 @@ def cache_lifetime(arg):
     elif not arg.interior:
         return 0
 
-    elif arg.interior.lower() == 'data':    # .../volname/data forever
-        return 0
+    elif arg.isdir and arg.interior.lower().endswith('data'):
+        return 0                            # .../volname/*data forever
     elif arg.isdir:
         return 3 * 24 * 60 * 60             # Other directories for three days
     else:
-        return 12 * 60 * 60                 # Files for 12 hours
+        return DEFAULT_FILE_CACHE_LIFETIME
 
 # Initialize the cache
 LOCAL_PRELOADED = []        # local copy of CACHE['$PRELOADED']
@@ -251,7 +253,7 @@ DEFAULT_CACHING = 'dir'     # 'dir', 'all' or 'none';
 
 PRELOAD_TRIES = 3
 
-def preload(holdings_list, port=0, clear=False):
+def preload(holdings_list, port=0, clear=False, force_reload=False):
     """Cache the top-level directories, starting from the given holdings
     directories.
 
@@ -261,11 +263,12 @@ def preload(holdings_list, port=0, clear=False):
         port                port to use for memcached; zero to prevent use of
                             memcached.
         clear               True to clear the cache before preloading.
+        force_reload        Re-load the cache regardless of whether the cache
+                            appears to contain the needed holdings.
     """
 
     global CACHE, MEMCACHE_PORT, DEFAULT_CACHING, LOCAL_PRELOADED, PRELOAD_TRIES
     global FS_IS_CASE_INSENSITIVE
-
 
     # Convert holdings to a list of absolute paths
     if not isinstance(holdings_list, (list,tuple)):
@@ -333,10 +336,15 @@ def preload(holdings_list, port=0, clear=False):
         LOGGER.add_root(holdings_list)
 
     # Get the current list of preloaded holdings directories
-    try:
-        LOCAL_PRELOADED = list(CACHE['$PRELOADED'])
-    except KeyError:
+    if force_reload:
         LOCAL_PRELOADED = []
+        if LOGGER:
+            LOGGER.info('Forcing a complete new preload')
+    else:
+        try:
+            LOCAL_PRELOADED = list(CACHE['$PRELOADED'])
+        except KeyError:
+            LOCAL_PRELOADED = []
 
     # If nothing is missing, we're done
     already_loaded = True
@@ -388,20 +396,26 @@ def preload(holdings_list, port=0, clear=False):
             return                          # don't go deeper than volume name
 
         for basename in pdsdir.childnames:
+
             if basename.endswith('.txt') or basename.endswith('.tar.gz'):
-                continue
+                lifetime = DEFAULT_FILE_CACHE_LIFETIME
+                recursive = False
+            else:
+                lifetime = 0
+                recursive = True
 
             try:
                 child = pdsdir.child(basename, fix_case=False,
-                                               caching='all', lifetime=0)
-                _preload_dir(child)
+                                     caching='all', lifetime=lifetime)
+                if recursive:
+                    _preload_dir(child)
 
             except ValueError:              # Skip out-of-place files
                 pdsdir._childnames_filled.remove(basename)
 
     #### Fill CACHE
 
-    try:    # undo the pause and block in the "finally" clause below
+    try:    # we will undo the pause and block in the "finally" clause below
 
         # Create and cache permanent, category-level merged directories. These
         # are roots of the cache tree and their list of children is merged from
@@ -541,7 +555,7 @@ def get_permanent_values(holdings_list, port):
         if LOGGER:
             LOGGER.warn('Permanent value %s missing from Memcache; '
                         'preloading again' % str(e))
-        preload(holdings_list, port, clear=True)
+        preload(holdings_list, port, force_reload=True)
 
     else:
         if LOGGER:

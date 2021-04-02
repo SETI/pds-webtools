@@ -12,15 +12,16 @@ import os
 ####################################################################################################################################
 
 description_and_icon_by_regex = translator.TranslatorByRegex([
-    (r'volumes/.*/DATA',          re.I, ('Data files grouped by date', 'CUBEDIR')),
-    (r'volumes/.*/DATA/\w+',      re.I, ('Data files grouped by date', 'CUBEDIR')),
-    (r'volumes/.*/HSP\w+\.DAT',   re.I, ('Time series data',           'DATA')),
-    (r'volumes/.*/HDAC\w+\.DAT',  re.I, ('Binary data cube',           'DATA')),
-    (r'volumes/.*/\w+\.DAT',      re.I, ('Spectral data cube',         'CUBE')),
-    (r'volumes/.*\.txt_[0-9].*',  re.I, ('Text file',                  'INFO')),
-    (r'volumes/.*OLD.DIR',        re.I, ('Directory',                  'FOLDER')),
-    (r'metadata/.*versions\.tab', 0,    ('Table to associate data files with DATA_SET_IDs and versions',
-                                                                       'INDEX')),
+    (r'volumes/.*/DATA',                re.I, ('Data files grouped by date', 'CUBEDIR')),
+    (r'volumes/.*/DATA/\w+',            re.I, ('Data files grouped by date', 'CUBEDIR')),
+    (r'volumes/.*/HSP\w+\.DAT',         re.I, ('Time series data',           'DATA')),
+    (r'volumes/.*/HDAC\w+\.DAT',        re.I, ('Binary data cube',           'DATA')),
+    (r'volumes/.*/\w+\.DAT',            re.I, ('Spectral data cube',         'CUBE')),
+    (r'volumes/.*\.txt_[0-9].*',        re.I, ('Text file',                  'INFO')),
+    (r'volumes/.*OLD.DIR',              re.I, ('Directory',                  'FOLDER')),
+    (r'metadata/.*versions\.tab',       0,    ('Table to associate data files with DATA_SET_IDs and versions',
+                                                                             'INDEX')),
+    (r'volumes/.*/DOCUMENT/UVIS.TXT',   re.I, ('PDS3 Archive Description',   'INFO' )),
 ])
 
 ####################################################################################################################################

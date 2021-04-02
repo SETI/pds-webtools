@@ -140,7 +140,9 @@ DESCRIPTION_AND_ICON = translator.TranslatorByRegex([
     (r'.*/document/ar.*sis\.[^L].*',    re.I, ('PDS3 Archive Description',      'INFO'    )),
     (r'.*/document/vol.*sis\.[^L].*',   re.I, ('PDS3 Archive Description',      'INFO'    )),
     (r'.*/document/cd.*sis\.[^L].*',    re.I, ('PDS3 Archive Description',      'INFO'    )),
-    (r'.*/document/.*sis\.[^L].*',      re.I, ('PDS3 Archive Description',      'INFO'    )),
+    (r'.*/document/.*basis.*(txt|asc)', re.I, ('Text document',                 'INFO'    )),
+    (r'.*/document/.*basis.*\.pdf',     re.I, ('PDF document',                  'INFO'    )),
+    (r'.*/document/.*sis(|_.*)\.[^L].*',re.I, ('PDS3 Archive Description',      'INFO'    )), # contains "sis_" or "sis.", but not "basis"
     (r'.*/document/.*\.(txt|asc)',      re.I, ('Text document',                 'INFO'    )),
     (r'.*/document(/\w+)*(|/)',         re.I, ('Documentation',                 'INFODIR' )),
     (r'.*/document/.*\.(gif|jpg|jpeg|tif|tiff|png)',
