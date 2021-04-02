@@ -182,7 +182,7 @@ class TestPdsFileBlackBox:
             ('metadata/COVIMS_0xxx/COVIMS_0001',
              (
                 'Cassini VIMS metadata 1999-01-10 to 2000-09-18 (SC clock 1294638283-1347975444)',
-                'VOLUME', '1.2', '2021-01-25', []
+                'VOLUME', '1.2', '2020-10-13', []
              )),
         ]
     )
