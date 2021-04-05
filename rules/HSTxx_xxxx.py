@@ -73,6 +73,10 @@ associations_to_metadata = translator.TranslatorByRegex([
     (r'.*/(HST.._....)(|_.*)/(HST.._....)/DATA',                    0,  r'metadata/\1/\3'),
 ])
 
+associations_to_documents = translator.TranslatorByRegex([
+    (r'volumes/(HST.x_xxxx).*',                                     0, r'documents/\1/*'),
+])
+
 ####################################################################################################################################
 # VIEW_OPTIONS (grid_view_allowed, multipage_view_allowed, continuous_view_allowed)
 ####################################################################################################################################
@@ -183,9 +187,10 @@ class HSTxx_xxxx(pdsfile.PdsFile):
     VIEWABLES = {'default': default_viewables}
 
     ASSOCIATIONS = pdsfile.PdsFile.ASSOCIATIONS.copy()
-    ASSOCIATIONS['volumes']  += associations_to_volumes
-    ASSOCIATIONS['previews'] += associations_to_previews
-    ASSOCIATIONS['metadata'] += associations_to_metadata
+    ASSOCIATIONS['volumes']   += associations_to_volumes
+    ASSOCIATIONS['previews']  += associations_to_previews
+    ASSOCIATIONS['metadata']  += associations_to_metadata
+    ASSOCIATIONS['documents'] += associations_to_documents
 
     FILENAME_KEYLEN = 9     # trim off suffixes
 

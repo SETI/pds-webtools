@@ -11,29 +11,31 @@ import re
 ####################################################################################################################################
 
 description_and_icon_by_regex = translator.TranslatorByRegex([
-    (r'volumes/.*/data/.*/N[0-9_]+\.IMG',                       0, ('Narrow-angle image, VICAR',     'IMAGE'   )),
-    (r'volumes/.*/data/.*/W[0-9_]+\.IMG',                       0, ('Wide-angle image, VICAR',       'IMAGE'   )),
-    (r'volumes/.*/data/.*/extras(/\w+)*(|/)',                   0, ('Preview image collection',      'BROWDIR' )),
-    (r'volumes/.*/data/.*/extras/.*\.(jpeg|jpeg_small|tiff)',   0, ('Preview image',                 'BROWSE'  )),
-    (r'volumes/.*/COISS_0011/document/.*/[0-9]+\.[0-9]+(|/)',   0, ('Calibration report',            'INFODIR' )),
-    (r'volumes/.*/data(|/\w*)',                                 0, ('Images grouped by SC clock',    'IMAGEDIR')),
-    (r'calibrated/.*_calib\.img',                               0, ('Calibrated image, VICAR',       'IMAGE'   )),
-    (r'calibrated/.*/data(|/\w+)',                              0, ('Calibrated images by SC clock', 'IMAGEDIR')),
-    (r'calibrated/\w+(|/\w+)',                                  0, ('Calibrated image collection',   'IMAGEDIR')),
-    (r'.*/thumbnail(/\w+)*',                                    0, ('Small browse images',           'BROWDIR' )),
-    (r'.*/thumbnail/.*\.(gif|jpg|jpeg|jpeg_small|tif|tiff|png)',
-                                                                0, ('Small browse image',            'BROWSE'  )),
-    (r'.*/(tiff|full)(/\w+)*',                                  0, ('Full-size browse images',       'BROWDIR' )),
-    (r'.*/(tiff|full)/.*\.(tif|tiff|png)',                      0, ('Full-size browse image',        'BROWSE'  )),
-    (r'volumes/COISS_0xxx.*/COISS_0011/document/report',        0, ('&#11013; <b>ISS Calibration Report</b>',
-                                                                                                     'INFO')),
+    (r'volumes/.*/data/.*/N[0-9_]+\.IMG',                        0, ('Narrow-angle image, VICAR',      'IMAGE'   )),
+    (r'volumes/.*/data/.*/W[0-9_]+\.IMG',                        0, ('Wide-angle image, VICAR',        'IMAGE'   )),
+    (r'volumes/.*/data/.*/extras(/\w+)*(|/)',                    0, ('Preview image collection',       'BROWDIR' )),
+    (r'volumes/.*/data/.*/extras/.*\.(jpeg|jpeg_small|tiff)',    0, ('Preview image',                  'BROWSE'  )),
+    (r'volumes/.*/COISS_0011/document/.*/[0-9]+\.[0-9]+(|/)',    0, ('Calibration report',             'INFODIR' )),
+    (r'volumes/.*/data(|/\w*)',                                  0, ('Images grouped by SC clock',     'IMAGEDIR')),
+    (r'calibrated/.*_calib\.img',                                0, ('Calibrated image, VICAR',        'IMAGE'   )),
+    (r'calibrated/.*/data(|/\w+)',                               0, ('Calibrated images by SC clock',  'IMAGEDIR')),
+    (r'calibrated/\w+(|/\w+)',                                   0, ('Calibrated image collection',    'IMAGEDIR')),
+    (r'.*/thumbnail(/\w+)*',                                     0, ('Small browse images',            'BROWDIR' )),
+    (r'.*/thumbnail/.*\.(gif|jpg|jpeg|jpeg_small|tif|tiff|png)', 0, ('Small browse image',             'BROWSE'  )),
+    (r'.*/(tiff|full)(/\w+)*',                                   0, ('Full-size browse images',        'BROWDIR' )),
+    (r'.*/(tiff|full)/.*\.(tif|tiff|png)',                       0, ('Full-size browse image',         'BROWSE'  )),
+    (r'volumes/COISS_0xxx.*/COISS_0011/document/report',         0, ('&#11013; <b>ISS Calibration Report</b>',
+                                                                                                       'INFO')),
     (r'(volumes/COISS_0xxx.*/COISS_0011/document/report/index.html)', 0,
             ('&#11013; <b>CLICK "index.html"</b> to view the ISS Calibration Report', 'INFO')),
     (r'volumes/COISS_0xxx.*/COISS_0011/document/.*user_guide.*\.pdf',
-                                                                0, ('&#11013; <b>ISS User Guide</b>','INFO')),
-    (r'volumes/COISS_0xxx.*/COISS_0011/extras',                 0, ('CISSCAL calibration software',  'CODE')),
-    (r'volumes/COISS_0xxx.*/COISS_0011/extras/cisscal',         0, ('CISSCAL source code (IDL)',     'CODE')),
-    (r'volumes/COISS_0xxx.*/COISS_0011/extras/cisscal\.tar\.gz',0, ('CISSCAL source code (download)', 'TARBALL')),
+                                                                 0, ('&#11013; <b>ISS User Guide</b>', 'INFO')),
+    (r'volumes/COISS_0xxx.*/COISS_0011/extras',                  0, ('CISSCAL calibration software',   'CODE')),
+    (r'volumes/COISS_0xxx.*/COISS_0011/extras/cisscal',          0, ('CISSCAL source code (IDL)',      'CODE')),
+    (r'volumes/COISS_0xxx.*/COISS_0011/extras/cisscal\.tar\.gz', 0, ('CISSCAL source code (download)', 'TARBALL')),
+    (r'documents/COISS_xxxx/CISSCAL-Users-Guide.pdf',            0, ("CISSCAL User's Guide",           'INFO')),
+    (r'documents/COISS_xxxx/VICAR-File-Format.pdf',              0, ('VICAR file format description',  'INFO')),
+    (r'documents/COISS_xxxx/VICAR-Home-Page-at-JPL.link',        0, ('External website link',          'LINK')),
 ])
 
 ####################################################################################################################################
@@ -173,11 +175,15 @@ associations_to_metadata = translator.TranslatorByRegex([
 ])
 
 associations_to_documents = translator.TranslatorByRegex([
-    (r'(volumes|calibrated)/COISS_[12]xxx/COISS_.....*', 0,
+    (r'(volumes|calibrated)/COISS_[012]xxx/COISS_.....*', 0,
             [r'volumes/COISS_0xxx/COISS_0011/document/report',
              r'volumes/COISS_0xxx/COISS_0011/document/iss_data_user_guide*.pdf',
              r'volumes/COISS_0xxx/COISS_0011/extras',
+             r'documents/COISS_xxxx/*',
             ]),
+    (r'volumes/COISS_[012]xxx.*', 0,
+            r'documents/COISS_xxxx/*'),
+
 ])
 
 ####################################################################################################################################
@@ -361,7 +367,7 @@ opus_id_to_primary_logical_path = translator.TranslatorByRegex([
 
 class COISS_xxxx(pdsfile.PdsFile):
 
-    pdsfile.PdsFile.VOLSET_TRANSLATOR = translator.TranslatorByRegex([('COISS_[0123]xxx', re.I, 'COISS_xxxx')]) + \
+    pdsfile.PdsFile.VOLSET_TRANSLATOR = translator.TranslatorByRegex([('COISS_[0123x]xxx', re.I, 'COISS_xxxx')]) + \
                                         pdsfile.PdsFile.VOLSET_TRANSLATOR
 
     DESCRIPTION_AND_ICON = description_and_icon_by_regex + pdsfile.PdsFile.DESCRIPTION_AND_ICON

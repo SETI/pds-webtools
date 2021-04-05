@@ -27,9 +27,9 @@ description_and_icon_by_regex = translator.TranslatorByRegex([
     (r'volumes/.*/EXTRAS/CUBE_OVERVIEW/RING_POLAR',        0, ('JPEGs of synthesized ring maps',    'BROWDIR')),
 
     (r'volumes/COCIRS_[56].*\.PNG',    0, ('Browse diagram',                     'BROWSE' )),
-    (r'diagrams/COCIRS_[56].*\.png',   0, ('Observation diagram',                'BROWSE' )),
+    (r'diagrams/COCIRS_[56].*\.png',   0, ('Observation diagram',                'DIAGRAM' )),
     (r'volumes/COCIRS_[56].*/BROWSE',  0, ('Observation diagrams',               'BROWDIR')),
-    (r'diagrams/COCIRS_[56].*/BROWSE', 0, ('Observation diagrams',               'BROWDIR')),
+    (r'diagrams/COCIRS_[56].*/BROWSE', 0, ('Observation diagrams',               'DIAGDIR')),
 
     (r'volumes/.*/FRV\w+\.(DAT|VAR)',  0, ('White light fringe voltages',        'DATA')),
     (r'volumes/.*/DIAG\w+\.DAT',       0, ('Diagnostic data',                    'DATA')),
@@ -380,6 +380,10 @@ associations_to_diagrams = translator.TranslatorByRegex([
 associations_to_documents = translator.TranslatorByRegex([
     (r'(volumes/COCIRS_[01]xxx.*/COCIRS_[01]...).*', 0,
             r'\1/DOCUMENT/CIRS-USER-GUIDE.PDF'),
+    (r'volumes/COCIRS_[01]xxx[^/]*', 0,
+            r'volumes/COCIRS_1xxx/COCIRS_1709/DOCUMENT/CIRS-USER-GUIDE.PDF'),
+    (r'(volumes|diagrams)/COCIRS_[56]xxx.*', 0,
+            r'documents/COCIRS_xxxx/CIRS-Diagram-Interpretation-Guide.txt'),
 ])
 
 ####################################################################################################################################
@@ -654,7 +658,7 @@ data_set_id = translator.TranslatorByRegex([
 
 class COCIRS_xxxx(pdsfile.PdsFile):
 
-    pdsfile.PdsFile.VOLSET_TRANSLATOR = translator.TranslatorByRegex([('COCIRS_[0156]xxx', re.I, 'COCIRS_xxxx')]) + \
+    pdsfile.PdsFile.VOLSET_TRANSLATOR = translator.TranslatorByRegex([('COCIRS_[0156x]xxx', re.I, 'COCIRS_xxxx')]) + \
                                         pdsfile.PdsFile.VOLSET_TRANSLATOR
 
     DESCRIPTION_AND_ICON = description_and_icon_by_regex + pdsfile.PdsFile.DESCRIPTION_AND_ICON

@@ -92,6 +92,21 @@ associations_to_metadata = translator.TranslatorByRegex([
             ]),
 ])
 
+associations_to_documents = translator.TranslatorByRegex([
+        (r'(volumes/COVIMS_0xxx.*/COVIMS_0...).*', 0,
+                [r'volumes/\1/catalog',
+                 r'volumes/\1/aareadme.txt',
+                 r'volumes/\1/errata.txt',
+                 r'volumes/\1/voldesc.cat',
+                 r'volumes/\1/document/*',
+                ]),
+
+    (r'volumes/COVIMS_0xxx.*', 0,
+            r'documents/COVIMS_0xxx/*'),
+    (r'previews/COVIMS_0xxx.*', 0,
+            r'documents/COVIMS_0xxx/VIMS-Preview-Interpretation-Guide.pdf'),
+])
+
 ####################################################################################################################################
 # VIEW_OPTIONS (grid_view_allowed, multipage_view_allowed, continuous_view_allowed)
 ####################################################################################################################################
@@ -262,9 +277,10 @@ class COVIMS_0xxx(pdsfile.PdsFile):
     VIEWABLES = {'default': default_viewables}
 
     ASSOCIATIONS = pdsfile.PdsFile.ASSOCIATIONS.copy()
-    ASSOCIATIONS['volumes']  += associations_to_volumes
-    ASSOCIATIONS['previews'] += associations_to_previews
-    ASSOCIATIONS['metadata'] += associations_to_metadata
+    ASSOCIATIONS['volumes']   += associations_to_volumes
+    ASSOCIATIONS['previews']  += associations_to_previews
+    ASSOCIATIONS['metadata']  += associations_to_metadata
+    ASSOCIATIONS['documents']  = associations_to_documents  # override, not addition, so "=" instead of "+="
 
     def FILENAME_KEYLEN(self):
         match = BASENAME_REGEX.match(self.basename)

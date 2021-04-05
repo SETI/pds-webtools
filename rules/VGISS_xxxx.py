@@ -25,6 +25,9 @@ description_and_icon_by_regex = translator.TranslatorByRegex([
     (r'volumes/.*_resloc\.tab',      re.I, ('ASCII Reseau table',                'TABLE'   )),
     (r'volumes/.*/MIPL/.*\.dat',     re.I, ('VICAR data file',                   'DATA'    )),
     (r'volumes/.*/DARKS/.*\.img',    re.I, ('Dark current image, VICAR',         'IMAGE'   )),
+
+    (r'volumes/.*/DOCUMENT/TUTORIAL.TXT',   0, ('&#11013; <b>Detailed tutorial</b> for this data set', 'INFO')),
+    (r'volumes/.*/DOCUMENT/PROCESSING.TXT', 0, ('&#11013; <b>Processing history</b> of this data set', 'INFO')),
 ])
 
 ####################################################################################################################################
@@ -303,6 +306,19 @@ associations_to_metadata = translator.TranslatorByRegex([
     (r'.*/(VGISS_.xxx)/(VGISS_....)/(DATA|BROWSE)',             0,  r'metadata/\1/\2'),
 ])
 
+associations_to_documents = translator.TranslatorByRegex([
+    (r'volumes/VGISS_.xxx.*', 0,
+        r'documents/VGISS_xxxx/*'),
+    (r'(volumes/VGISS_.xxx/VGISS_....).*', 0,
+        [r'\1/DOCUMENT/TUTORIAL.TXT',
+         r'\1/DOCUMENT/PROCESSING.TXT',
+        ]),
+    (r'volumes/(VGISS_.)xxx.*', 0,
+        [r'volumes/\1xxx/\g<1>201/DOCUMENT/TUTORIAL.TXT',
+         r'volumes/\1xxx/\g<1>201/DOCUMENT/PROCESSING.TXT',
+        ]),
+])
+
 ####################################################################################################################################
 # VIEW_OPTIONS (grid_view_allowed, multipage_view_allowed, continuous_view_allowed)
 ####################################################################################################################################
@@ -540,7 +556,7 @@ opus_id_to_primary_logical_path = translator.TranslatorByRegex([
 
 class VGISS_xxxx(pdsfile.PdsFile):
 
-    pdsfile.PdsFile.VOLSET_TRANSLATOR = translator.TranslatorByRegex([('VGISS_[5678]xxx', re.I, 'VGISS_xxxx')]) + \
+    pdsfile.PdsFile.VOLSET_TRANSLATOR = translator.TranslatorByRegex([('VGISS_[5678x]xxx', re.I, 'VGISS_xxxx')]) + \
                                         pdsfile.PdsFile.VOLSET_TRANSLATOR
 
     DESCRIPTION_AND_ICON = description_and_icon_by_regex + pdsfile.PdsFile.DESCRIPTION_AND_ICON
@@ -556,9 +572,10 @@ class VGISS_xxxx(pdsfile.PdsFile):
     OPUS_ID_TO_PRIMARY_LOGICAL_PATH = opus_id_to_primary_logical_path
 
     ASSOCIATIONS = pdsfile.PdsFile.ASSOCIATIONS.copy()
-    ASSOCIATIONS['volumes']  += associations_to_volumes
-    ASSOCIATIONS['previews'] += associations_to_previews
-    ASSOCIATIONS['metadata'] += associations_to_metadata
+    ASSOCIATIONS['volumes']   += associations_to_volumes
+    ASSOCIATIONS['previews']  += associations_to_previews
+    ASSOCIATIONS['metadata']  += associations_to_metadata
+    ASSOCIATIONS['documents'] += associations_to_documents
 
     VIEWABLES = {'default': default_viewables}
 
