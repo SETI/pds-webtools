@@ -317,6 +317,7 @@ ICON_FILENAME_VS_TYPE = {       # (priority, icon URL)
     'INFO'     : (21, 'document_info.png'),
     'INDEX'    : (31, 'document_index.png'),
     'CODE'     : (41, 'document_software.png'),
+    'LINK'     : (51, 'document_link.png'),
 
     'FOLDER'   : ( 4, 'folder_generic%s.png' ),
     'INFODIR'  : (24, 'folder_info%s.png'),
@@ -334,7 +335,7 @@ ICON_FILENAME_VS_TYPE = {       # (priority, icon URL)
     'DATADIR'  : (22, 'folder_binary%s.png'),
     'BROWDIR'   :(52, 'folder_previews%s.png'),
     'GEOMDIR'  : (62, 'folder_geometry%s.png'),
-    'DIAGDIR'  : (53, 'folder_geometry%s.png'),
+    'DIAGDIR'  : (53, 'folder_diagrams%s.png'),
 
     'CHECKSUM' : (90, 'document_checksums.png'),
     'TARBALL'  : (91, 'document_archive.png'),
