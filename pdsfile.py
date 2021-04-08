@@ -119,11 +119,17 @@ DEFAULT_HIGH_LEVEL_ICONS = {
 }
 
 # CATEGORIES contains the name of every subdirectory of holdings/
-CATEGORIES = set()
+CATEGORY_LIST = []
 for checksums in ('', 'checksums-'):
     for archives in ('', 'archives-'):
         for voltype in VOLTYPES:
-            CATEGORIES.add(checksums + archives + voltype)
+            CATEGORY_LIST.append(checksums + archives + voltype)
+
+CATEGORY_LIST.remove('checksums-documents')
+CATEGORY_LIST.remove('archives-documents')
+CATEGORY_LIST.remove('checksums-archives-documents')
+
+CATEGORIES = set(CATEGORY_LIST)
 
 # Extra description files that can appear in volset directories
 EXTRA_README_BASENAMES = ('AAREADME.txt', 'AAREADME.pdf')
@@ -147,6 +153,7 @@ def set_logger(logger):
 _GLOB_CACHE_SIZE = 200
 _PATH_EXISTS_CACHE_SIZE = 200
 SHELVES_ONLY = False
+
 FS_IS_CASE_INSENSITIVE = True
 # The above just a guess until preload. Certain unexpected behavior can arise
 # when the file system is case-insensitive, such as glob.glob matching files
@@ -157,15 +164,12 @@ FS_IS_CASE_INSENSITIVE = True
 
 def use_shelves_only(status=True):
     """Call before preload(). Status=True to identify files based on their
-    presence in the infoshelf files rather than searching the holdings directory
-    and it subdirectories."""
+    presence in the infoshelf files first. Search the file system only if a
+    shelf is missing."""
 
-    global SHELVES_ONLY, FS_IS_CASE_INSENSITIVE
+    global SHELVES_ONLY
 
     SHELVES_ONLY = status
-
-    if SHELVES_ONLY:
-        FS_IS_CASE_INSENSITIVE = False
 
 ################################################################################
 # How to handle missing shelf files
@@ -308,7 +312,7 @@ def preload(holdings_list, port=0, clear=False, force_reload=False):
             if k < PRELOAD_TRIES - 1:
                 if LOGGER:
                     LOGGER.warn(('Failed to connect PdsFile Memcache [%s]; ' +
-                                   'trying again in %d sec') %
+                                 'trying again in %d sec') %
                                   (MEMCACHE_PORT, 2**k))
                 time.sleep(2.**k)       # try then wait 1 sec, then 2 sec
 
@@ -326,10 +330,9 @@ def preload(holdings_list, port=0, clear=False, force_reload=False):
 
     # Clear if necessary
     if clear:
-        CACHE.clear(block=True)     # For a MemcachedCache, this will pause for
-                                    # any other thread's block, then clear, and
-                                    # retain the block until the preload is
-                                    # finished.
+        CACHE.clear(block=True) # For a MemcachedCache, this will pause for any
+                                # other thread's block, then clear, and retain
+                                # the block until the preload is finished.
 
     # Define default caching based on whether MemCache is active
     if MEMCACHE_PORT == 0:
@@ -383,38 +386,28 @@ def preload(holdings_list, port=0, clear=False, force_reload=False):
     def _preload_dir(pdsdir):
         if not pdsdir.isdir: return
 
-        if LOGGER:
-
-            # If this is a category-level dir (just below holdings/), log an
-            # "info" message
-            if not pdsdir.volset:
+        # Log category directories as info
+        if pdsdir.is_category_dir:
+            if LOGGER:
                 LOGGER.info('Pre-loading: ' + pdsdir.abspath)
 
-            # Otherwise, log a "debug" message
-            else:
+        # Log volsets as debug
+        elif pdsdir.is_volset:
+            if LOGGER:
                 LOGGER.debug('Pre-loading: ' + pdsdir.abspath)
+
+        # Don't go deeper
+        else:
+            return
 
         # Preloaded dirs are permanent
         pdsdir.permanent = True
 
-        if pdsdir.volname:
-            return                          # don't go deeper than volume name
-
+        # Make recursive calls and cache
         for basename in pdsdir.childnames:
-
-            if basename.endswith('.txt') or basename.endswith('.tar.gz'):
-                lifetime = DEFAULT_FILE_CACHE_LIFETIME
-                recursive = False
-            else:
-                lifetime = 0
-                recursive = True
-
             try:
-                child = pdsdir.child(basename, fix_case=False,
-                                     caching='all', lifetime=lifetime)
-                if recursive:
-                    _preload_dir(child)
-
+                child = pdsdir.child(basename, fix_case=False, lifetime=0)
+                _preload_dir(child)
             except ValueError:              # Skip out-of-place files
                 pdsdir._childnames_filled.remove(basename)
 
@@ -427,29 +420,23 @@ def preload(holdings_list, port=0, clear=False, force_reload=False):
         # multiple physical directories. This makes it possible for our data
         # sets to exist on multiple physical drives in a way that is invisible
         # to the user.
-        for category in CATEGORIES:
+        for category in CATEGORY_LIST:
             CACHE.set(category, PdsFile.new_merged_dir(category), lifetime=0)
 
         # Initialize RANKS, VOLS and category list
-        categories = []     # order counts below!
-        for checksums_ in ('', 'checksums-'):
-          for archives_ in ('', 'archives-'):
-            for voltype in VOLTYPES:
-                category = checksums_ + archives_ + voltype
-                categories.append(category)
+        for category in CATEGORY_LIST:
+          category_ = category + '/'
+          key = '$RANKS-' + category_
+          try:
+              _ = CACHE[key]
+          except KeyError:
+              CACHE.set(key, {}, lifetime=0)
 
-                category_ = category + '/'
-                key = '$RANKS-' + category_
-                try:
-                    _ = CACHE[key]
-                except KeyError:
-                    CACHE.set(key, {}, lifetime=0)
-
-                key = '$VOLS-'  + category_
-                try:
-                    _ = CACHE[key]
-                except KeyError:
-                    CACHE.set(key, {}, lifetime=0)
+          key = '$VOLS-'  + category_
+          try:
+              _ = CACHE[key]
+          except KeyError:
+              CACHE.set(key, {}, lifetime=0)
 
         # Cache all of the top-level PdsFile directories
         for holdings in holdings_list:
@@ -469,7 +456,7 @@ def preload(holdings_list, port=0, clear=False, force_reload=False):
             # Load directories starting from here
             holdings_ = holdings.rstrip('/') + '/'
 
-            for c in categories:
+            for c in CATEGORY_LIST:
                 category_abspath = holdings_ + c
                 if not PdsFile.os_path_exists(category_abspath):
                   if LOGGER:
@@ -497,15 +484,12 @@ def preload(holdings_list, port=0, clear=False, force_reload=False):
     # Determine if the file system is case-sensitive
     # If any physical volume is case-insensitive, then we treat the whole file
     # system as case-insensitive.
-    if SHELVES_ONLY:
-        FS_IS_CASE_INSENSITIVE = False
-    else:
-        FS_IS_CASE_INSENSITIVE = False
-        for holdings_dir in LOCAL_PRELOADED:
-            testfile = os.path.join(holdings_dir, 'VoLuMeS')
-            if os.path.exists(testfile):
-                FS_IS_CASE_INSENSITIVE = True
-                break
+    FS_IS_CASE_INSENSITIVE = False
+    for holdings_dir in LOCAL_PRELOADED:
+        testfile = holdings_dir.replace('/holdings', '/ShElVeS')
+        if os.path.exists(testfile):
+            FS_IS_CASE_INSENSITIVE = True
+            break
 
 def is_preloading():
     return CACHE.get_now('$PRELOADING')
@@ -533,7 +517,7 @@ def get_permanent_values(holdings_list, port):
         pause_caching()
 
         # For each category...
-        for category in CATEGORIES:
+        for category in CATEGORY_LIST:
 
             # Get the cached values
             _ = CACHE['$RANKS-' + category + '/']
@@ -636,7 +620,7 @@ def load_volume_info(holdings):
                 keys_without_dsids.append(parts[0])
 
             # Fill in the master dictionary
-            volinfo = (parts[1], parts[2], parts[3], parts[4], list(parts[5:]))
+            volinfo = (parts[1], parts[2], parts[3], parts[4], dsids)
             volinfo_dict[parts[0]] = volinfo
 
     # Update the list of data set IDs wherever appropriate
@@ -1052,18 +1036,6 @@ class PdsFile(object):
             return None
 
     @staticmethod
-    def _basenames_are_volsets(basenames):
-        """True if the majority of entries in the given list of basenames are
-        valid volset names."""
-
-        volsets = 0
-        for basename in basenames:
-            test = VOLSET_PLUS_REGEX.match(basename)
-            if test: volsets += 1
-
-        return volsets > len(basenames)//2
-
-    @staticmethod
     @functools.lru_cache(maxsize=_PATH_EXISTS_CACHE_SIZE)
     def os_path_exists(abspath, force_case_sensitive=False):
         """True if the given absolute path points to a file that exists; False
@@ -1077,6 +1049,9 @@ class PdsFile(object):
         system.
         """
 
+        if '/shelves/info/' in abspath:
+            return os.path.exists(abspath)
+
         if SHELVES_ONLY:
             try:
                 (shelf_abspath,
@@ -1086,10 +1061,13 @@ class PdsFile(object):
                     shelf = PdsFile._get_shelf(shelf_abspath,
                                                log_missing_file=False)
                     return (key in shelf)
-                else:       # Every shelf file has an entry with an empty key,
-                            # so this avoids an unnecessary open of the file.
-                    return True
-            except:
+                elif PdsFile.os_path_exists(shelf_abspath):
+                    return True     # Every shelf file has an entry with an
+                                    # empty key, so this avoids an unnecessary
+                                    # open of the file.
+                else:
+                    return False
+            except (ValueError, IndexError, IOError, OSError):
                 pass
 
             # Maybe it's associated with something else in the infoshelf tree
@@ -1097,11 +1075,11 @@ class PdsFile(object):
 
                 # Maybe there's an associated directory in the infoshelf tree
                 shelf_abspath = abspath.replace('/holdings/','/shelves/info/')
-                if os.path.exists(shelf_abspath):
+                if PdsFile.os_path_exists(shelf_abspath):
                     return True
 
                 # Maybe there's an associated shelf file in the infoshelf tree
-                if os.path.exists(shelf_abspath + '_info.pickle'):
+                if PdsFile.os_path_exists(shelf_abspath + '_info.pickle'):
                     return True
 
                 # Checksum files need special handling
@@ -1137,10 +1115,13 @@ class PdsFile(object):
                                                log_missing_file=False)
                     (_, _, _, checksum, _) = shelf[key]
                     return (checksum == '')
-                else:       # The blank key in a shelf is always a directory, so
-                            # this avoids an unnecessary open of the file.
-                    return True
-            except:
+                elif PdsFile.os_path_exists(shelf_abspath):
+                    return True     # Every shelf file has an entry with an
+                                    # empty key, so this avoids an unnecessary
+                                    # open of the file.
+                else:
+                    return False
+            except (ValueError, IndexError, IOError, OSError):
                 pass
 
             # Maybe it's associated with something else in the infoshelf tree
@@ -1168,7 +1149,7 @@ class PdsFile(object):
     def os_listdir(abspath):
         """Returns a list of the file basenames within a directory, given its
         absolute path. This replaces os.listdir() but might use infoshelf files
-        rather than the filesystem.
+        rather than the file system.
         """
 
         # Make sure there is no trailing slash
@@ -1205,8 +1186,6 @@ class PdsFile(object):
 
                 testpath = abspath.replace('/checksums-','/')
                 results = PdsFile.os_listdir(testpath)
-                if PdsFile._basenames_are_volsets(results):
-                    return [r for r in results]
 
                 for voltype in VOLTYPES:
                   if '-' + voltype in abspath:
@@ -1219,53 +1198,62 @@ class PdsFile(object):
 
             # Deal with checksums directories
             if '/holdings/checksums-' in abspath:
-                if abspath.endswith('.txt'):
+                if abspath.endswith('_md5.txt'):
                     return []
 
                 testpath = abspath.replace('/checksums-','/')
                 results = PdsFile.os_listdir(testpath)
-                if PdsFile._basenames_are_volsets(results):
-                    return [r for r in results]
 
-                for voltype in VOLTYPES:
-                  if '-' + voltype in abspath:
-                    if voltype == 'volumes':
-                        return [r + '_md5.txt' for r in results]
-                    else:
-                        return [r + '_' + voltype + '_md5.txt' for r in results]
+                after = abspath.rpartition('/holdings/checksums-')[-1]
+                parts = after.split('/')
+                if len(parts) == 1:         # category-level call
+                    return results
 
-                raise ValueError('Invalid abspath for os_listdir: ' + abspath)
+                voltype = parts[0]
+                if voltype == 'volumes':
+                    return [r + '_md5.txt' for r in results]
+                else:
+                    return [r + '_' + voltype + '_md5.txt' for r in results]
 
-            # Deal with archives directories
+            # Deal with archive directories
             if '/holdings/archives-' in abspath:
                 if abspath.endswith('.tar.gz'):
                     return []
 
                 testpath = abspath.replace('/archives-','/')
                 results = PdsFile.os_listdir(testpath)
-                for voltype in VOLTYPES:
-                  if '-' + voltype in abspath:
-                    if voltype == 'volumes':
-                        return [r + '.tar.gz' for r in results]
-                    else:
-                        return [r + '_' + voltype + '.tar.gz' for r in results]
 
-                raise ValueError('Invalid abspath for os_listdir: ' + abspath)
+                after = abspath.rpartition('/holdings/archives-')[-1]
+                parts = after.split('/')
+                if len(parts) == 1:         # category-level call
+                    return results
 
-            # Deal with other holdings directories
+                voltype = parts[0]
+                if voltype == 'volumes':
+                    return [r + '.tar.gz' for r in results]
+                else:
+                    return [r + '_' + voltype + '.tar.gz' for r in results]
+
+            # Deal with other holdings directories, e.g., holdings/volumes
             if '/holdings/' in abspath:
 
                 # Maybe there's an associated directory in the infoshelf tree
                 shelf_abspath = abspath.replace('/holdings/','/shelves/info/')
                 try:
-                    results = PdsFile.os_listdir(shelf_abspath)
-                except OSError:
+                    results = os.listdir(shelf_abspath)
+                except FileNotFoundError:
                     return []
 
                 if not results:
                     return []
 
+                after = abspath.rpartition('/holdings/')[-1]
+                parts = after.split('/')
+                if len(parts) == 1:         # category-level call
+                    return results
+
                 # Isolate unique volume names from shelf files
+                # This prevent duplicated results for _info.py and _info.pickle
                 filtered = []
                 for result in results:
                     parts = result.split('_info.')
@@ -1275,12 +1263,13 @@ class PdsFile(object):
                     if volname not in filtered:
                         filtered.append(volname)
 
-                if filtered:
-                    return filtered
-                else:                   # This handles infoshelf subdirs
-                    return results
+                # Check the actual file system for a volset-level AAREADME
+                aareadmes = []
+                for basename in EXTRA_README_BASENAMES:
+                    if os.path.exists(abspath + '/' + basename):
+                        aareadmes.append(basename)
 
-                raise ValueError('Invalid abspath for os_listdir: ' + abspath)
+                return aareadmes + filtered
 
         childnames = os.listdir(abspath)
         return [c for c in childnames
@@ -1298,19 +1287,46 @@ class PdsFile(object):
         """
 
         if not SHELVES_ONLY:
-            results = _clean_glob(abspath, force_case_sensitive)
-            return results
+            return _clean_glob(abspath, force_case_sensitive)
 
-        # Find the shelf file if any
+        # We can save a lot of trouble if there's no match pattern
+        if not _needs_glob(abspath):
+            if PdsFile.os_path_exists(abspath):
+                return [abspath]
+            else:
+                return []
+
+        # Find the shelf file(s) if any
         abspath = abspath.rstrip('/')
-        (pattern, key) = PdsFile.shelf_path_and_key_for_abspath(abspath, 'info')
+        try:
+            (pattern,
+             key) = PdsFile.shelf_path_and_key_for_abspath(abspath, 'info')
+        except ValueError:
+            # For a category-level holdings dir, this might still work
+            if '/holdings/' in abspath:
+                pattern = abspath.replace('/holdings/', '/shelves/info/')
+                key = None  # Below, None indicates that we handled this error
+            else:
+                pattern = ''
 
-        if _needs_glob(pattern):
+        if not pattern:
+            shelf_paths = []
+        elif _needs_glob(pattern):
             shelf_paths = _clean_glob(pattern)
         elif os.path.exists(pattern):
             shelf_paths = [pattern]
         else:
             shelf_paths = []
+
+        # If there are no exact infoshelf files, revert to the file system
+        if not shelf_paths:
+            return _clean_glob(abspath, force_case_sensitive)
+
+        # If the check for an exact shelf file failed, just convert the list
+        # of shelf/info directories back to holdings directories
+        if key is None:
+            return [p.replace('/shelves/info/', '/holdings/')
+                    for p in shelf_paths]
 
         # Gather the matching entries in each shelf
         abspaths = []
@@ -1363,7 +1379,8 @@ class PdsFile(object):
                 if key in shelf:
                     abspaths.append(root_ + key)
 
-        return abspaths
+        # Remove trailing slashes!
+        return [p.rstrip('/') for p in abspaths]
 
     ############################################################################
     # Properties
@@ -1710,23 +1727,29 @@ class PdsFile(object):
                     child_count -= 1
                     continue
 
-                (file_bytes, _,
-                 timestring, _, _) = self.shelf_lookup('info', volname)
+                try:
+                    (file_bytes, _,
+                     timestring, _, _) = self.shelf_lookup('info', volname)
+                except IOError:     # Shelf file for volname is missing--maybe
+                                    # it's not a volume name after all
+                    file_bytes = os.path.getsize(self.abspath)
+                    timestamp = os.path.getmtime(self.abspath)
+                    modtime = datetime.datetime.fromtimestamp(timestamp)
+                else:
+                    # Without this check, we get an error for empty directories
+                    if timestring == '' or file_bytes == 0: continue
 
-                # Without this check, we get an error for empty directories
-                if timestring == '' or file_bytes == 0: continue
+                    # Convert formatted time to datetime
+                    yr = int(timestring[ 0: 4])
+                    mo = int(timestring[ 5: 7])
+                    da = int(timestring[ 8:10])
+                    hr = int(timestring[11:13])
+                    mi = int(timestring[14:16])
+                    sc = int(timestring[17:19])
+                    ms = int(timestring[20:  ])
+                    modtime = datetime.datetime(yr, mo, da, hr, mi, sc, ms)
 
-                # Convert formatted time to datetime
-                yr = int(timestring[ 0: 4])
-                mo = int(timestring[ 5: 7])
-                da = int(timestring[ 8:10])
-                hr = int(timestring[11:13])
-                mi = int(timestring[14:16])
-                sc = int(timestring[17:19])
-                ms = int(timestring[20:  ])
-                modtime = datetime.datetime(yr, mo, da, hr, mi, sc, ms)
                 latest_modtime = max(modtime, latest_modtime)
-
                 total_bytes += file_bytes
 
             # If no modtimes were found. Shouldn't happen but worth checking.
@@ -3113,8 +3136,8 @@ class PdsFile(object):
 
         # Handle the special case of index rows
         if self.is_index and allow_index_row:
-            return self.child_of_index(basename,
-                                       flag=('=' if must_exist else ''))
+            flag = '=' if must_exist else ''
+            return self.child_of_index(basename, flag=flag)
 
         # Fix the case if necessary
         if fix_case:
@@ -3219,13 +3242,17 @@ class PdsFile(object):
             # is added to the child list of the merged parent.
 
             if self.abspath:
-                merged_parent = CACHE[self.logical_path.lower()]
-                childnames = merged_parent._childnames_filled
-                if basename not in childnames:
-                    merged_parent._childnames_filled.append(basename)
-                    merged_parent._childnames_filled.sort()
-                    CACHE.set(self.logical_path.lower(), merged_parent,
-                                                         lifetime=0)
+                try:
+                    merged_parent = CACHE[self.logical_path.lower()]
+                except KeyError:
+                    pass
+                else:
+                    childnames = merged_parent._childnames_filled
+                    if basename not in childnames:
+                        merged_parent._childnames_filled.append(basename)
+                        merged_parent._childnames_filled.sort()
+                        CACHE.set(self.logical_path.lower(), merged_parent,
+                                                             lifetime=0)
 
             return this._complete(must_exist, caching, lifetime)
 
@@ -3910,11 +3937,6 @@ class PdsFile(object):
                 rows = (rows,)
 
             row_range = (min(rows), max(rows)+1)
-
-            if SHELVES_ONLY and not os.path.exists(self.label_abspath):
-                raise IOError('Index rows unavailable in shelves-only mode: ' +
-                              self.abspath)
-
             table = pdstable.PdsTable(self.label_abspath, self.index_pdslabel,
                                       row_range=row_range)
             table_dicts = table.dicts_by_row()
@@ -3945,11 +3967,10 @@ class PdsFile(object):
         If the selected row is missing, the associated data file might still
         exist. In this case, it conducts a search for a data file assuming it
         is on the same volume and parallel to the other files in the index.
-
-        This function is not supported when using the SHELVES_ONLY option.
         """
 
-        # Internal function identifies the row_dict keys for filespec and volume
+        # Internal function identifies the row_dict keys for filespec,
+        # path_name (optional), and volume
         def get_keys(row_dict):
             filespec_key = ''
             for guess in pdstable.FILE_SPECIFICATION_COLUMN_NAMES:
@@ -3958,39 +3979,39 @@ class PdsFile(object):
                     break
 
             if not filespec_key:
-                return ('', '')
+                return ('', '', '')
 
             volume_key = ''
             for guess in pdstable.VOLUME_ID_COLUMN_NAMES:
                 if guess in row_dict:
                     volume_key = guess
 
-            return (volume_key, filespec_key)
+            if 'PATH_NAME' in row_dict:
+                path_key = 'PATH_NAME'
+            else:
+                path_key = ''
+
+            return (volume_key, path_key, filespec_key)
 
         # Begin active code...
 
         if not self.is_index_row:
             return ''
 
-        # This function is not supported with SHELVES_ONLY
-        if SHELVES_ONLY:
-            return ''
-
-        # If the row exists and not SHELVES_ONLY
+        # If the row exists
         if self.row_dicts:
             row_dict = self.row_dicts[0]
-            (volume_key, filespec_key) = get_keys(row_dict)
+            (volume_key, path_key, filespec_key) = get_keys(row_dict)
             if not filespec_key:
                 return ''
 
+            parts = [self.volset_abspath('volumes')]
             if volume_key:
-                parts = [self.volset_abspath('volumes'),
-                         row_dict[volume_key],
-                         row_dict[filespec_key]]
-            else:
-                parts = [self.volume_abspath('volumes'),
-                         row_dict[filespec_key]]
+                parts.append(row_dict[volume_key].strip('/'))
+            if path_key:
+                parts.append(row_dict[path_key].strip('/'))
 
+            parts.append(row_dict[filespec_key].strip('/'))
             return '/'.join(parts)
 
         # If the row doesn't exist, try the rows before it and after it, and
@@ -4223,11 +4244,15 @@ class PdsFile(object):
         if self.checksums_:
             return ''
 
+        path_if_exact = ''
         if self.archives_ and self.is_volset_dir:
-            return self.checksum_path_and_lskip()[0]
+            path_if_exact = self.checksum_path_and_lskip()[0]
 
         if self.is_volume_dir:
-            return self.checksum_path_and_lskip()[0]
+            path_if_exact = self.checksum_path_and_lskip()[0]
+
+        if PdsFile.os_path_exists(path_if_exact):
+            return path_if_exact
 
         return ''
 
@@ -4288,22 +4313,16 @@ class PdsFile(object):
         if self.checksums_ or self.archives_:
             return ''
 
-        if self.archives_ and self.is_volset_dir:
-            return self.checksum_path_and_lskip()[0]
-
-        if self.is_volume_dir:
-            return self.checksum_path_and_lskip()[0]
-
-        return ''
-
+        if self.interior:
+            return ''
 
         try:
-            path = self.archive_path_and_lskip()[0]
+            path_if_exact = self.archive_path_and_lskip()[0]
         except ValueError:
             return ''
 
-        if self.interior == '':
-            return path
+        if PdsFile.os_path_exists(path_if_exact):
+            return path_if_exact
 
         return ''
 
@@ -4493,36 +4512,10 @@ class PdsFile(object):
             try:
                 return PdsFile.SHELF_NULL_KEY_VALUES[shelf_path]
             except KeyError:
-                value = self.shelf_null_key_value(id, volname)
-                PdsFile.SHELF_NULL_KEY_VALUES[shelf_path] = value
-                return PdsFile.SHELF_NULL_KEY_VALUES[shelf_path]
+                pass
 
         shelf = PdsFile._get_shelf(shelf_path)
         return shelf[key]
-
-    def shelf_null_key_value(self, id='info', volname=''):
-        """This is a quick hack to read the second line of the .py file
-        instead of the shelf file. It speeds up the case of needing the size
-        of each volume."""
-
-        (shelf_path, key) = self.shelf_path_and_key(id, volname)
-        dict_path = shelf_path.rpartition('.')[0] + '.py'
-        try:
-            with open(dict_path, 'r', encoding='utf-8') as f:
-                rec = f.readline()
-                rec = f.readline()
-
-        except FileNotFoundError:
-            if LOGGER:
-                LOGGER.warn('Python file not found: ' + dict_path)
-
-            if SHELVES_REQUIRED:
-                raise
-
-            return (0, 0, '', '', (0,0))
-
-        value = rec.partition(':')[2][:-2]  # after ':', before ',\n'
-        return eval(value)
 
     @staticmethod
     def shelf_path_and_key_for_abspath(abspath, id='info'):
@@ -4552,7 +4545,7 @@ class PdsFile(object):
         # Otherwise, the shelf is associated with the volume
         else:
             parts = logical_path.split('/')
-            if len(parts) < 2:
+            if len(parts) < 3:
                 raise ValueError('Non-archive shelves require volume names: ' +
                                  logical_path)
 
@@ -5022,12 +5015,10 @@ class PdsFile(object):
 
     def associated_logical_paths(self, category, must_exist=True):
 
-
         abspaths = self.associated_abspaths(category, must_exist=must_exist)
         return PdsFile.logicals_for_abspaths(abspaths)
 
     def associated_pdsfiles(self, category, must_exist=True):
-
 
         abspaths = self.associated_abspaths(category, must_exist=must_exist)
         return PdsFile.pdsfiles_for_abspaths(abspaths)
@@ -5108,8 +5099,6 @@ class PdsFile(object):
             pdsf = self.associated_parallel(category)
             if pdsf and pdsf.abspath:
                 patterns = [pdsf.abspath]
-            else:
-                patterns = []
 
         abspaths = []
         for pattern in patterns:
@@ -5201,6 +5190,9 @@ class PdsFile(object):
         else:
             category = category.rstrip('/')
             voltype = category.rpartition('-')[-1]
+
+        if category not in CATEGORIES:
+            return None
 
         # Handle category-level parallel
         if self.is_category_dir:
@@ -5317,7 +5309,7 @@ from rules import *     # Data set-specific rules are implemented as subclasses
 # preload() replaces these.
 ################################################################################
 
-for category in CATEGORIES:
+for category in CATEGORY_LIST:
     if category not in CACHE:
         CACHE.set(category, PdsFile.new_merged_dir(category), lifetime=0)
 
@@ -5350,6 +5342,7 @@ def _clean_glob(pattern, force_case_sensitive=False):
             result = repair_case(result)
             if fnmatch.fnmatchcase(result, pattern):
                 filtered_results.append(result)
+
         return filtered_results
 
     else:

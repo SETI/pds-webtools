@@ -99,6 +99,12 @@ associations_to_volumes = translator.TranslatorByRegex([
              r'volumes/\1/BROWSE'
             ]),
     (r'.*/(VGISS_.)999.*', 0, r'volumes/\1xxx'),
+    (r'documents/VGISS_xxxx.*', 0,
+            [r'volumes/VGISS_5xxx',
+             r'volumes/VGISS_6xxx',
+             r'volumes/VGISS_7xxx',
+             r'volumes/VGISS_8xxx',
+            ]),
 
 # These associations are very slow to execute, not important.
 #     # VG_0006 to VG_0008, selected Jupiter

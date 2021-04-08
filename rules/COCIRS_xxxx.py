@@ -199,6 +199,11 @@ associations_to_volumes = translator.TranslatorByRegex([
     (r'\w+/(COCIRS_[56]xxx/COCIRS_[56]...)/BROWSE(|/\w+)', 0,
             r'volumes/\1/DATA'),
 
+    (r'documents/COCIRS_xxxx.*', 0,
+            [r'volumes/COCIRS_5xxx',
+             r'volumes/COCIRS_6xxx',
+            ]),
+
     # COCIRS_[01]xxx, previews to volumes/DATA and volumes/EXTRAS
     (r'previews/(COCIRS_[01]xxx.*/COCIRS_....)/DATA/CUBE/(\w+/\w+_F[134]_[^_\.]+).*', 0,
             [r'volumes/\1/DATA/CUBE/\2.*',

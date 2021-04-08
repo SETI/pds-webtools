@@ -253,32 +253,36 @@ DESCRIPTION_AND_ICON = translator.TranslatorByRegex([
 ####################################################################################################################################
 
 ASSOCIATIONS = {
-    'volumes'   : translator.NullTranslator(),
+    'volumes'   : translator.TranslatorByRegex([
+                        (r'documents/([A-Z][A-Z0-9x]{1,5}_....).*', 0, r'volumes/\1'),
+                    ]),
     'previews'  : translator.NullTranslator(),
     'calibrated': translator.NullTranslator(),
     'diagrams'  : translator.NullTranslator(),
     'metadata'  : translator.TranslatorByRegex([
-        (r'metadata/(\w+)/.*', re.I, r'metadata/\1/AAREADME.txt')]),
-
+                        (r'metadata/([\w\.]+)/.*', 0, r'metadata/\1/AAREADME.txt'),
+                    ]),
     'documents' : translator.TranslatorByRegex([
-        (r'volumes/([\w\.]+/\w+)(|/.*)', 0,
-                [r'volumes/\1/document',
-                 r'volumes/\1/catalog',
-                 r'volumes/\1/aareadme.txt',
-                 r'volumes/\1/errata.txt',
-                 r'volumes/\1/voldesc.cat',
-                 r'volumes/\1/DOCUMENT',
-                 r'volumes/\1/CATALOG',
-                 r'volumes/\1/AAREADME.TXT',
-                 r'volumes/\1/ERRATA.TXT',
-                 r'volumes/\1/VOLDESC.CAT',
-                 r'volumes/\1/VOLDESC.SFD',
-                ]),
-        (r'previews/(\w+)(|/.*)', 0,
-                [r'previews/\1/AAREADME.pdf',
-                 r'previews/\1/AAREADME.txt',
-                ]),
-        ]),
+                        (r'volumes/([A-Z][A-Z0-9x]{1,5}_....).*', 0,
+                            r'documents/\1/*'),
+                        (r'volumes/([\w\.]+/\w+)(|/.*)', 0,
+                            [r'volumes/\1/document',
+                             r'volumes/\1/catalog',
+                             r'volumes/\1/aareadme.txt',
+                             r'volumes/\1/errata.txt',
+                             r'volumes/\1/voldesc.cat',
+                             r'volumes/\1/DOCUMENT',
+                             r'volumes/\1/CATALOG',
+                             r'volumes/\1/AAREADME.TXT',
+                             r'volumes/\1/ERRATA.TXT',
+                             r'volumes/\1/VOLDESC.CAT',
+                             r'volumes/\1/VOLDESC.SFD',
+                            ]),
+                        (r'previews/([\w\.]+)(|/.*)', 0,
+                            [r'previews/\1/AAREADME.pdf',
+                             r'previews/\1/AAREADME.txt',
+                            ]),
+                    ]),
 }
 
 ####################################################################################################################################

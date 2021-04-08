@@ -87,6 +87,11 @@ associations_to_volumes = translator.TranslatorByRegex([
             r'volumes/\1/data'),
     (r'.*/(COISS_[12])999.*', 0,
             r'volumes/\1xxx'),
+    (r'documents/COISS_xxxx.*', 0,
+            [r'volumes/COISS_0xxx',
+             r'volumes/COISS_1xxx',
+             r'volumes/COISS_2xxx',
+            ]),
 
     # COISS_3xxx
     (r'.*/(COISS_3xxx.*/COISS_3...)/(data|extras/\w+)/(images/\w+[A-Z]+)(|_[a-z]+)\..*', 0,
@@ -183,7 +188,6 @@ associations_to_documents = translator.TranslatorByRegex([
             ]),
     (r'volumes/COISS_[012]xxx.*', 0,
             r'documents/COISS_xxxx/*'),
-
 ])
 
 ####################################################################################################################################

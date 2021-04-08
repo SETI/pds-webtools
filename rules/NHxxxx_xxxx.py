@@ -151,6 +151,10 @@ associations_to_volumes = translator.TranslatorByRegex([
              r'volumes/\1\2/\3_1\4/DATA\5',
              r'volumes/\1\2/\3_2\4/data\5',
             ]),
+    (r'documents/NHxxxx_xxxx.*', 0,
+            [r'volumes/NHxxLO_xxxx',
+             r'volumes/NHxxMV_xxxx'
+            ]),
 ])
 
 associations_to_previews = translator.TranslatorByRegex([
