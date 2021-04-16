@@ -185,13 +185,13 @@ class TestPdsFileBlackBox:
         'input_path,expected',
         [
             ('diagrams/COCIRS_6xxx/COCIRS_6004/BROWSE/SATURN/POI1004010000_FP1_small.jpg',
-             'holdings/diagrams/COCIRS_6xxx/COCIRS_6004/BROWSE/SATURN/POI1004010000_FP1_small.jpg'),
-            ('volumes/COISS_1xxx/COISS_1001', 'holdings/volumes/COISS_1xxx/COISS_1001')
+             '/holdings/diagrams/COCIRS_6xxx/COCIRS_6004/BROWSE/SATURN/POI1004010000_FP1_small.jpg'),
+            ('volumes/COISS_1xxx/COISS_1001', '/holdings/volumes/COISS_1xxx/COISS_1001')
         ]
     )
     def test_html_path(self, input_path, expected):
         target_pdsfile = instantiate_target_pdsfile(input_path)
-        expected = 'holdings/' + input_path if expected is None else expected
+        expected = '/holdings/' + input_path if expected is None else expected
         assert target_pdsfile.html_path == expected
 
     @pytest.mark.parametrize(
@@ -270,8 +270,8 @@ class TestPdsFileBlackBox:
             ('volumes/COVIMS_8xxx', 'VOLDIR'),
             ('volumes/COVIMS_0xxx/COVIMS_0001', 'VOLUME'),
             ('metadata/COVIMS_0xxx/COVIMS_0001/COVIMS_0001_index.tab', 'INDEX'),
-            ('previews/COVIMS_0xxx', 'BROWDIR'),
-            ('previews/COVIMS_0xxx/COVIMS_0001', 'BROWDIR'),
+            ('previews/COVIMS_0xxx', 'IMAGEDIR'),
+            ('previews/COVIMS_0xxx/COVIMS_0001', 'IMAGEDIR'),
             ('previews/COVIMS_0xxx/COVIMS_0001/data1999010T054026_1999010T060958/v1294638283_1_thumb.png',
              'BROWSE'),
             ('metadata/COVIMS_0xxx/COVIMS_0001', 'INDEXDIR')
@@ -316,17 +316,17 @@ class TestPdsFileBlackBox:
             ('volumes/HSTIx_xxxx/HSTI1_1556/DATA/VISIT_01/IB4W01I5Q.lbl',
              [
                 'HST WFC3 images of the Pluto system    2010-04-24 to 2010-09-06',
-                'VOLUME'
+                None
              ]),
             ('previews/GO_0xxx/GO_0017/J0/OPNAV/C0346405900R_med.jpg',
              [
                 'Galileo Jupiter preview image 1996-06-03 to 1996-12-14 (SC clock 03464059-03740374)',
-                'VOLUME'
+                None
              ]),
             ('metadata/COVIMS_0xxx/COVIMS_0001',
              [
                 'Cassini VIMS metadata 1999-01-10 to 2000-09-18 (SC clock 1294638283-1347975444)',
-                'VOLUME'
+                None
              ])
         ]
     )
