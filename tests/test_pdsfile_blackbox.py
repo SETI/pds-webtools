@@ -381,18 +381,18 @@ class TestPdsFileBlackBox:
         [
             ('previews/HSTOx_xxxx/HSTO0_7308/DATA/VISIT_05/O43B05C1Q_small.jpg',
              [
-                 'holdings/previews/HSTOx_xxxx/HSTO0_7308/DATA/VISIT_05/O43B05C1Q_small.jpg',
-                 'holdings/previews/HSTOx_xxxx/HSTO0_7308/DATA/VISIT_05/O43B05C1Q_thumb.jpg',
-                 'holdings/previews/HSTOx_xxxx/HSTO0_7308/DATA/VISIT_05/O43B05C1Q_full.jpg',
-                 'holdings/previews/HSTOx_xxxx/HSTO0_7308/DATA/VISIT_05/O43B05C1Q_med.jpg',
+                 '/holdings/previews/HSTOx_xxxx/HSTO0_7308/DATA/VISIT_05/O43B05C1Q_small.jpg',
+                 '/holdings/previews/HSTOx_xxxx/HSTO0_7308/DATA/VISIT_05/O43B05C1Q_thumb.jpg',
+                 '/holdings/previews/HSTOx_xxxx/HSTO0_7308/DATA/VISIT_05/O43B05C1Q_full.jpg',
+                 '/holdings/previews/HSTOx_xxxx/HSTO0_7308/DATA/VISIT_05/O43B05C1Q_med.jpg',
              ]
             ),
             ('volumes/HSTOx_xxxx/HSTO0_7308/DATA/VISIT_05/O43B05C1Q.LBL',
              [
-                'holdings/previews/HSTOx_xxxx/HSTO0_7308/DATA/VISIT_05/O43B05C1Q_small.jpg',
-                'holdings/previews/HSTOx_xxxx/HSTO0_7308/DATA/VISIT_05/O43B05C1Q_thumb.jpg',
-                'holdings/previews/HSTOx_xxxx/HSTO0_7308/DATA/VISIT_05/O43B05C1Q_full.jpg',
-                'holdings/previews/HSTOx_xxxx/HSTO0_7308/DATA/VISIT_05/O43B05C1Q_med.jpg',
+                '/holdings/previews/HSTOx_xxxx/HSTO0_7308/DATA/VISIT_05/O43B05C1Q_small.jpg',
+                '/holdings/previews/HSTOx_xxxx/HSTO0_7308/DATA/VISIT_05/O43B05C1Q_thumb.jpg',
+                '/holdings/previews/HSTOx_xxxx/HSTO0_7308/DATA/VISIT_05/O43B05C1Q_full.jpg',
+                '/holdings/previews/HSTOx_xxxx/HSTO0_7308/DATA/VISIT_05/O43B05C1Q_med.jpg',
              ]
             ),
         ]
@@ -502,14 +502,10 @@ class TestPdsFileBlackBox:
     @pytest.mark.parametrize(
         'input_path,expected',
         [
-            ('archives-volumes/COCIRS_0xxx/COCIRS_0010.tar.gz',
-             'holdings/checksums-archives-volumes/COCIRS_0xxx_md5.txt'),
-            ('checksums-volumes/COCIRS_0xxx/COCIRS_0010_md5.txt', ''),
-            ('volumes/COCIRS_0xxx/COCIRS_0012/DATA/NAV_DATA/GEO00120100.DAT',
-             ''),
+            ('volumes/COCIRS_0xxx/COCIRS_0012/DATA/NAV_DATA/GEO00120100.DAT', ''),
             ('volumes/COCIRS_0xxx/COCIRS_0012/CALIB', ''),
             ('volumes/COCIRS_0xxx/COCIRS_0012',
-             'holdings/checksums-volumes/COCIRS_0xxx/COCIRS_0012_md5.txt')
+             '/holdings/checksums-volumes/COCIRS_0xxx/COCIRS_0012_md5.txt')
         ]
     )
     def test_exact_checksum_url(self, input_path, expected):
