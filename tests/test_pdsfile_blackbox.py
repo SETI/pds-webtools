@@ -606,6 +606,102 @@ class TestPdsFileBlackBox:
         res = target_pdsfile.infoshelf_path_and_key
         assert res == expected
 
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('volumes/HSTNx_xxxx/HSTN0_7176/DATA/VISIT_01/N4BI01L4Q.lbl', False),
+            ('volumes/HSTNx_xxxx/HSTN0_7176', True)
+        ]
+    )
+    def test_is_volume_dir(self, input_path, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        res = target_pdsfile.is_volume_dir
+        assert res == expected
+
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('checksums-volumes/COCIRS_0xxx/COCIRS_0010_md5.txt', True),
+            ('archives-volumes/COCIRS_0xxx/COCIRS_0010.tar.gz', True),
+            ('volumes/HSTNx_xxxx/HSTN0_7176', False)
+        ]
+    )
+    def test_is_volume_file(self, input_path, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        res = target_pdsfile.is_volume_file
+        assert res == expected
+
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('checksums-volumes/COCIRS_0xxx/COCIRS_0010_md5.txt', True),
+            ('archives-volumes/COCIRS_0xxx/COCIRS_0010.tar.gz', True),
+            ('volumes/HSTNx_xxxx/HSTN0_7176', True),
+            ('volumes/HSTNx_xxxx/HSTN0_7176/DATA/VISIT_01/N4BI01L4Q.lbl', False)
+        ]
+    )
+    def test_is_volume(self, input_path, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        res = target_pdsfile.is_volume
+        assert res == expected
+
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('checksums-volumes/COCIRS_0xxx', True),
+            ('archives-volumes/COCIRS_0xxx', True),
+            ('volumes/HSTNx_xxxx', True),
+            ('volumes/HSTNx_xxxx/HSTN0_7176', False)
+        ]
+    )
+    def test_is_volset_dir(self, input_path, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        res = target_pdsfile.is_volset_dir
+        assert res == expected
+
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('checksums-volumes/COCIRS_0xxx/COCIRS_0010_md5.txt', False),
+            ('archives-volumes/COCIRS_0xxx/COCIRS_0010.tar.gz', False),
+            ('volumes/HSTNx_xxxx', False),
+            ('volumes/HSTNx_xxxx/HSTN0_7176', False),
+            ('volumes/COISS_1xxx/AAREADME.txt', True),
+        ]
+    )
+    def test_is_volset_file(self, input_path, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        res = target_pdsfile.is_volset_file
+        assert res == expected
+
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('checksums-volumes/COCIRS_0xxx', True),
+            ('archives-volumes/COCIRS_0xxx', True),
+            ('volumes/HSTNx_xxxx', True),
+            ('volumes/HSTNx_xxxx/HSTN0_7176', False),
+            ('archives-volumes/COCIRS_0xxx/COCIRS_0010.tar.gz', False),
+            ('volumes/COISS_1xxx/AAREADME.txt', True),
+        ]
+    )
+    def test_is_volset(self, input_path, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        res = target_pdsfile.is_volset
+        assert res == expected
+
+    @pytest.mark.parametrize(
+        'input_path,expected',
+        [
+            ('volumes/HSTNx_xxxx', False),
+            ('volumes', True)
+        ]
+    )
+    def test_is_category_dir(self, input_path, expected):
+        target_pdsfile = instantiate_target_pdsfile(input_path)
+        res = target_pdsfile.is_category_dir
+        assert res == expected
+
     ############################################################################
     # Test for functions
     ############################################################################
@@ -2192,20 +2288,6 @@ class TestPdsFileBlackBox:
     @pytest.mark.parametrize(
         'input_path,expected',
         [
-            ('volumes/HSTNx_xxxx/HSTN0_7176/DATA/VISIT_01/N4BI01L4Q.lbl',
-             'volumes/HSTNx_xxxx/HSTN0_7176'),
-            ('volumes/HSTNx_xxxx/HSTN0_7176', 'volumes/HSTNx_xxxx/HSTN0_7176')
-        ]
-    )
-    def test_volume_pdsdir(self, input_path, expected):
-        target_pdsfile = instantiate_target_pdsfile(input_path)
-        res = target_pdsfile.volume_pdsdir()
-        assert isinstance(res, pdsfile.PdsFile)
-        assert res.logical_path == expected
-
-    @pytest.mark.parametrize(
-        'input_path,expected',
-        [
             ('volumes/NHSP_xxxx/NHSP_1000/DATA/CK/MERGED_NHPC_2006_V011.LBL',
              'volumes/NHSP_xxxx'),
         ]
@@ -2215,19 +2297,6 @@ class TestPdsFileBlackBox:
         res = target_pdsfile.volset_pdsfile()
         assert isinstance(res, pdsfile.PdsFile)
         assert res.logical_path == expected
-
-    @pytest.mark.parametrize(
-        'input_path,expected',
-        [
-            ('volumes/NHSP_xxxx/NHSP_1000/DATA/CK/MERGED_NHPC_2006_V011.LBL',
-             False),
-            ('volumes', True)
-        ]
-    )
-    def test_is_category_dir(self, input_path, expected):
-        target_pdsfile = instantiate_target_pdsfile(input_path)
-        res = target_pdsfile.is_category_dir()
-        assert res == expected
 
     @pytest.mark.parametrize(
         'input_path,expected',
