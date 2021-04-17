@@ -2356,8 +2356,6 @@ class TestPdsFileBlackBox:
              'U2NO0402T', '>', 'U2NO0402T'),
             ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
              'U2NO0401T', '=', 'U2NO0401T'),
-            ('metadata/HSTOx_xxxx/HSTO0_7308/HSTO0_7308x_index.tab',
-             'O43B06BTQ', '', 'O43B06BTQ'),
         ]
     )
     def test_find_selected_row_key(self, input_path, selection, flag, expected):
@@ -2410,10 +2408,7 @@ class TestPdsFileBlackBox:
         target_pdsfile = instantiate_target_pdsfile(input_path)
         index_row = target_pdsfile.child_of_index(selection, flag)
         res = index_row.data_abspath_associated_with_index_row()
-        if pdsfile.SHELVES_ONLY:
-            assert res == ''
-        else:
-            assert res == expected
+        assert res == expected
 
     ############################################################################
     # Test for checksum path associations
