@@ -502,6 +502,8 @@ class TestPdsFileBlackBox:
     @pytest.mark.parametrize(
         'input_path,expected',
         [
+            ('archives-volumes/COCIRS_0xxx',
+             '/holdings/checksums-archives-volumes/COCIRS_0xxx_md5.txt'),
             ('volumes/COCIRS_0xxx/COCIRS_0012/DATA/NAV_DATA/GEO00120100.DAT', ''),
             ('volumes/COCIRS_0xxx/COCIRS_0012/CALIB', ''),
             ('volumes/COCIRS_0xxx/COCIRS_0012',
@@ -2437,7 +2439,7 @@ class TestPdsFileBlackBox:
     @pytest.mark.parametrize(
         'input_path,expected',
         [
-            ('archives-volumes/COCIRS_0xxx/COCIRS_0010.tar.gz',
+            ('archives-volumes/COCIRS_0xxx',
              PDS_DATA_DIR + '/checksums-archives-volumes/COCIRS_0xxx_md5.txt'),
             ('volumes/COCIRS_0xxx/COCIRS_0010',
              PDS_DATA_DIR + '/checksums-volumes/COCIRS_0xxx/COCIRS_0010_md5.txt'),
