@@ -177,12 +177,12 @@ class TestPdsFileBlackBox:
             ('volumes/COISS_2xxx/COISS_2002/data/1460960653_1461048959/N1460960868_1.LBL',
              (
                 'Cassini ISS Saturn images 2004-04-18 to 2004-05-18 (SC clock 1460960653-1463538454)',
-                'VOLUME', '1.0', '2005-07-01', ['CO-S-ISSNA/ISSWA-2-EDR-V1.0']
+                None, '1.0', '2005-07-01', ['CO-S-ISSNA/ISSWA-2-EDR-V1.0']
              )),
             ('metadata/COVIMS_0xxx/COVIMS_0001',
              (
                 'Cassini VIMS metadata 1999-01-10 to 2000-09-18 (SC clock 1294638283-1347975444)',
-                'VOLUME', '1.2', '2020-10-13', []
+                None, '1.2', '2020-10-13', ['CO-E/V/J/S-VIMS-2-QUBE-V1.0']
              )),
         ]
     )
@@ -228,7 +228,7 @@ class TestPdsFileBlackBox:
         'input_path,expected',
         [
             ('volumes/NHxxMV_xxxx/NHLAMV_1001/data/20060321_000526/mc0_0005261846_0x536_eng_1.fit', 'image/fits'),
-            ('volumes/RPX_xxxx/RPX_0001/CALIB/F130LP.tab', 'text/plain'),
+            ('volumes/RPX_xxxx/RPX_0001/CALIB/F130LP.TAB', 'text/plain'),
             ('previews/HSTUx_xxxx/HSTU0_5167/DATA/VISIT_04/U2NO0401T_thumb.jpg',
              'image/jpg')
         ]
