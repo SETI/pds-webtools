@@ -4529,6 +4529,24 @@ class PdsFile(object):
             except KeyError:
                 pass
 
+            # Try the second line of the .py file; this is quicker than reading
+            # the whole .pickle file. This is useful because it avoids the need
+            # to open every info shelf file during preload.
+            if id == 'info':
+                py_path = shelf_path.replace('.pickle', '.py')
+                if LOGGER:
+                    LOGGER.debug('Retrieving key ""', py_path)
+
+                with open(py_path) as f:
+                    rec = f.readline()
+                    rec = f.readline()
+
+                # Format is "": (bytes, count, date, checksum, (0,0)),
+                parts = rec.partition(':')
+                values = eval(parts[2].strip()[:-1])
+                PdsFile.SHELF_NULL_KEY_VALUES[shelf_path] = values
+                return values
+
         shelf = PdsFile._get_shelf(shelf_path)
         return shelf[key]
 
