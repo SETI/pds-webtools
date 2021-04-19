@@ -107,7 +107,7 @@ class TestPdsFileBlackBox:
     @pytest.mark.parametrize(
         'input_path,expected',
         [
-            ('volumes/RPX_xxxx/RPX_0001/CALIB/F130LP.lbl', []),
+            ('volumes/RPX_xxxx/RPX_0001/CALIB/F130LP.LBL', []),
             ('previews/VGISS_5xxx/VGISS_5101/DATA/C13854XX',
              [
                 'C1385455_full.jpg', 'C1385455_med.jpg',
