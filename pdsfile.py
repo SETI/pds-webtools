@@ -5104,9 +5104,9 @@ class PdsFile(object):
                     pass
 
             # Remove duplicates
-            abspaths = [p for (k,p) in enumerate(abspaths)
-                        if p not in abspaths[:k]]
-            return abspaths
+            new_abspaths = [p for (k,p) in enumerate(new_abspaths)
+                        if p not in new_abspaths[:k]]
+            return new_abspaths
 
         # Handle archives by finding associated files in subcategory
         if category.startswith('archives-'):
@@ -5126,9 +5126,9 @@ class PdsFile(object):
                     pass
 
             # Remove duplicates
-            abspaths = [p for (k,p) in enumerate(abspaths)
-                        if p not in abspaths[:k]]
-            return abspaths
+            new_abspaths = [p for (k,p) in enumerate(new_abspaths)
+                        if p not in new_abspaths[:k]]
+            return new_abspaths
 
         # No more recursive calls...
 
