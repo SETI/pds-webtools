@@ -811,11 +811,11 @@ class TestPdsFileWhiteBox:
              ]),
         ]
     )
-    def test__associated_paths1(self, input_path, category, selection,
+    def test_associated_abspaths1(self, input_path, category, selection,
                                 flag, expected):
         target_pdsfile = instantiate_target_pdsfile(input_path)
         index_row = target_pdsfile.child_of_index(selection, flag)
-        res = index_row._associated_paths(
+        res = index_row.associated_abspaths(
             category=category)
         print(res)
         for path in res:
@@ -827,7 +827,10 @@ class TestPdsFileWhiteBox:
 
             ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
              'metadata',
-             PDS_DATA_DIR + '/metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab'),
+             [
+                PDS_DATA_DIR + '/metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
+                PDS_DATA_DIR + '/metadata/HSTUx_xxxx/AAREADME.txt'
+             ]),
             ('volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/FUV1999_007_16_57.DAT',
              'archives-volumes',
              PDS_DATA_DIR + '/archives-volumes/COUVIS_0xxx/COUVIS_0001.tar.gz'),
@@ -836,10 +839,10 @@ class TestPdsFileWhiteBox:
              PDS_DATA_DIR + '/checksums-volumes/COUVIS_0xxx/COUVIS_0001_md5.txt'),
         ]
     )
-    def test__associated_paths2(self, input_path, category, expected):
+    def test_associated_abspaths2(self, input_path, category, expected):
         target_pdsfile = instantiate_target_pdsfile(input_path)
-        res = target_pdsfile._associated_paths(
-            category=category, use_abspaths=False)
+        res = target_pdsfile.associated_abspaths(
+            category=category, must_exist=False)
         print(res)
         for path in res:
             assert path in expected
@@ -850,12 +853,15 @@ class TestPdsFileWhiteBox:
 
             ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
              'metadata',
-             PDS_DATA_DIR + '/metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab'),
+             [
+                PDS_DATA_DIR + '/metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
+                PDS_DATA_DIR + '/metadata/HSTUx_xxxx/AAREADME.txt'
+             ]),
         ]
     )
-    def test__associated_paths3(self, input_path, category, expected):
+    def test_associated_abspaths3(self, input_path, category, expected):
         target_pdsfile = instantiate_target_pdsfile(input_path)
-        res = target_pdsfile._associated_paths(
+        res = target_pdsfile.associated_abspaths(
             category=category, must_exist=False)
         print(res)
         for path in res:
@@ -867,14 +873,14 @@ class TestPdsFileWhiteBox:
             ('checksums-volumes/COUVIS_0xxx/COUVIS_0001_md5.txt',
              None, 'checksums-volumes',  None),
             ('volumes', None, None, 'volumes'),
-            ('metadata', "latestx", 'metadata', None),
+            ('metadata', "latestx", 'metadata', 'metadata'),
             ('volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/FUV1999_007_16_57.DAT',
              'latest', 'volumes',
              'volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/FUV1999_007_16_57.DAT'),
             ('volumes/COUVIS_0xxx/COUVIS_0001',
-             'previous', 'volumes', None),
+             'previous', 'volumes', 'volumes/COUVIS_0xxx/COUVIS_0001'),
             ('volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/FUV1999_007_16_57.DAT',
-             'next', 'volumes', None),
+             'next', 'volumes', 'volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/FUV1999_007_16_57.DAT'),
             ('volumes/COUVIS_0xxx', 'latest', 'volumes', 'volumes/COUVIS_0xxx'),
         ]
     )
