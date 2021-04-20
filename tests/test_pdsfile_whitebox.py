@@ -84,7 +84,7 @@ class TestPdsFileWhiteBox:
         'input_path,expected',
         [
             ('previews/HSTUx_xxxx/HSTU0_5167/DATA/VISIT_04', ''),
-            ('volumes/RPX_xxxx/RPX_0001/CALIB/F130LP.tabx', '')
+            ('volumes/RPX_xxxx/RPX_0001/CALIB/F130LP.TAB', 'text/plain'),
         ]
     )
     def test_mime_type(self, input_path, expected):
@@ -247,11 +247,7 @@ class TestPdsFileWhiteBox:
     def test_description2(self, input_path, selection, flag, expected):
         target_pdsfile = instantiate_target_pdsfile(input_path)
         index_row = target_pdsfile.child_of_index(selection, flag)
-        if pdsfile.SHELVES_ONLY:
-            # Beacause self.row_dicts = []
-            assert index_row.description == 'Selected rows of index'
-        else:
-            assert index_row.description == expected
+        assert index_row.description == expected
 
     @pytest.mark.parametrize(
         'input_path,expected',
