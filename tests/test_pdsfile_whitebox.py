@@ -418,30 +418,6 @@ class TestPdsFileWhiteBox:
     @pytest.mark.parametrize(
         'input_path,expected',
         [
-            ('volumes', 'No associated volume'),
-        ]
-    )
-    def test_volume_pdsdir(self, input_path, expected):
-        with pytest.raises(ValueError) as excinfo:
-            target_pdsfile = instantiate_target_pdsfile(input_path)
-            target_pdsfile.volume_pdsdir()
-        assert expected in str(excinfo.value)
-        # target_pdsfile = instantiate_target_pdsfile(input_path)
-        # assert target_pdsfile.volume_pdsdir() == expected
-
-    @pytest.mark.parametrize(
-        'input_path,expected',
-        [
-            ('volumes/HSTNx_xxxx/HSTN0_7176', 'volumes/HSTNx_xxxx')
-        ]
-    )
-    def test_volset_pdsdir(self, input_path, expected):
-        target_pdsfile = instantiate_target_pdsfile(input_path)
-        assert target_pdsfile.volset_pdsdir().logical_path == expected
-
-    @pytest.mark.parametrize(
-        'input_path,expected',
-        [
             ('archives-volumes/COUVIS_0xxx/COUVIS_0001.tar.gz',
              PDS_DATA_DIR + '/archives-volumes/COUVIS_0xxx/COUVIS_0001.tar.gz'),
 
@@ -791,7 +767,7 @@ class TestPdsFileWhiteBox:
     @pytest.mark.parametrize(
         'input_path,basenames,expected',
         [
-            ('volumes/COCIRS_0xxx/COCIRS_0410',
+            ('volumes/COCIRS_0xxx',
              ['COCIRS_0xxx_v3', 'COCIRS_0xxx', 'COCIRS_0xxx_v2'],
              #  Sort by version number
              ['COCIRS_0xxx', 'COCIRS_0xxx_v3', 'COCIRS_0xxx_v2']),
@@ -805,7 +781,7 @@ class TestPdsFileWhiteBox:
     @pytest.mark.parametrize(
         'input_path,basenames,expected',
         [
-            ('volumes/COCIRS_0xxx/COCIRS_0410',
+            ('volumes/COCIRS_0xxx',
              ['COCIRS_0xxx_v3', 'COCIRS_0xxx', 'COCIRS_0xxx_v2'],
              #  Sort by version number
              ['COCIRS_0xxx', 'COCIRS_0xxx_v3', 'COCIRS_0xxx_v2']),
