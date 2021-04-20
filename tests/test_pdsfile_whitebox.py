@@ -46,7 +46,7 @@ class TestPdsFileWhiteBox:
         'input_path,expected',
         [
             # virtual directory
-            ('volumes', 'holdings/volumes'),
+            ('volumes', '/holdings/volumes'),
         ]
     )
     def test_html_path(self, input_path, expected):
@@ -268,7 +268,7 @@ class TestPdsFileWhiteBox:
         'input_path,expected',
         [
             ('volumes/COCIRS_0xxx/COCIRS_0010',
-              'holdings/archives-volumes/COCIRS_0xxx/COCIRS_0010.tar.gz'),
+              '/holdings/archives-volumes/COCIRS_0xxx/COCIRS_0010.tar.gz'),
         ]
     )
     def test_exact_archive_url1(self, input_path, expected):
@@ -329,10 +329,10 @@ class TestPdsFileWhiteBox:
         [
             ('previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007',
              [
-                'holdings/previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31_thumb.png',
-                'holdings/previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31_full.png',
-                'holdings/previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31_small.png',
-                'holdings/previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31_med.png'
+                '/holdings/previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31_thumb.png',
+                '/holdings/previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31_full.png',
+                '/holdings/previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31_small.png',
+                '/holdings/previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/HDAC1999_007_16_31_med.png'
              ]),
             ('archives-volumes/COCIRS_0xxx/', None),
             ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab', []),
