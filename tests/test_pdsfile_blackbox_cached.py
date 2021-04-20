@@ -1,6 +1,8 @@
 import datetime
 import os
 import pdsfile
+import pdsgroup
+import pdsgrouptable
 import pdsviewable
 import pytest
 
@@ -739,10 +741,10 @@ class TestPdsGroupBlackBox:
                 'volumes/COCIRS_0xxx/COCIRS_0012/DATA/NAV_DATA/GEO00120100.LBL'
              ],
              [
-                'icons-local/blue/png-30/document_binary.png',
-                'icons-local/blue/png-50/document_binary.png',
-                'icons-local/blue/png-200/document_binary.png',
-                'icons-local/blue/png-100/document_binary.png',
+                'icons-local/blue/png-100/document_geometry.png',
+                'icons-local/blue/png-30/document_geometry.png',
+                'icons-local/blue/png-200/document_geometry.png',
+                'icons-local/blue/png-50/document_geometry.png',
              ]
             ),
             (['previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007'],
@@ -782,10 +784,10 @@ class TestPdsGroupBlackBox:
                 'volumes/COCIRS_0xxx/COCIRS_0012/DATA/NAV_DATA/GEO00120100.LBL'
              ],
              [
-                'icons-local/blue/png-30/document_binary.png',
-                'icons-local/blue/png-50/document_binary.png',
-                'icons-local/blue/png-200/document_binary.png',
-                'icons-local/blue/png-100/document_binary.png',
+                'icons-local/blue/png-100/document_geometry.png',
+                'icons-local/blue/png-30/document_geometry.png',
+                'icons-local/blue/png-200/document_geometry.png',
+                'icons-local/blue/png-50/document_geometry.png',
              ]
             ),
             (['previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007'],
@@ -825,10 +827,10 @@ class TestPdsGroupBlackBox:
                 'volumes/COCIRS_0xxx/COCIRS_0012/DATA/NAV_DATA/GEO00120100.LBL'
              ],
              [
-                'icons-local/blue/png-30/document_binary.png',
-                'icons-local/blue/png-50/document_binary.png',
-                'icons-local/blue/png-200/document_binary.png',
-                'icons-local/blue/png-100/document_binary.png',
+                'icons-local/blue/png-100/document_geometry.png',
+                'icons-local/blue/png-30/document_geometry.png',
+                'icons-local/blue/png-200/document_geometry.png',
+                'icons-local/blue/png-50/document_geometry.png',
              ]
             ),
             (['previews/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007'],
