@@ -406,9 +406,9 @@ class MemcachedCache(PdsCache):
             was_blocked = True
             unblock_time = time.time() + MAX_BLOCK_SECONDS
             if self.logger:
-                self.logger.info(f'Process {self.pid} is blocked by ' +
-                                 f'{blocking_pid} at {funcname}() on ' +
-                                 f'MemcacheCache [{self.port}]')
+                self.logger.debug(f'Process {self.pid} is blocked by ' +
+                                  f'{blocking_pid} at {funcname}() on ' +
+                                  f'MemcacheCache [{self.port}]')
 
             broken_block = False
             while self.is_blocked() == blocking_pid:
@@ -424,8 +424,8 @@ class MemcachedCache(PdsCache):
                                  f'MemcacheCache [{self.port}]')
 
         if self.logger and was_blocked and not broken_block:
-            self.logger.info(f'Process {self.pid} is unblocked at ' +
-                             f'{funcname}() on MemcacheCache [{self.port}]')
+            self.logger.debug(f'Process {self.pid} is unblocked at ' +
+                              f'{funcname}() on MemcacheCache [{self.port}]')
 
     def block(self, funcname='block'):
         """Block any other process from touching the cache."""
@@ -433,8 +433,8 @@ class MemcachedCache(PdsCache):
         self._wait_for_block(funcname)
         self.mc.set('$OK_PID', self.pid, time=60)
         if self.logger:
-            self.logger.info(f'Process {self.pid} is now blocking '
-                             f'MemcachedCache [{self.port}]')
+            self.logger.debug(f'Process {self.pid} is now blocking '
+                              f'MemcachedCache [{self.port}]')
 
     def unblock(self):
         """Remove block preventing processes from touching the cache."""
@@ -456,8 +456,8 @@ class MemcachedCache(PdsCache):
 
         self.mc.set('$OK_PID', 0, time=0)
         if self.logger:
-            self.logger.info(f'Process {self.pid} removed block of ' +
-                             f'MemcachedCache [{self.port}]')
+            self.logger.debug(f'Process {self.pid} removed block of ' +
+                              f'MemcachedCache [{self.port}]')
 
     def is_blocked(self):
         """Status of blocking. 0 if unblocked; otherwise ID of process that is
@@ -933,15 +933,15 @@ class MemcachedCache(PdsCache):
         self.flushtime = time.time() + 9999999.
 
         if self.logger:
-            self.logger.info(f'Process {self.pid} has set clear count to ' +
-                             f'{self.clear_count} on ' +
-                             f'MemcacheCache [{self.port}]')
+            self.logger.debug(f'Process {self.pid} has set clear count to ' +
+                              f'{self.clear_count} on ' +
+                              f'MemcacheCache [{self.port}]')
 
         if block:
             if self.logger:
-              self.logger.info(f'Process {self.pid} has completed clear() ' +
-                               f'of MemcacheCache [{self.port}] ' +
-                               f'but continues to block')
+              self.logger.debug(f'Process {self.pid} has completed clear() ' +
+                                f'of MemcacheCache [{self.port}] ' +
+                                f'but continues to block')
         else:
             self.unblock()
 
@@ -963,8 +963,8 @@ class MemcachedCache(PdsCache):
         self.flushtime = time.time() + 9999999.
 
         if self.logger:
-          self.logger.info(f'Process {self.pid} has replicated clear of ' +
-                           f'MemcacheCache [{self.port}]')
+          self.logger.debug(f'Process {self.pid} has replicated clear of ' +
+                            f'MemcacheCache [{self.port}]')
         return True
 
     def replicate_clear_if_necessary(self):
