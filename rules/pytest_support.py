@@ -7,10 +7,10 @@ import translator
 import re
 import os
 
-try:        # PDS_DATA_DIR overrides the default holdings directory location
-    pdsfile.LOCAL_HOLDINGS_DIRS = [os.environ['PDS_DATA_DIR']]
-except KeyError:
-    pass
+# try:        # PDS_DATA_DIR overrides the default holdings directory location
+#     pdsfile.LOCAL_HOLDINGS_DIRS = [os.environ['PDS_DATA_DIR']]
+# except KeyError:
+#     pass
 
 def translate_first(trans, path):
     """Logical paths of "first" files found using given translator on path."""
@@ -115,4 +115,10 @@ def opus_products_test(input_path, expected):
         for path in result_paths:
             assert path in expected[key], f'Extra file under key {key}: {path}'
         for path in expected[key]:
+            try:
+                assert path in result_paths
+            except:
+                print("==================")
+                print(path)
+                print(result_paths)
             assert path in result_paths, f'Missing file under key {key}: {path}'

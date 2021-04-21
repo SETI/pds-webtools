@@ -841,25 +841,6 @@ class TestPdsFileWhiteBox:
             assert path in expected
 
     @pytest.mark.parametrize(
-        'input_path,category,expected',
-        [
-            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
-             'metadata',
-             [
-                PDS_DATA_DIR + '/metadata/HSTUx_xxxx/HSTU9_9999/HSTU9_9999_index.lbl',
-                PDS_DATA_DIR + '/metadata/HSTUx_xxxx/HSTU9_9999/HSTU9_9999_index.tab'
-             ]),
-        ]
-    )
-    def test_associated_abspaths3(self, input_path, category, expected):
-        target_pdsfile = instantiate_target_pdsfile(input_path)
-        res = target_pdsfile.associated_abspaths(
-            category=category, must_exist=True)
-        print(res)
-        for path in res:
-            assert path in expected
-
-    @pytest.mark.parametrize(
         'input_path,rank,category,expected',
         [
             ('checksums-volumes/COUVIS_0xxx/COUVIS_0001_md5.txt',
