@@ -7,10 +7,10 @@ import translator
 import re
 import os
 
-# try:        # PDS_DATA_DIR overrides the default holdings directory location
-#     pdsfile.LOCAL_HOLDINGS_DIRS = [os.environ['PDS_DATA_DIR']]
-# except KeyError:
-#     pass
+try:        # PDS_DATA_DIR overrides the default holdings directory location
+    pdsfile.LOCAL_HOLDINGS_DIRS = [os.environ['PDS_DATA_DIR']]
+except KeyError:
+    pass
 
 def translate_first(trans, path):
     """Logical paths of "first" files found using given translator on path."""

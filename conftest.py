@@ -1,17 +1,20 @@
 import os
 import pdsfile
+import pdslogger
 import pytest
-################################################################################
-# Setup before pytest
-################################################################################
-try:        # PDS_DATA_DIR overrides the default holdings directory location
-    pdsfile.LOCAL_HOLDINGS_DIRS = [os.environ['PDS_DATA_DIR']]
-except KeyError:
-    pass
 
+PDS_DATA_DIR = os.environ['PDS_DATA_DIR']
+################################################################################
+# Setup before all tests
+################################################################################
 def pytest_addoption(parser):
     parser.addoption("--mode", action="store")
 
+def turn_on_logger(filename):
+    LOGGER = pdslogger.PdsLogger(filename)
+    pdsfile.set_logger(LOGGER)
+
+# We only use use_pickles and use_shelves_only
 @pytest.fixture(scope='session', autouse=True)
 def setup(request):
     mode = request.config.option.mode
@@ -21,3 +24,5 @@ def setup(request):
         pdsfile.use_shelves_only(False)
     else: # default
         pdsfile.use_shelves_only(True)
+    turn_on_logger("test_log.txt")
+    pdsfile.preload(PDS_DATA_DIR)
