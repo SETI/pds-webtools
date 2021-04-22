@@ -24,5 +24,5 @@ def setup(request):
         pdsfile.use_shelves_only(False)
     else: # default
         pdsfile.use_shelves_only(True)
-    turn_on_logger("test_log.txt")
+    # turn_on_logger("test_log.txt")
     pdsfile.preload(PDS_DATA_DIR)
