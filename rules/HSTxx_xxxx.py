@@ -315,4 +315,29 @@ from .pytest_support import *
 def test_opus_products(input_path, expected):
     opus_products_test(input_path, expected)
 
+
+@pytest.mark.parametrize(
+    'input_path,category,selection,flag,expected',
+    [
+
+        ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
+         'metadata', 'u2no0403t', '',
+         [
+         'metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab/U2NO0403T',
+         'metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_hstfiles.tab/U2NO0403T',
+         'metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
+         'metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_hstfiles.tab',
+         'metadata/HSTUx_xxxx/HSTU0_5167/',
+         'metadata/HSTUx_xxxx/HSTU0_5167',
+         ]),
+    ]
+)
+def test_associated_abspaths(input_path, category, expected):
+    target_pdsfile = instantiate_target_pdsfile(input_path)
+    res = target_pdsfile.associated_abspaths(
+        category=category)
+    result_paths = []
+    result_paths += pdsfile.PdsFile.logicals_for_abspaths(res)
+    for path in result_paths:
+        assert path in expected
 ####################################################################################################################################

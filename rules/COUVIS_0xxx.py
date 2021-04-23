@@ -412,6 +412,12 @@ def test_associated_logical_paths(input_path, expected):
             'volumes/COUVIS_0xxx/COUVIS_0058/CALIB/VERSION_5',
             'volumes/COUVIS_0xxx/COUVIS_0058/CALIB/VERSION_4',
          ]),
+        ('volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/FUV1999_007_16_57.DAT',
+         'archives-volumes',
+         'archives-volumes/COUVIS_0xxx/COUVIS_0001.tar.gz'),
+        ('volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/FUV1999_007_16_57.DAT',
+         'checksums-volumes',
+         'checksums-volumes/COUVIS_0xxx/COUVIS_0001_md5.txt'),
     ]
 )
 def test_associated_abspaths(input_path, category, expected):

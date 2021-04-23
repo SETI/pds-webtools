@@ -796,51 +796,6 @@ class TestPdsFileWhiteBox:
     # Test for associations
     ############################################################################
     @pytest.mark.parametrize(
-        'input_path,category,selection,flag,expected',
-        [
-
-            ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
-             'metadata', 'u2no0403t', '',
-             [
-              PDS_DATA_DIR + '/metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab/U2NO0403T',
-              PDS_DATA_DIR + '/metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_hstfiles.tab/U2NO0403T',
-              PDS_DATA_DIR + '/metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
-              PDS_DATA_DIR + '/metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_hstfiles.tab',
-              PDS_DATA_DIR + '/metadata/HSTUx_xxxx/HSTU0_5167/',
-              PDS_DATA_DIR + '/metadata/HSTUx_xxxx/HSTU0_5167',
-             ]),
-        ]
-    )
-    def test_associated_abspaths1(self, input_path, category, selection,
-                                flag, expected):
-        target_pdsfile = instantiate_target_pdsfile(input_path)
-        index_row = target_pdsfile.child_of_index(selection, flag)
-        res = index_row.associated_abspaths(
-            category=category)
-        print(res)
-        for path in res:
-            assert path in expected
-
-    @pytest.mark.parametrize(
-        'input_path,category,expected',
-        [
-            ('volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/FUV1999_007_16_57.DAT',
-             'archives-volumes',
-             PDS_DATA_DIR + '/archives-volumes/COUVIS_0xxx/COUVIS_0001.tar.gz'),
-            ('volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/FUV1999_007_16_57.DAT',
-             'checksums-volumes',
-             PDS_DATA_DIR + '/checksums-volumes/COUVIS_0xxx/COUVIS_0001_md5.txt'),
-        ]
-    )
-    def test_associated_abspaths2(self, input_path, category, expected):
-        target_pdsfile = instantiate_target_pdsfile(input_path)
-        res = target_pdsfile.associated_abspaths(
-            category=category, must_exist=False)
-        print(res)
-        for path in res:
-            assert path in expected
-
-    @pytest.mark.parametrize(
         'input_path,rank,category,expected',
         [
             ('checksums-volumes/COUVIS_0xxx/COUVIS_0001_md5.txt',
