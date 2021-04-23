@@ -332,9 +332,10 @@ def test_opus_products(input_path, expected):
          ]),
     ]
 )
-def test_associated_abspaths(input_path, category, expected):
+def test_associated_abspaths(input_path, category, selection, flag, expected):
     target_pdsfile = instantiate_target_pdsfile(input_path)
-    res = target_pdsfile.associated_abspaths(
+    index_row = target_pdsfile.child_of_index(selection, flag)
+    res = index_row.associated_abspaths(
         category=category)
     result_paths = []
     result_paths += pdsfile.PdsFile.logicals_for_abspaths(res)
