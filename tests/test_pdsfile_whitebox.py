@@ -799,7 +799,7 @@ class TestPdsFileWhiteBox:
         'input_path,rank,category,expected',
         [
             ('checksums-volumes/COUVIS_0xxx/COUVIS_0001_md5.txt',
-             None, 'checksums-volumes',  None),
+             None, 'checksums-volumes', 'checksums-volumes/COUVIS_0xxx/COUVIS_0001_md5.txt'),
             ('volumes', None, None, 'volumes'),
             ('metadata', "latestx", 'metadata', 'metadata'),
             ('volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/FUV1999_007_16_57.DAT',

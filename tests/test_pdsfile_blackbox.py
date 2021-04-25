@@ -270,8 +270,8 @@ class TestPdsFileBlackBox:
             ('volumes/COVIMS_8xxx', 'VOLDIR'),
             ('volumes/COVIMS_0xxx/COVIMS_0001', 'VOLUME'),
             ('metadata/COVIMS_0xxx/COVIMS_0001/COVIMS_0001_index.tab', 'INDEX'),
-            ('previews/COVIMS_0xxx', 'IMAGEDIR'),
-            ('previews/COVIMS_0xxx/COVIMS_0001', 'IMAGEDIR'),
+            ('previews/COVIMS_0xxx', 'BROWDIR'),
+            ('previews/COVIMS_0xxx/COVIMS_0001', 'BROWDIR'),
             ('previews/COVIMS_0xxx/COVIMS_0001/data1999010T054026_1999010T060958/v1294638283_1_thumb.png',
              'BROWSE'),
             ('metadata/COVIMS_0xxx/COVIMS_0001', 'INDEXDIR')
@@ -320,7 +320,7 @@ class TestPdsFileBlackBox:
              ]),
             ('previews/GO_0xxx/GO_0017/J0/OPNAV/C0346405900R_med.jpg',
              [
-                'Galileo Jupiter preview image 1996-06-03 to 1996-12-14 (SC clock 03464059-03740374)',
+                'Galileo Jupiter preview images 1996-06-03 to 1996-12-14 (SC clock 03464059-03740374)',
                 None
              ]),
             ('metadata/COVIMS_0xxx/COVIMS_0001',
