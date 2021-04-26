@@ -3,7 +3,7 @@ import pdsfile
 import pdslogger
 import pytest
 
-PDS_DATA_DIR = os.environ['PDS_DATA_DIR']
+PDS_HOLDINGS_DIR = os.environ['PDS_HOLDINGS_DIR']
 ################################################################################
 # Setup before all tests
 ################################################################################
@@ -25,4 +25,4 @@ def setup(request):
     else: # default
         pdsfile.use_shelves_only(True)
     turn_on_logger("test_log.txt")
-    pdsfile.preload(PDS_DATA_DIR)
+    pdsfile.preload(PDS_HOLDINGS_DIR)

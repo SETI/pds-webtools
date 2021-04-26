@@ -3,11 +3,11 @@ import pdsfile
 import pdsgroup
 import pdsgrouptable
 
-PDS_DATA_DIR = os.environ['PDS_DATA_DIR']
+PDS_HOLDINGS_DIR = os.environ['PDS_HOLDINGS_DIR']
 
 def instantiate_target_pdsfile(path, is_abspath=True):
     if is_abspath:
-        TESTFILE_PATH = PDS_DATA_DIR + '/' + path
+        TESTFILE_PATH = PDS_HOLDINGS_DIR + '/' + path
         target_pdsfile = pdsfile.PdsFile.from_abspath(TESTFILE_PATH)
     else:
         TESTFILE_PATH = path
@@ -18,7 +18,7 @@ def get_pdsfiles(paths, is_abspath=True):
     pdsfiles_arr = []
     if is_abspath:
         for path in paths:
-            TESTFILE_PATH = PDS_DATA_DIR + '/' +  path
+            TESTFILE_PATH = PDS_HOLDINGS_DIR + '/' +  path
             target_pdsfile = pdsfile.PdsFile.from_abspath(TESTFILE_PATH)
             pdsfiles_arr.append(target_pdsfile)
     else:

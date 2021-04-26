@@ -5,7 +5,7 @@ import pytest
 
 from tests.helper import instantiate_target_pdsfile
 
-PDS_DATA_DIR = os.environ['PDS_DATA_DIR']
+PDS_HOLDINGS_DIR = os.environ['PDS_HOLDINGS_DIR']
 
 ################################################################################
 # Blackbox test for functions & properties in PdsViewSet class
