@@ -40,14 +40,21 @@ filespec_to_volset = translator.TranslatorByRegex([
     (r'VG_28\d{2}.*', 0, r'VG_28xx'),
 ])
 
+####################################################################################################################################
+# SPLIT_RULES
+####################################################################################################################################
+
+split_rules = translator.TranslatorByRegex([
+    # VG_2810
+    (r'(IS[12]_....._...)_(\w+)\.(.*)$', 0, (r'\1', r'_\2', r'.\3')),
+    # (r'(UVIS_HSP_...._..._\w+_[IE])_(\w+)\.(.*)$', 0, (r'\1', r'_\2', r'.\3')),
+])
 
 ####################################################################################################################################
 # OPUS_TYPE
 ####################################################################################################################################
 # (dataset name, priority (where lower comes first), type ID, description)
 opus_type = translator.TranslatorByRegex([
-    # (r'volumes/.*_TAU_?01KM\.(TAB|LBL)', 0, ('Cassini UVIS', 10, 'couvis_occ_01', 'Occultation Profile (1 km)',  True)),
-    # (r'volumes/.*_TAU_?10KM\.(TAB|LBL)', 0, ('Cassini UVIS', 20, 'couvis_occ_10', 'Occultation Profile (10 km)', True)),
     # VG_2801
     (r'volumes/.*/VG_2801/EASYDATA/KM000_1/(.*)\.(TAB|LBL)',  0, ('Voyager PPS', 10, 'voyager_occ_0_1', 'Occultation Profile (0.1 km)',  True)),
     (r'volumes/.*/VG_2801/EASYDATA/KM000_2/(.*)\.(TAB|LBL)',  0, ('Voyager PPS', 20, 'voyager_occ_0_2', 'Occultation Profile (0.2 km)',  True)),
@@ -93,7 +100,6 @@ opus_type = translator.TranslatorByRegex([
     (r'volumes/.*/VG_2810/DATA/.*KM004\.(TAB|LBL)',  0, ('Voyager ISS', 10, 'voyager_prof_04', 'Intensity Profile (4 km)',  True)),
     (r'volumes/.*/VG_2810/DATA/.*KM010\.(TAB|LBL)',  0, ('Voyager ISS', 10, 'voyager_prof_10', 'Intensity Profile (10 km)',  True)),
     (r'volumes/.*/VG_2810/DATA/.*KM020\.(TAB|LBL)',  0, ('Voyager ISS', 10, 'voyager_prof_20', 'Intensity Profile (20 km)',  True)),
-
 ])
 
 
