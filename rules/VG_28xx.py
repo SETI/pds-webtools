@@ -24,12 +24,159 @@ description_and_icon_by_regex = translator.TranslatorByRegex([
 ])
 
 ####################################################################################################################################
+# VIEWABLES
+####################################################################################################################################
+# TODO: NEED to add VIEWABLES later when they are available
+# default_viewables = translator.TranslatorByRegex([
+#     (r'volumes/COUVIS_8xxx(|_v[0-9\.]+)/(COUVIS_8...)/(data|DATA/EASYDATA)/(UVIS_HSP.*)_TAU_?\d+KM\.TAB', 0,
+#             [r'previews/COUVIS_8xxx/\2/data/\4_full.jpg',
+#              r'previews/COUVIS_8xxx/\2/data/\4_med.jpg',
+#              r'previews/COUVIS_8xxx/\2/data/\4_small.jpg',
+#              r'previews/COUVIS_8xxx/\2/data/\4_thumb.jpg',
+#             ]),
+# ])
+#
+# diagrams_viewables = translator.TranslatorByRegex([
+#     (r'volumes/COUVIS_8xxx(|_v[0-9\.]+)/(COUVIS_8...)/(data|DATA/EASYDATA)/(UVIS_HSP.*)_TAU_?\d+KM\.TAB', 0,
+#             [r'diagrams/COUVIS_8xxx/\2/data/\4_full.jpg',
+#              r'diagrams/COUVIS_8xxx/\2/data/\4_med.jpg',
+#              r'diagrams/COUVIS_8xxx/\2/data/\4_small.jpg',
+#              r'diagrams/COUVIS_8xxx/\2/data/\4_thumb.jpg',
+#             ]),
+# ])
+default_viewables = translator.TranslatorByRegex([])
+diagrams_viewables = translator.TranslatorByRegex([])
+
+####################################################################################################################################
+# ASSOCIATIONS
+####################################################################################################################################
+
+associations_to_volumes = translator.TranslatorByRegex([
+    # VG_2801/2802
+    (r'.*/VG_28xx/VG_28(\d{2})/EASYDATA/(?:FILTER.*|KM0.*)/(.*)\..*', 0,
+            [r'volumes/VG_28xx/VG_28\1/EASYDATA/FILTER01/\2.LBL',
+             r'volumes/VG_28xx/VG_28\1/EASYDATA/FILTER01/\2.TAB',
+             r'volumes/VG_28xx/VG_28\1/EASYDATA/FILTER02/\2.LBL',
+             r'volumes/VG_28xx/VG_28\1/EASYDATA/FILTER02/\2.TAB',
+             r'volumes/VG_28xx/VG_28\1/EASYDATA/FILTER03/\2.LBL',
+             r'volumes/VG_28xx/VG_28\1/EASYDATA/FILTER03/\2.TAB',
+             r'volumes/VG_28xx/VG_28\1/EASYDATA/FILTER04/\2.LBL',
+             r'volumes/VG_28xx/VG_28\1/EASYDATA/FILTER04/\2.TAB',
+             r'volumes/VG_28xx/VG_28\1/EASYDATA/FILTER05/\2.LBL',
+             r'volumes/VG_28xx/VG_28\1/EASYDATA/FILTER05/\2.TAB',
+             r'volumes/VG_28xx/VG_28\1/EASYDATA/KM000_1/\2.LBL',
+             r'volumes/VG_28xx/VG_28\1/EASYDATA/KM000_1/\2.TAB',
+             r'volumes/VG_28xx/VG_28\1/EASYDATA/KM000_2/\2.LBL',
+             r'volumes/VG_28xx/VG_28\1/EASYDATA/KM000_2/\2.TAB',
+             r'volumes/VG_28xx/VG_28\1/EASYDATA/KM000_5/\2.LBL',
+             r'volumes/VG_28xx/VG_28\1/EASYDATA/KM000_5/\2.TAB',
+             r'volumes/VG_28xx/VG_28\1/EASYDATA/KM001/\2.LBL',
+             r'volumes/VG_28xx/VG_28\1/EASYDATA/KM001/\2.TAB',
+             r'volumes/VG_28xx/VG_28\1/EASYDATA/KM002/\2.LBL',
+             r'volumes/VG_28xx/VG_28\1/EASYDATA/KM002/\2.TAB',
+             r'volumes/VG_28xx/VG_28\1/EASYDATA/KM005/\2.LBL',
+             r'volumes/VG_28xx/VG_28\1/EASYDATA/KM005/\2.TAB',
+             r'volumes/VG_28xx/VG_28\1/EASYDATA/KM010/\2.LBL',
+             r'volumes/VG_28xx/VG_28\1/EASYDATA/KM010/\2.TAB',
+             r'volumes/VG_28xx/VG_28\1/EASYDATA/KM020/\2.LBL',
+             r'volumes/VG_28xx/VG_28\1/EASYDATA/KM020/\2.TAB',
+             r'volumes/VG_28xx/VG_28\1/EASYDATA/KM050/\2.LBL',
+             r'volumes/VG_28xx/VG_28\1/EASYDATA/KM050/\2.TAB',
+            ]),
+    # VG_2803
+    (r'.*/VG_28xx/VG_28(\d{2})/(S|U)_RINGS/EASYDATA/KM0.*/(.*)\..*', 0,
+            [r'volumes/VG_28xx/VG_28\1/\2_RINGS/EASYDATA/KM000_2/\3.LBL',
+             r'volumes/VG_28xx/VG_28\1/\2_RINGS/EASYDATA/KM000_2/\3.TAB',
+             r'volumes/VG_28xx/VG_28\1/\2_RINGS/EASYDATA/KM000_5/\3.LBL',
+             r'volumes/VG_28xx/VG_28\1/\2_RINGS/EASYDATA/KM000_5/\3.TAB',
+             r'volumes/VG_28xx/VG_28\1/\2_RINGS/EASYDATA/KM001/\3.LBL',
+             r'volumes/VG_28xx/VG_28\1/\2_RINGS/EASYDATA/KM001/\3.TAB',
+             r'volumes/VG_28xx/VG_28\1/\2_RINGS/EASYDATA/KM002/\3.LBL',
+             r'volumes/VG_28xx/VG_28\1/\2_RINGS/EASYDATA/KM002/\3.TAB',
+             r'volumes/VG_28xx/VG_28\1/\2_RINGS/EASYDATA/KM002_5/\3.LBL',
+             r'volumes/VG_28xx/VG_28\1/\2_RINGS/EASYDATA/KM002_5/\3.TAB',
+             r'volumes/VG_28xx/VG_28\1/\2_RINGS/EASYDATA/KM005/\3.LBL',
+             r'volumes/VG_28xx/VG_28\1/\2_RINGS/EASYDATA/KM005/\3.TAB',
+             r'volumes/VG_28xx/VG_28\1/\2_RINGS/EASYDATA/KM010/\3.LBL',
+             r'volumes/VG_28xx/VG_28\1/\2_RINGS/EASYDATA/KM010/\3.TAB',
+             r'volumes/VG_28xx/VG_28\1/\2_RINGS/EASYDATA/KM020/\3.LBL',
+             r'volumes/VG_28xx/VG_28\1/\2_RINGS/EASYDATA/KM020/\3.TAB',
+             r'volumes/VG_28xx/VG_28\1/\2_RINGS/EASYDATA/KM050/\3.LBL',
+             r'volumes/VG_28xx/VG_28\1/\2_RINGS/EASYDATA/KM050/\3.TAB',
+             r'volumes/VG_28xx/VG_28\1/\2_RINGS/EASYDATA/KM00_025/\3.LBL',
+             r'volumes/VG_28xx/VG_28\1/\2_RINGS/EASYDATA/KM00_025/\3.TAB',
+             r'volumes/VG_28xx/VG_28\1/\2_RINGS/EASYDATA/KM00_05/\3.LBL',
+             r'volumes/VG_28xx/VG_28\1/\2_RINGS/EASYDATA/KM00_05/\3.TAB',
+             r'volumes/VG_28xx/VG_28\1/\2_RINGS/EASYDATA/KM00_1/\3.LBL',
+             r'volumes/VG_28xx/VG_28\1/\2_RINGS/EASYDATA/KM00_1/\3.TAB',
+             r'volumes/VG_28xx/VG_28\1/\2_RINGS/EASYDATA/KM00_2/\3.LBL',
+             r'volumes/VG_28xx/VG_28\1/\2_RINGS/EASYDATA/KM00_2/\3.TAB',
+             r'volumes/VG_28xx/VG_28\1/\2_RINGS/EASYDATA/KM00_5/\3.LBL',
+             r'volumes/VG_28xx/VG_28\1/\2_RINGS/EASYDATA/KM00_5/\3.TAB',
+             r'volumes/VG_28xx/VG_28\1/\2_RINGS/EASYDATA/KM00_25/\3.LBL',
+             r'volumes/VG_28xx/VG_28\1/\2_RINGS/EASYDATA/KM00_25/\3.TAB',
+            ]),
+    # VG_2810
+    (r'.*/VG_28xx/VG_28(\d{2})/DATA/(IS\d_P...._...)_KM0.*\..*', 0,
+            [r'volumes/VG_28xx/VG_28\1/DATA/\2_KM002.LBL',
+             r'volumes/VG_28xx/VG_28\1/DATA/\2_KM002.TAB',
+             r'volumes/VG_28xx/VG_28\1/DATA/\2_KM004.LBL',
+             r'volumes/VG_28xx/VG_28\1/DATA/\2_KM004.TAB',
+             r'volumes/VG_28xx/VG_28\1/DATA/\2_KM010.LBL',
+             r'volumes/VG_28xx/VG_28\1/DATA/\2_KM010.TAB',
+             r'volumes/VG_28xx/VG_28\1/DATA/\2_KM020.LBL',
+             r'volumes/VG_28xx/VG_28\1/DATA/\2_KM020.TAB',
+            ]),
+])
+
+# TODO: Add images later when they are available.
+# associations_to_previews = translator.TranslatorByRegex([
+#     (r'.*/COUVIS_8xxx(|_v[0-9\.]+)/(COUVIS_8...)/(data|DATA/EASYDATA)/(UVIS_HSP.*)_(TAU\w+KM|[a-z]+)\..*', 0,
+#             [r'previews/COUVIS_8xxx/\2/data/\3_full.jpg',
+#              r'previews/COUVIS_8xxx/\2/data/\3_med.jpg',
+#              r'previews/COUVIS_8xxx/\2/data/\3_small.jpg',
+#              r'previews/COUVIS_8xxx/\2/data/\3_thumb.jpg',
+#             ]),
+# ])
+#
+# associations_to_diagrams = translator.TranslatorByRegex([
+#     (r'.*/COUVIS_8xxx(|_v[0-9\.]+)/(COUVIS_8...)/(data|DATA/EASYDATA)/(UVIS_HSP.*)_(TAU\w+KM|[a-z]+)\..*', 0,
+#             [r'diagrams/COUVIS_8xxx/\2/data/\3_full.jpg',
+#              r'diagrams/COUVIS_8xxx/\2/data/\3_med.jpg',
+#              r'diagrams/COUVIS_8xxx/\2/data/\3_small.jpg',
+#              r'diagrams/COUVIS_8xxx/\2/data/\3_thumb.jpg',
+#             ]),
+# ])
+associations_to_previews = translator.TranslatorByRegex([])
+associations_to_diagrams = translator.TranslatorByRegex([])
+
+# TODO: Need to update the .*.tab/basename URL, currently the URL won't work in viewmaster.
+associations_to_metadata = translator.TranslatorByRegex([
+    (r'volumes/VG_28xx/(VG_28..)/EASYDATA/(?:FILTER.*|KM0.*)/(.*)\..*', 0,
+            [r'metadata/VG_28xx/\1/\1_index.tab/\2',
+             r'metadata/VG_28xx/\1/\1_profile_index.tab/\2',
+             r'metadata/VG_28xx/\1/\1_supplemental_index.tab/\2',
+            ]),
+    (r'volumes/VG_28xx/(VG_28..)/(?:S|U)_RINGS/EASYDATA/KM0.*/(.*)\..*', 0,
+            [r'metadata/VG_28xx/\1/\1_index.tab/\2',
+             r'metadata/VG_28xx/\1/\1_profile_index.tab/\2',
+             r'metadata/VG_28xx/\1/\1_supplemental_index.tab/\2',
+            ]),
+    (r'volumes/VG_28xx/(VG_28..)/DATA/(IS\d_P...._..._KM0.*)\..*', 0,
+            [r'metadata/VG_28xx/\1/\1_index.tab/\2',
+             r'metadata/VG_28xx/\1/\1_profile_index.tab/\2',
+             r'metadata/VG_28xx/\1/\1_supplemental_index.tab/\2',
+            ]),
+])
+
+
+####################################################################################################################################
 # VIEW_OPTIONS (grid_view_allowed, multipage_view_allowed, continuous_view_allowed)
 ####################################################################################################################################
 
-# view_options = translator.TranslatorByRegex([
-#     (r'volumes/VG_28xx(|/\w+)/VG_28../IMAGES', 0, (True, False, False)),
-# ])
+view_options = translator.TranslatorByRegex([
+    (r'volumes/VG_28xx(|/\w+)/VG_28../IMAGES', 0, (True, False, False)),
+])
 
 
 ####################################################################################################################################
@@ -40,6 +187,7 @@ filespec_to_volset = translator.TranslatorByRegex([
     (r'VG_28\d{2}.*', 0, r'VG_28xx'),
 ])
 
+
 ####################################################################################################################################
 # SPLIT_RULES
 ####################################################################################################################################
@@ -47,8 +195,8 @@ filespec_to_volset = translator.TranslatorByRegex([
 split_rules = translator.TranslatorByRegex([
     # VG_2810
     (r'(IS[12]_....._...)_(\w+)\.(.*)$', 0, (r'\1', r'_\2', r'.\3')),
-    # (r'(UVIS_HSP_...._..._\w+_[IE])_(\w+)\.(.*)$', 0, (r'\1', r'_\2', r'.\3')),
 ])
+
 
 ####################################################################################################################################
 # OPUS_TYPE
@@ -141,7 +289,6 @@ opus_type = translator.TranslatorByRegex([
 ####################################################################################################################################
 
 opus_id = translator.TranslatorByRegex([
-    # (r'.*/VG_28xx/VG_28(\d{2})/EASYDATA/KM0(.*)/(.*{5})(\w{2})\..*', 0, r'vg-pps-occ'),
     (r'.*/VG_28xx/VG_28(\d{2})/EASYDATA/KM0(.*)/(.*)\..*', 0, r'vg-pps-occ-\1-\3'),
     (r'.*/VG_28xx/VG_28(\d{2})/EASYDATA/(FILTER.*|KM0.*)/(.*)\..*', 0, r'vg-uvs-occ-\1-\3'),
     (r'.*/VG_28xx/VG_28(\d{2})/(S|U)_RINGS/EASYDATA/KM0.*/(.*)\..*', 0, r'vg-rss-occ-\1-\2-\3'),
@@ -167,27 +314,25 @@ class VG_28xx(pdsfile.PdsFile):
     pdsfile.PdsFile.VOLSET_TRANSLATOR = translator.TranslatorByRegex([('VG_28xx', re.I, 'VG_28xx')]) + \
                                         pdsfile.PdsFile.VOLSET_TRANSLATOR
 
-    # DESCRIPTION_AND_ICON = description_and_icon_by_regex + pdsfile.PdsFile.DESCRIPTION_AND_ICON
-    # VIEW_OPTIONS = view_options + pdsfile.PdsFile.VIEW_OPTIONS
-    # SPLIT_RULES = split_rules + pdsfile.PdsFile.SPLIT_RULES
+    DESCRIPTION_AND_ICON = description_and_icon_by_regex + pdsfile.PdsFile.DESCRIPTION_AND_ICON
+    VIEW_OPTIONS = view_options + pdsfile.PdsFile.VIEW_OPTIONS
+    SPLIT_RULES = split_rules + pdsfile.PdsFile.SPLIT_RULES
     #
     OPUS_TYPE = opus_type + pdsfile.PdsFile.OPUS_TYPE
     # OPUS_PRODUCTS = opus_products
     OPUS_ID = opus_id
     # OPUS_ID_TO_PRIMARY_LOGICAL_PATH = opus_id_to_primary_logical_path
-    #
-    # VIEWABLES = {
-    #     'default': default_viewables,
-    #     'diagram': diagrams_viewables,
-    # }
-    #
-    # ASSOCIATIONS = pdsfile.PdsFile.ASSOCIATIONS.copy()
-    # ASSOCIATIONS['volumes']  += associations_to_volumes
-    # ASSOCIATIONS['previews'] += associations_to_previews
-    # ASSOCIATIONS['diagrams'] += associations_to_diagrams
-    # ASSOCIATIONS['metadata'] += associations_to_metadata
-    #
-    # VERSIONS = versions + pdsfile.PdsFile.VERSIONS
+
+    VIEWABLES = {
+        'default': default_viewables,
+        'diagram': diagrams_viewables,
+    }
+
+    ASSOCIATIONS = pdsfile.PdsFile.ASSOCIATIONS.copy()
+    ASSOCIATIONS['volumes']  += associations_to_volumes
+    ASSOCIATIONS['previews'] += associations_to_previews
+    ASSOCIATIONS['diagrams'] += associations_to_diagrams
+    ASSOCIATIONS['metadata'] += associations_to_metadata
 
 pdsfile.PdsFile.FILESPEC_TO_VOLSET = filespec_to_volset + pdsfile.PdsFile.FILESPEC_TO_VOLSET
 
