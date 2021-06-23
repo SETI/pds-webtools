@@ -167,7 +167,7 @@ split_rules = translator.TranslatorByRegex([
 ####################################################################################################################################
 # OPUS_TYPE
 ####################################################################################################################################
-# (dataset name, priority (where lower comes first), type ID, description)
+
 opus_type = translator.TranslatorByRegex([
     # VG_2801
     (r'volumes/.*/VG_2801/EASYDATA/KM000_1/(.*)\.(TAB|LBL)',  0, ('Voyager PPS', 10, 'voyager_occ_0_1', 'Occultation Profile (0.1 km)',  True)),
@@ -318,34 +318,6 @@ opus_products = translator.TranslatorByRegex([
             ]),
 ])
 
-# Use of explicit file names means we don't need to invoke glob.glob(); this goes much faster
-# opus_products = translator.TranslatorByRegex([
-#     (r'.*/COUVIS_8xxx(|_v[0-9\.]+)/(COUVIS_....)/(data|DATA/EASYDATA)/(UVIS_HSP.*)_(TAU.*|[a-z]+)\..*', 0,
-#             [r'volumes/COUVIS_8xxx*/\2/data/\4_TAU01KM.LBL',
-#              r'volumes/COUVIS_8xxx*/\2/data/\4_TAU01KM.TAB',
-#              r'volumes/COUVIS_8xxx*/\2/data/\4_TAU10KM.LBL',
-#              r'volumes/COUVIS_8xxx*/\2/data/\4_TAU10KM.TAB',
-#              r'volumes/COUVIS_8xxx_v1/\2/DATA/EASYDATA/\4_TAU_01KM.LBL',
-#              r'volumes/COUVIS_8xxx_v1/\2/DATA/EASYDATA/\4_TAU_01KM.TAB',
-#              r'volumes/COUVIS_8xxx_v1/\2/DATA/EASYDATA/\4_TAU_10KM.LBL',
-#              r'volumes/COUVIS_8xxx_v1/\2/DATA/EASYDATA/\4_TAU_10KM.TAB',
-#              r'previews/COUVIS_8xxx/\2/data/\4_full.jpg',
-#              r'previews/COUVIS_8xxx/\2/data/\4_med.jpg',
-#              r'previews/COUVIS_8xxx/\2/data/\4_small.jpg',
-#              r'previews/COUVIS_8xxx/\2/data/\4_thumb.jpg',
-#              r'diagrams/COUVIS_8xxx/\2/data/\4_full.jpg',
-#              r'diagrams/COUVIS_8xxx/\2/data/\4_med.jpg',
-#              r'diagrams/COUVIS_8xxx/\2/data/\4_small.jpg',
-#              r'diagrams/COUVIS_8xxx/\2/data/\4_thumb.jpg',
-#              r'metadata/COUVIS_8xxx/\2/\2_index.lbl',
-#              r'metadata/COUVIS_8xxx/\2/\2_index.tab',
-#              r'metadata/COUVIS_8xxx/\2/\2_profile_index.lbl',
-#              r'metadata/COUVIS_8xxx/\2/\2_profile_index.tab',
-#              r'metadata/COUVIS_8xxx/\2/\2_supplemental_index.lbl',
-#              r'metadata/COUVIS_8xxx/\2/\2_supplemental_index.tab',
-#             ]),
-# ])
-
 
 ####################################################################################################################################
 # OPUS_ID
@@ -355,7 +327,7 @@ opus_id = translator.TranslatorByRegex([
     (r'.*/VG_28xx/VG_28(\d{2})/EASYDATA/KM0(.*)/(.*)\..*', 0, r'vg-pps-occ-\1-\3'),
     (r'.*/VG_28xx/VG_28(\d{2})/EASYDATA/(FILTER.*|KM0.*)/(.*)\..*', 0, r'vg-uvs-occ-\1-\3'),
     (r'.*/VG_28xx/VG_28(\d{2})/(S|U)_RINGS/EASYDATA/KM0.*/(.*)\..*', 0, r'vg-rss-occ-\1-\2-\3'),
-    (r'.*/VG_28xx/VG_28(\d{2})/DATA/(IS\d_P....).*\..*', 0, r'vg-iss-occ-\1-\2'),
+    (r'.*/VG_28xx/VG_28(\d{2})/DATA/(IS\d_P....).*\..*', 0, r'vg-iss-prof-\1-\2'),
 ])
 
 
