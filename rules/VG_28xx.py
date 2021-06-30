@@ -306,7 +306,7 @@ opus_products = translator.TranslatorByRegex([
              r'metadata/VG_28xx/\1/\1_supplemental_index.lbl',
              r'metadata/VG_28xx/\1/\1_supplemental_index.tab',
             ]),
-    (r'.*/VG_28xx/(VG_28..)/EASYDATA/KM0.*/(PU.*)((?:D|E|L|X)(?:I|E))\..*', 0,
+    (r'.*/VG_28xx/(VG_28..)/EASYDATA/KM0.*/(PU.*)((?:6|5|4|A|B|N|G|D|E|L|X)(?:I|E))\..*', 0,
             [r'volumes/VG_28xx/\1/EASYDATA/KM000_1/\2\3.LBL',
              r'volumes/VG_28xx/\1/EASYDATA/KM000_1/\2\3.TAB',
              r'volumes/VG_28xx/\1/EASYDATA/KM000_2/\2\3.LBL',
@@ -438,9 +438,16 @@ opus_id = translator.TranslatorByRegex([
     # S RIGNS (1981-08-26, egress): 'mission'-'instrument'-'year'-'day of year'-'star name'-'direction'
     (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PS.*\..*',       0, r'vg-pps-occ-1981-238-delsco-e'),
     # U RINGS (1986-01-24): 'mission'-'instrument'-'year'-'day of year'-'ring name'-'direction'
+    (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU.*6(I|E)\..*', 0, r'vg-pps-occ-1986-24-six-#LOWER#\1'),
+    (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU.*5(I|E)\..*', 0, r'vg-pps-occ-1986-24-five-#LOWER#\1'),
+    (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU.*4(I|E)\..*', 0, r'vg-pps-occ-1986-24-four-#LOWER#\1'),
+    (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU.*A(I|E)\..*', 0, r'vg-pps-occ-1986-24-alpha-#LOWER#\1'),
+    (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU.*B(I|E)\..*', 0, r'vg-pps-occ-1986-24-beta-#LOWER#\1'),
+    (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU.*N(I|E)\..*', 0, r'vg-pps-occ-1986-24-eta-#LOWER#\1'),
+    (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU.*G(I|E)\..*', 0, r'vg-pps-occ-1986-24-gamma-#LOWER#\1'),
     (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU.*D(I|E)\..*', 0, r'vg-pps-occ-1986-24-delta-#LOWER#\1'),
-    (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU.*E(I|E)\..*', 0, r'vg-pps-occ-1986-24-epsilon-#LOWER#\1'),
     (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU.*L(I|E)\..*', 0, r'vg-pps-occ-1986-24-lambda-#LOWER#\1'),
+    (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU.*E(I|E)\..*', 0, r'vg-pps-occ-1986-24-epsilon-#LOWER#\1'),
     (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU.*X(I|E)\..*', 0, r'vg-pps-occ-1986-24-ringplane-#LOWER#\1'),
     # N RINGS (1989-08-24, ingress): 'mission'-'instrument'-'year'-'day of year'-'star name'-'direction'
     (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PN.*\..*',       0, r'vg-pps-occ-1989-236-sigsgr-i'),
@@ -467,6 +474,14 @@ opus_id = translator.TranslatorByRegex([
     (r'.*/VG_28xx/VG_28(\d{2})/DATA/(IS\d_P....).*\..*', 0, r'vg-iss-prof-\1-\2'),
 ])
 
+
+####################################################################################################################################
+# FILESPEC_TO_VOLSET
+####################################################################################################################################
+
+filespec_to_volset = translator.TranslatorByRegex([
+    (r'VG_28\d{2}.*', 0, r'VG_28xx'),
+])
 
 ####################################################################################################################################
 # OPUS_ID_TO_PRIMARY_LOGICAL_PATH
@@ -499,7 +514,8 @@ class VG_28xx(pdsfile.PdsFile):
     ASSOCIATIONS['metadata']  += associations_to_metadata
     ASSOCIATIONS['documents'] += associations_to_documents
 
-
+    pdsfile.PdsFile.FILESPEC_TO_VOLSET = filespec_to_volset + pdsfile.PdsFile.FILESPEC_TO_VOLSET
+    
 # Global attribute shared by all subclasses
 pdsfile.PdsFile.OPUS_ID_TO_SUBCLASS = translator.TranslatorByRegex([(r'TBD', 0, VG_28xx)]) + \
                                       pdsfile.PdsFile.OPUS_ID_TO_SUBCLASS
