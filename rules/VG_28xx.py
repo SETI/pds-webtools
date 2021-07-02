@@ -280,7 +280,7 @@ opus_type = translator.TranslatorByRegex([
 opus_products = translator.TranslatorByRegex([
     # VG_2801
     # We want files from all resolutions.
-    (r'.*/VG_28xx/(VG_28..)/EASYDATA/KM0.*/(PS|PN).*\..*', 0,
+    (r'.*/VG_28xx/(VG_28..)/EASYDATA/KM0.*/(PS.|PN.).*\..*', 0,
             [r'volumes/VG_28xx/\1/EASYDATA/KM000_1/\2*.LBL',
              r'volumes/VG_28xx/\1/EASYDATA/KM000_1/\2*.TAB',
              r'volumes/VG_28xx/\1/EASYDATA/KM000_2/\2*.LBL',
@@ -306,7 +306,7 @@ opus_products = translator.TranslatorByRegex([
              r'metadata/VG_28xx/\1/\1_supplemental_index.lbl',
              r'metadata/VG_28xx/\1/\1_supplemental_index.tab',
             ]),
-    (r'.*/VG_28xx/(VG_28..)/EASYDATA/KM0.*/(PU).*((?:6|5|4|A|B|N|G|D|E|L|X)(?:I|E))\..*', 0,
+    (r'.*/VG_28xx/(VG_28..)/EASYDATA/KM0.*/(PU.).*((?:6|5|4|A|B|N|G|D|E|L|X)(?:I|E))\..*', 0,
             [r'volumes/VG_28xx/\1/EASYDATA/KM000_1/\2*\3.LBL',
              r'volumes/VG_28xx/\1/EASYDATA/KM000_1/\2*\3.TAB',
              r'volumes/VG_28xx/\1/EASYDATA/KM000_2/\2*\3.LBL',
@@ -434,32 +434,47 @@ opus_products = translator.TranslatorByRegex([
 
 opus_id = translator.TranslatorByRegex([
     # VG_2801 (VG2801: vg-pps-1-s-occ-1986-024-star-i
-    # S RINGS (1981-08-26, egress): 'mission'-'instrument'-'year'-'day of year'-'star name'-'direction'
-    (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PS.*\..*',       0, r'vg-pps-occ-1981-238-delsco-e'),
-    # U RINGS (1986-01-24): 'mission'-'instrument'-'year'-'day of year'-'ring name'-'direction'
-    (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU.*6(I|E)\..*', 0, r'vg-pps-occ-1986-024-six-#LOWER#\1'),
-    (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU.*5(I|E)\..*', 0, r'vg-pps-occ-1986-024-five-#LOWER#\1'),
-    (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU.*4(I|E)\..*', 0, r'vg-pps-occ-1986-024-four-#LOWER#\1'),
-    (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU.*A(I|E)\..*', 0, r'vg-pps-occ-1986-024-alpha-#LOWER#\1'),
-    (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU.*B(I|E)\..*', 0, r'vg-pps-occ-1986-024-beta-#LOWER#\1'),
-    (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU.*N(I|E)\..*', 0, r'vg-pps-occ-1986-024-eta-#LOWER#\1'),
-    (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU.*G(I|E)\..*', 0, r'vg-pps-occ-1986-024-gamma-#LOWER#\1'),
-    (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU.*D(I|E)\..*', 0, r'vg-pps-occ-1986-024-delta-#LOWER#\1'),
-    (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU.*L(I|E)\..*', 0, r'vg-pps-occ-1986-024-lambda-#LOWER#\1'),
-    (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU.*E(I|E)\..*', 0, r'vg-pps-occ-1986-024-epsilon-#LOWER#\1'),
-    (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU.*X(I|E)\..*', 0, r'vg-pps-occ-1986-024-ringplane-#LOWER#\1'),
-    # N RINGS (1989-08-24, ingress): 'mission'-'instrument'-'year'-'day of year'-'star name'-'direction'
-    (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PN.*\..*',       0, r'vg-pps-occ-1989-236-sigsgr-i'),
+    # S RINGS (1981-08-26, egress):
+    # 'mission'-'inst'-'inst host'-planet-occ-'year'-'day of year'-'star name'-'direction'
+    (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PS.*\..*',        0, r'vg-pps-2-s-occ-1981-238-delsco-e'),
+    # U RINGS (1986-01-24):
+    # 'mission'-'inst'-'inst host'-planet-occ-'year'-'day of year'-'ring name'-'star name'-'direction'
+    (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU1.*6(I|E)\..*', 0, r'vg-pps-2-u-occ-1986-024-six-sigsgr-#LOWER#\1'),
+    (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU1.*5(I|E)\..*', 0, r'vg-pps-2-u-occ-1986-024-five-sigsgr-#LOWER#\1'),
+    (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU1.*4(I|E)\..*', 0, r'vg-pps-2-u-occ-1986-024-four-sigsgr-#LOWER#\1'),
+    (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU1.*A(I|E)\..*', 0, r'vg-pps-2-u-occ-1986-024-alpha-sigsgr-#LOWER#\1'),
+    (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU1.*B(I|E)\..*', 0, r'vg-pps-2-u-occ-1986-024-beta-sigsgr-#LOWER#\1'),
+    (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU1.*N(I|E)\..*', 0, r'vg-pps-2-u-occ-1986-024-eta-sigsgr-#LOWER#\1'),
+    (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU1.*G(I|E)\..*', 0, r'vg-pps-2-u-occ-1986-024-gamma-sigsgr-#LOWER#\1'),
+    (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU1.*D(I|E)\..*', 0, r'vg-pps-2-u-occ-1986-024-delta-sigsgr-#LOWER#\1'),
+    (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU1.*L(I|E)\..*', 0, r'vg-pps-2-u-occ-1986-024-lambda-sigsgr-#LOWER#\1'),
+    (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU1.*E(I|E)\..*', 0, r'vg-pps-2-u-occ-1986-024-epsilon-sigsgr-#LOWER#\1'),
+    (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU1.*X(I|E)\..*', 0, r'vg-pps-2-u-occ-1986-024-ringplane-sigsgr-#LOWER#\1'),
+    (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU2.*6(I|E)\..*', 0, r'vg-pps-2-u-occ-1986-024-six-betper-#LOWER#\1'),
+    (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU2.*5(I|E)\..*', 0, r'vg-pps-2-u-occ-1986-024-five-betper-#LOWER#\1'),
+    (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU2.*4(I|E)\..*', 0, r'vg-pps-2-u-occ-1986-024-four-betper-#LOWER#\1'),
+    (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU2.*A(I|E)\..*', 0, r'vg-pps-2-u-occ-1986-024-alpha-betper-#LOWER#\1'),
+    (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU2.*B(I|E)\..*', 0, r'vg-pps-2-u-occ-1986-024-beta-betper-#LOWER#\1'),
+    (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU2.*N(I|E)\..*', 0, r'vg-pps-2-u-occ-1986-024-eta-betper-#LOWER#\1'),
+    (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU2.*G(I|E)\..*', 0, r'vg-pps-2-u-occ-1986-024-gamma-betper-#LOWER#\1'),
+    (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU2.*D(I|E)\..*', 0, r'vg-pps-2-u-occ-1986-024-delta-betper-#LOWER#\1'),
+    (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU2.*L(I|E)\..*', 0, r'vg-pps-2-u-occ-1986-024-lambda-betper-#LOWER#\1'),
+    (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU2.*E(I|E)\..*', 0, r'vg-pps-2-u-occ-1986-024-epsilon-betper-#LOWER#\1'),
+    (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU2.*X(I|E)\..*', 0, r'vg-pps-2-u-occ-1986-024-ringplane-betper-#LOWER#\1'),
+    # N RINGS (1989-08-24, ingress): 'mission'-'inst'-'inst host'-planet-occ-'year'-'day of year'-'star name'-'direction'
+    (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PN.*\..*',        0, r'vg-pps-2-n-occ-1989-236-sigsgr-i'),
 
     # VG_2802 (TODO: update later)
     (r'.*/VG_28xx/VG_28(\d{2})/EASYDATA/(FILTER.*|KM0.*)/(.*)\..*', 0, r'vg-uvs-occ-\1-\3'),
 
     # VG_2803
-    # S RINGS (1980-11-13, egress): 'mission'-'inst'-'inst host'-planet-occ-'year'-'day of year'-'band name + 2-digit DSN'-'direction'
+    # S RINGS (1980-11-13, egress):
+    # 'mission'-'inst'-'inst host'-planet-occ-'year'-'day of year'-'band name + 2-digit DSN'-'direction'
     # NOTE: replace matched group from \n to \g<n> to make sure match_obj.expand
     # return the correct result when numbers are right after the matched group.
     (r'.*/VG_28xx/VG_2803/S_RINGS/EASYDATA/KM0.*/RS.*2(S|X)..\..*',     0, r'vg-rss-1-s-occ-1980-318-#LOWER#\g<1>63-e'),
-    # U RINGS (1986-01-24): 'mission'-'inst'-'inst host'-planet-occ-'year'-'day of year'-'ring name'-'band name + 2-digit DSN'-'direction'
+    # U RINGS (1986-01-24):
+    # 'mission'-'inst'-'inst host'-planet-occ-'year'-'day of year'-'ring name'-'band name + 2-digit DSN'-'direction'
     (r'.*/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM0.*/RU.*2(S|X)6(I|E)\..*', 0, r'vg-rss-2-u-occ-1986-024-six-#LOWER#\g<1>43-\2'),
     (r'.*/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM0.*/RU.*2(S|X)5(I|E)\..*', 0, r'vg-rss-2-u-occ-1986-024-five-#LOWER#\g<1>43-\2'),
     (r'.*/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM0.*/RU.*2(S|X)4(I|E)\..*', 0, r'vg-rss-2-u-occ-1986-024-four-#LOWER#\g<1>43-\2'),
@@ -491,18 +506,30 @@ filespec_to_volset = translator.TranslatorByRegex([
 opus_id_to_primary_logical_path = translator.TranslatorByRegex([
     # VG_2801, Satrun: PS1 in KM000_2, Uranus: PU1 in KM000_1, PU2 in KM001
     # Neptune: PN1 in KM002
-    (r'vg-pps-occ-1981-238-(.*)-e',           0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM000_2/PS1P0107.TAB'),
-    (r'vg-pps-occ-1986-024-six-([ie])',       0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM001/PU2P01#UPPER#\g<1>6\2.TAB'),
-    (r'vg-pps-occ-1986-024-five-([ie])',      0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM001/PU2P01#UPPER##UPPER#\g<1>5\2.TAB'),
-    (r'vg-pps-occ-1986-024-four-([ie])',      0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM001/PU2P01#UPPER##UPPER#\g<1>4\2.TAB'),
-    (r'vg-pps-occ-1986-024-alpha-([ie])',     0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM001/PU2P01#UPPER##UPPER#\g<1>A\2.TAB'),
-    (r'vg-pps-occ-1986-024-beta-([ie])',      0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM001/PU2P01#UPPER##UPPER#\g<1>B\2.TAB'),
-    (r'vg-pps-occ-1986-024-eta-([ie])',       0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM001/PU2P01#UPPER##UPPER#\g<1>N\2.TAB'),
-    (r'vg-pps-occ-1986-024-gamma-([ie])',     0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM001/PU2P01#UPPER##UPPER#\g<1>G\2.TAB'),
-    (r'vg-pps-occ-1986-024-delta-([ie])',     0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM000_1/PU1P01#UPPER##UPPER#\g<1>D\2.TAB'),
-    (r'vg-pps-occ-1986-024-lambda-([ie])',    0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM000_1/PU1P01#UPPER##UPPER#\g<1>L\2.TAB'),
-    (r'vg-pps-occ-1986-024-epsilon-([ie])',   0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM000_1/PU1P01#UPPER##UPPER#\g<1>E\2.TAB'),
-    (r'vg-pps-occ-1986-024-ringplane-([ie])', 0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM000_1/PU1P01#UPPER##UPPER#\g<1>X\2.TAB'),
+    (r'vg-pps-2-s-occ-1981-238-(.*)-e',                  0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM000_2/PS1P0107.TAB'),
+    (r'vg-pps-2-u-occ-1986-024-six-sigsgr-([ie])',       0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM000_1/PU1P01#UPPER#\g<1>6\2.TAB'),
+    (r'vg-pps-2-u-occ-1986-024-five-sigsgr-([ie])',      0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM000_1/PU1P01#UPPER#\g<1>5\2.TAB'),
+    (r'vg-pps-2-u-occ-1986-024-four-sigsgr-([ie])',      0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM000_1/PU1P01#UPPER#\g<1>4\2.TAB'),
+    (r'vg-pps-2-u-occ-1986-024-alpha-sigsgr-([ie])',     0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM000_1/PU1P01#UPPER#\g<1>A\2.TAB'),
+    (r'vg-pps-2-u-occ-1986-024-beta-sigsgr-([ie])',      0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM000_1/PU1P01#UPPER#\g<1>B\2.TAB'),
+    (r'vg-pps-2-u-occ-1986-024-eta-sigsgr-([ie])',       0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM000_1/PU1P01#UPPER#\g<1>N\2.TAB'),
+    (r'vg-pps-2-u-occ-1986-024-gamma-sigsgr-([ie])',     0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM000_1/PU1P01#UPPER#\g<1>G\2.TAB'),
+    (r'vg-pps-2-u-occ-1986-024-delta-sigsgr-([ie])',     0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM000_1/PU1P01#UPPER#\g<1>D\2.TAB'),
+    (r'vg-pps-2-u-occ-1986-024-lambda-sigsgr-([ie])',    0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM000_1/PU1P01#UPPER#\g<1>L\2.TAB'),
+    (r'vg-pps-2-u-occ-1986-024-epsilon-sigsgr-([ie])',   0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM000_1/PU1P01#UPPER#\g<1>E\2.TAB'),
+    (r'vg-pps-2-u-occ-1986-024-ringplane-sigsgr-([ie])', 0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM000_1/PU1P01#UPPER#\g<1>X\2.TAB'),
+    (r'vg-pps-2-u-occ-1986-024-six-betper-([ie])',       0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM001/PU2P01#UPPER#\g<1>6\2.TAB'),
+    (r'vg-pps-2-u-occ-1986-024-five-betper-([ie])',      0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM001/PU2P01#UPPER#\g<1>5\2.TAB'),
+    (r'vg-pps-2-u-occ-1986-024-four-betper-([ie])',      0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM001/PU2P01#UPPER#\g<1>4\2.TAB'),
+    (r'vg-pps-2-u-occ-1986-024-alpha-betper-([ie])',     0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM001/PU2P01#UPPER#\g<1>A\2.TAB'),
+    (r'vg-pps-2-u-occ-1986-024-beta-betper-([ie])',      0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM001/PU2P01#UPPER#\g<1>B\2.TAB'),
+    (r'vg-pps-2-u-occ-1986-024-eta-betper-([ie])',       0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM001/PU2P01#UPPER#\g<1>N\2.TAB'),
+    (r'vg-pps-2-u-occ-1986-024-gamma-betper-([ie])',     0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM001/PU2P01#UPPER#\g<1>G\2.TAB'),
+    (r'vg-pps-2-u-occ-1986-024-delta-betper-([ie])',     0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM001/PU2P01#UPPER#\g<1>D\2.TAB'),
+    (r'vg-pps-2-u-occ-1986-024-lambda-betper-([ie])',    0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM001/PU2P01#UPPER#\g<1>L\2.TAB'),
+    (r'vg-pps-2-u-occ-1986-024-epsilon-betper-([ie])',   0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM001/PU2P01#UPPER#\g<1>E\2.TAB'),
+    (r'vg-pps-2-u-occ-1986-024-ringplane-betper-([ie])', 0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM001/PU2P01#UPPER#\g<1>X\2.TAB'),
+    (r'vg-pps-2-n-occ-1989-236-(.*)-i',                  0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM001/PN1P104.TAB'),
 
     # VG_2803, pick the smallest resolutions
     # S RINGS: KM000_2, U RINGS: KM00_25
