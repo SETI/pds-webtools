@@ -433,7 +433,7 @@ opus_products = translator.TranslatorByRegex([
 ####################################################################################################################################
 
 opus_id = translator.TranslatorByRegex([
-    # VG_2801
+    # VG_2801 (VG2801: vg-pps-1-s-occ-1986-024-star-i
     # S RINGS (1981-08-26, egress): 'mission'-'instrument'-'year'-'day of year'-'star name'-'direction'
     (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PS.*\..*',       0, r'vg-pps-occ-1981-238-delsco-e'),
     # U RINGS (1986-01-24): 'mission'-'instrument'-'year'-'day of year'-'ring name'-'direction'
@@ -455,19 +455,21 @@ opus_id = translator.TranslatorByRegex([
     (r'.*/VG_28xx/VG_28(\d{2})/EASYDATA/(FILTER.*|KM0.*)/(.*)\..*', 0, r'vg-uvs-occ-\1-\3'),
 
     # VG_2803
-    # S RINGS (1980-11-13, egress): 'mission'-'instrument'-'year'-'day of year'-'band name'-'direction'
-    (r'.*/VG_28xx/VG_2803/S_RINGS/EASYDATA/KM0.*/RS.*2(S|X)..\..*',     0, r'vg-rss-occ-1980-318-#LOWER#\1-e'),
-    # U RINGS (1986-01-24): 'mission'-'instrument'-'year'-'day of year'-'band name'-'ring name'-'direction'
-    (r'.*/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM0.*/RU.*2(S|X)6(I|E)\..*', 0, r'vg-rss-occ-1986-024-#LOWER#\1-six-\2'),
-    (r'.*/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM0.*/RU.*2(S|X)5(I|E)\..*', 0, r'vg-rss-occ-1986-024-#LOWER#\1-five-\2'),
-    (r'.*/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM0.*/RU.*2(S|X)4(I|E)\..*', 0, r'vg-rss-occ-1986-024-#LOWER#\1-four-\2'),
-    (r'.*/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM0.*/RU.*2(S|X)A(I|E)\..*', 0, r'vg-rss-occ-1986-024-#LOWER#\1-alpha-\2'),
-    (r'.*/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM0.*/RU.*2(S|X)B(I|E)\..*', 0, r'vg-rss-occ-1986-024-#LOWER#\1-beta-\2'),
-    (r'.*/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM0.*/RU.*2(S|X)N(I|E)\..*', 0, r'vg-rss-occ-1986-024-#LOWER#\1-eta-\2'),
-    (r'.*/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM0.*/RU.*2(S|X)G(I|E)\..*', 0, r'vg-rss-occ-1986-024-#LOWER#\1-gamma-\2'),
-    (r'.*/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM0.*/RU.*2(S|X)D(I|E)\..*', 0, r'vg-rss-occ-1986-024-#LOWER#\1-delta-\2'),
-    (r'.*/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM0.*/RU.*2(S|X)L(I|E)\..*', 0, r'vg-rss-occ-1986-024-#LOWER#\1-lambda-\2'),
-    (r'.*/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM0.*/RU.*2(S|X)E(I|E)\..*', 0, r'vg-rss-occ-1986-024-#LOWER#\1-epsilon-\2'),
+    # S RINGS (1980-11-13, egress): 'mission'-'inst'-'inst host'-planet-occ-'year'-'day of year'-'band name + 2-digit DSN'-'direction'
+    # NOTE: replace matched group from \n to \g<n> to make sure match_obj.expand
+    # return the correct result when numbers are right after the matched group.
+    (r'.*/VG_28xx/VG_2803/S_RINGS/EASYDATA/KM0.*/RS.*2(S|X)..\..*',     0, r'vg-rss-1-s-occ-1980-318-#LOWER#\g<1>63-e'),
+    # U RINGS (1986-01-24): 'mission'-'inst'-'inst host'-planet-occ-'year'-'day of year'-'ring name'-'band name + 2-digit DSN'-'direction'
+    (r'.*/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM0.*/RU.*2(S|X)6(I|E)\..*', 0, r'vg-rss-2-u-occ-1986-024-six-#LOWER#\g<1>43-\2'),
+    (r'.*/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM0.*/RU.*2(S|X)5(I|E)\..*', 0, r'vg-rss-2-u-occ-1986-024-five-#LOWER#\g<1>43-\2'),
+    (r'.*/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM0.*/RU.*2(S|X)4(I|E)\..*', 0, r'vg-rss-2-u-occ-1986-024-four-#LOWER#\g<1>43-\2'),
+    (r'.*/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM0.*/RU.*2(S|X)A(I|E)\..*', 0, r'vg-rss-2-u-occ-1986-024-alpha-#LOWER#\g<1>43-\2'),
+    (r'.*/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM0.*/RU.*2(S|X)B(I|E)\..*', 0, r'vg-rss-2-u-occ-1986-024-beta-#LOWER#\g<1>43-\2'),
+    (r'.*/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM0.*/RU.*2(S|X)N(I|E)\..*', 0, r'vg-rss-2-u-occ-1986-024-eta-#LOWER#\g<1>43-\2'),
+    (r'.*/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM0.*/RU.*2(S|X)G(I|E)\..*', 0, r'vg-rss-2-u-occ-1986-024-gamma-#LOWER#\g<1>43-\2'),
+    (r'.*/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM0.*/RU.*2(S|X)D(I|E)\..*', 0, r'vg-rss-2-u-occ-1986-024-delta-#LOWER#\g<1>43-\2'),
+    (r'.*/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM0.*/RU.*2(S|X)L(I|E)\..*', 0, r'vg-rss-2-u-occ-1986-024-lambda-#LOWER#\g<1>43-\2'),
+    (r'.*/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM0.*/RU.*2(S|X)E(I|E)\..*', 0, r'vg-rss-2-u-occ-1986-024-epsilon-#LOWER#\g<1>43-\2'),
 
     # VG_2810 (TODO: update later)
     (r'.*/VG_28xx/VG_28(\d{2})/DATA/(IS\d_P....).*\..*', 0, r'vg-iss-prof-\1-\2'),
@@ -489,32 +491,32 @@ filespec_to_volset = translator.TranslatorByRegex([
 opus_id_to_primary_logical_path = translator.TranslatorByRegex([
     # VG_2801, Satrun: PS1 in KM000_2, Uranus: PU1 in KM000_1, PU2 in KM001
     # Neptune: PN1 in KM002
-    (r'vg-pps-occ-1981-238-(.*)-e',           0, r'VG_28xx/VG_2801/EASYDATA/KM000_2/PS1P0107.TAB'),
-    (r'vg-pps-occ-1986-024-six-([ie])',       0, r'VG_28xx/VG_2801/EASYDATA/KM001/PU2P01\16\2.TAB'),
-    (r'vg-pps-occ-1986-024-five-([ie])',      0, r'VG_28xx/VG_2801/EASYDATA/KM001/PU2P01\15\2.TAB'),
-    (r'vg-pps-occ-1986-024-four-([ie])',      0, r'VG_28xx/VG_2801/EASYDATA/KM001/PU2P01\14\2.TAB'),
-    (r'vg-pps-occ-1986-024-alpha-([ie])',     0, r'VG_28xx/VG_2801/EASYDATA/KM001/PU2P01\1A\2.TAB'),
-    (r'vg-pps-occ-1986-024-beta-([ie])',      0, r'VG_28xx/VG_2801/EASYDATA/KM001/PU2P01\1B\2.TAB'),
-    (r'vg-pps-occ-1986-024-eta-([ie])',       0, r'VG_28xx/VG_2801/EASYDATA/KM001/PU2P01\1N\2.TAB'),
-    (r'vg-pps-occ-1986-024-gamma-([ie])',     0, r'VG_28xx/VG_2801/EASYDATA/KM001/PU2P01\1G\2.TAB'),
-    (r'vg-pps-occ-1986-024-delta-([ie])',     0, r'VG_28xx/VG_2801/EASYDATA/KM000_1/PU1P01\1D\2.TAB'),
-    (r'vg-pps-occ-1986-024-lambda-([ie])',    0, r'VG_28xx/VG_2801/EASYDATA/KM000_1/PU1P01\1L\2.TAB'),
-    (r'vg-pps-occ-1986-024-epsilon-([ie])',   0, r'VG_28xx/VG_2801/EASYDATA/KM000_1/PU1P01\1E\2.TAB'),
-    (r'vg-pps-occ-1986-024-ringplane-([ie])', 0, r'VG_28xx/VG_2801/EASYDATA/KM000_1/PU1P01\1X\2.TAB'),
+    (r'vg-pps-occ-1981-238-(.*)-e',           0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM000_2/PS1P0107.TAB'),
+    (r'vg-pps-occ-1986-024-six-([ie])',       0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM001/PU2P01#UPPER#\g<1>6\2.TAB'),
+    (r'vg-pps-occ-1986-024-five-([ie])',      0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM001/PU2P01#UPPER##UPPER#\g<1>5\2.TAB'),
+    (r'vg-pps-occ-1986-024-four-([ie])',      0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM001/PU2P01#UPPER##UPPER#\g<1>4\2.TAB'),
+    (r'vg-pps-occ-1986-024-alpha-([ie])',     0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM001/PU2P01#UPPER##UPPER#\g<1>A\2.TAB'),
+    (r'vg-pps-occ-1986-024-beta-([ie])',      0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM001/PU2P01#UPPER##UPPER#\g<1>B\2.TAB'),
+    (r'vg-pps-occ-1986-024-eta-([ie])',       0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM001/PU2P01#UPPER##UPPER#\g<1>N\2.TAB'),
+    (r'vg-pps-occ-1986-024-gamma-([ie])',     0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM001/PU2P01#UPPER##UPPER#\g<1>G\2.TAB'),
+    (r'vg-pps-occ-1986-024-delta-([ie])',     0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM000_1/PU1P01#UPPER##UPPER#\g<1>D\2.TAB'),
+    (r'vg-pps-occ-1986-024-lambda-([ie])',    0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM000_1/PU1P01#UPPER##UPPER#\g<1>L\2.TAB'),
+    (r'vg-pps-occ-1986-024-epsilon-([ie])',   0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM000_1/PU1P01#UPPER##UPPER#\g<1>E\2.TAB'),
+    (r'vg-pps-occ-1986-024-ringplane-([ie])', 0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM000_1/PU1P01#UPPER##UPPER#\g<1>X\2.TAB'),
 
     # VG_2803, pick the smallest resolutions
-    # S RINGS: KM000_2, U RINGS: KM00_025
-    (r'vg-rss-occ-1980-318-(.*)-e',              0, r'VG_28xx/VG_2803/S_RINGS/EASYDATA/KM000_2/RS1P2\107.TAB'),
-    (r'vg-rss-occ-1986-024-(.*)-six-([ie])',     0, r'VG_28xx/VG_2803/U_RINGS/EASYDATA/KM00_025/RU4P2\16\2.TAB'),
-    (r'vg-rss-occ-1986-024-(.*)-five-([ie])',    0, r'VG_28xx/VG_2803/U_RINGS/EASYDATA/KM00_025/RU4P2\15\2.TAB'),
-    (r'vg-rss-occ-1986-024-(.*)-four-([ie])',    0, r'VG_28xx/VG_2803/U_RINGS/EASYDATA/KM00_025/RU4P2\14\2.TAB'),
-    (r'vg-rss-occ-1986-024-(.*)-alpha-([ie])',   0, r'VG_28xx/VG_2803/U_RINGS/EASYDATA/KM00_025/RU4P2\1A\2.TAB'),
-    (r'vg-rss-occ-1986-024-(.*)-beta-([ie])',    0, r'VG_28xx/VG_2803/U_RINGS/EASYDATA/KM00_025/RU4P2\1B\2.TAB'),
-    (r'vg-rss-occ-1986-024-(.*)-eta-([ie])',     0, r'VG_28xx/VG_2803/U_RINGS/EASYDATA/KM00_025/RU4P2\1N\2.TAB'),
-    (r'vg-rss-occ-1986-024-(.*)-gamma-([ie])',   0, r'VG_28xx/VG_2803/U_RINGS/EASYDATA/KM00_025/RU4P2\1G\2.TAB'),
-    (r'vg-rss-occ-1986-024-(.*)-delta-([ie])',   0, r'VG_28xx/VG_2803/U_RINGS/EASYDATA/KM00_025/RU4P2\1D\2.TAB'),
-    (r'vg-rss-occ-1986-024-(.*)-lambda-([ie])',  0, r'VG_28xx/VG_2803/U_RINGS/EASYDATA/KM00_025/RU4P2\1L\2.TAB'),
-    (r'vg-rss-occ-1986-024-(.*)-epsilon-([ie])', 0, r'VG_28xx/VG_2803/U_RINGS/EASYDATA/KM00_025/RU4P2\1E\2.TAB'),
+    # S RINGS: KM000_2, U RINGS: KM00_25
+    (r'vg-rss-1-s-occ-1980-318-(.*)63-e',              0, r'volumes/VG_28xx/VG_2803/S_RINGS/EASYDATA/KM000_2/RS1P2#UPPER#\g<1>07.TAB'),
+    (r'vg-rss-2-u-occ-1986-024-six-(.*)43-([ie])',     0, r'volumes/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM00_25/RU4P2#UPPER#\g<1>6\2.TAB'),
+    (r'vg-rss-2-u-occ-1986-024-five-(.*)43-([ie])',    0, r'volumes/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM00_25/RU4P2#UPPER#\g<1>5\2.TAB'),
+    (r'vg-rss-2-u-occ-1986-024-four-(.*)43-([ie])',    0, r'volumes/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM00_25/RU4P2#UPPER#\g<1>4\2.TAB'),
+    (r'vg-rss-2-u-occ-1986-024-alpha-(.*)43-([ie])',   0, r'volumes/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM00_25/RU4P2#UPPER#\g<1>A\2.TAB'),
+    (r'vg-rss-2-u-occ-1986-024-beta-(.*)43-([ie])',    0, r'volumes/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM00_25/RU4P2#UPPER#\g<1>B\2.TAB'),
+    (r'vg-rss-2-u-occ-1986-024-eta-(.*)43-([ie])',     0, r'volumes/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM00_25/RU4P2#UPPER#\g<1>N\2.TAB'),
+    (r'vg-rss-2-u-occ-1986-024-gamma-(.*)43-([ie])',   0, r'volumes/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM00_25/RU4P2#UPPER#\g<1>G\2.TAB'),
+    (r'vg-rss-2-u-occ-1986-024-delta-(.*)43-([ie])',   0, r'volumes/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM00_25/RU4P2#UPPER#\g<1>D\2.TAB'),
+    (r'vg-rss-2-u-occ-1986-024-lambda-(.*)43-([ie])',  0, r'volumes/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM00_25/RU4P2#UPPER#\g<1>L\2.TAB'),
+    (r'vg-rss-2-u-occ-1986-024-epsilon-(.*)43-([ie])', 0, r'volumes/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM00_25/RU4P2#UPPER#\g<1>E\2.TAB'),
 ])
 
 ####################################################################################################################################
@@ -546,10 +548,10 @@ pdsfile.PdsFile.OPUS_ID_TO_SUBCLASS = translator.TranslatorByRegex([(r'TBD', 0, 
                                       pdsfile.PdsFile.OPUS_ID_TO_SUBCLASS
 
 # Global attribute shared by all subclasses
-pdsfile.PdsFile.OPUS_ID_TO_SUBCLASS = translator.TranslatorByRegex([(r'vg-pps-occ.*', 0, VG_28xx)]) + \
-                                      translator.TranslatorByRegex([(r'vg-uvs-occ.*', 0, VG_28xx)]) + \
-                                      translator.TranslatorByRegex([(r'vg-rss-occ.*', 0, VG_28xx)]) + \
-                                      translator.TranslatorByRegex([(r'vg-iss-occ.*', 0, VG_28xx)]) + \
+pdsfile.PdsFile.OPUS_ID_TO_SUBCLASS = translator.TranslatorByRegex([(r'vg-pps.*occ.*', 0, VG_28xx)]) + \
+                                      translator.TranslatorByRegex([(r'vg-uvs.*occ.*', 0, VG_28xx)]) + \
+                                      translator.TranslatorByRegex([(r'vg-rss.*occ.*', 0, VG_28xx)]) + \
+                                      translator.TranslatorByRegex([(r'vg-iss.*prof.*', 0, VG_28xx)]) + \
                                       pdsfile.PdsFile.OPUS_ID_TO_SUBCLASS
 
 
