@@ -545,8 +545,9 @@ opus_id = translator.TranslatorByRegex([
     (r'.*/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM0.*/RU.*2(S|X)L(I|E)\..*', 0, r'vg-rss-2-u-occ-1986-024-lambda-#LOWER#\g<1>43-\2'),
     (r'.*/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM0.*/RU.*2(S|X)E(I|E)\..*', 0, r'vg-rss-2-u-occ-1986-024-epsilon-#LOWER#\g<1>43-\2'),
 
-    # VG_2810 (TODO: update later)
-    (r'.*/VG_28xx/VG_28(\d{2})/DATA/(IS\d_P....).*\..*', 0, r'vg-iss-prof-\1-\2'),
+    # VG_2810
+    # 'mission'-'inst'-'inst host'-prof
+    (r'.*/VG_28xx/VG_2810/DATA/IS(\d)_P.*\..*', 0, r'vg-iss-\1-prof'),
 ])
 
 
@@ -620,6 +621,9 @@ opus_id_to_primary_logical_path = translator.TranslatorByRegex([
     (r'vg-rss-2-u-occ-1986-024-delta-(.*)43-([ie])',   0, r'volumes/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM00_25/RU4P2#UPPER#\g<1>D\2.TAB'),
     (r'vg-rss-2-u-occ-1986-024-lambda-(.*)43-([ie])',  0, r'volumes/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM00_25/RU4P2#UPPER#\g<1>L\2.TAB'),
     (r'vg-rss-2-u-occ-1986-024-epsilon-(.*)43-([ie])', 0, r'volumes/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM00_25/RU4P2#UPPER#\g<1>E\2.TAB'),
+
+    # VG_2810, pick the smallest resolutions
+    (r'vg-iss-([12])-prof', 0, r'volumes/VG_28xx/VG_2810/DATA/IS\1_*_KM002.TAB'),
 ])
 
 ####################################################################################################################################
@@ -654,7 +658,7 @@ pdsfile.PdsFile.OPUS_ID_TO_SUBCLASS = translator.TranslatorByRegex([(r'TBD', 0, 
 pdsfile.PdsFile.OPUS_ID_TO_SUBCLASS = translator.TranslatorByRegex([(r'vg-pps.*occ.*', 0, VG_28xx)]) + \
                                       translator.TranslatorByRegex([(r'vg-uvs.*occ.*', 0, VG_28xx)]) + \
                                       translator.TranslatorByRegex([(r'vg-rss.*occ.*', 0, VG_28xx)]) + \
-                                      translator.TranslatorByRegex([(r'vg-iss.*prof.*', 0, VG_28xx)]) + \
+                                      translator.TranslatorByRegex([(r'vg-iss.*prof', 0, VG_28xx)]) + \
                                       pdsfile.PdsFile.OPUS_ID_TO_SUBCLASS
 
 
@@ -834,9 +838,7 @@ from .pytest_support import *
               40,
               'vgpps_occ_01',
               'Occultation Profile (1 km)',
-              True): ['volumes/VG_28xx/VG_2801/EASYDATA/KM001/PU2P01DE.TAB',
-                      'volumes/VG_28xx/VG_2801/EASYDATA/KM001/PU2P01DE.LBL',
-                      'volumes/VG_28xx/VG_2801/EASYDATA/KM001/PU1P01DE.TAB',
+              True): ['volumes/VG_28xx/VG_2801/EASYDATA/KM001/PU1P01DE.TAB',
                       'volumes/VG_28xx/VG_2801/EASYDATA/KM001/PU1P01DE.LBL',
                       'volumes/VG_28xx/VG_2801/EASYDATA/KM001/PU1P01DE.TAB',
                       'volumes/VG_28xx/VG_2801/EASYDATA/KM001/PU1P01DE.LBL'],
@@ -844,9 +846,7 @@ from .pytest_support import *
               50,
               'vgpps_occ_02',
               'Occultation Profile (2 km)',
-              True): ['volumes/VG_28xx/VG_2801/EASYDATA/KM002/PU2P01DE.TAB',
-                      'volumes/VG_28xx/VG_2801/EASYDATA/KM002/PU2P01DE.LBL',
-                      'volumes/VG_28xx/VG_2801/EASYDATA/KM002/PU1P01DE.TAB',
+              True): ['volumes/VG_28xx/VG_2801/EASYDATA/KM002/PU1P01DE.TAB',
                       'volumes/VG_28xx/VG_2801/EASYDATA/KM002/PU1P01DE.LBL',
                       'volumes/VG_28xx/VG_2801/EASYDATA/KM002/PU1P01DE.TAB',
                       'volumes/VG_28xx/VG_2801/EASYDATA/KM002/PU1P01DE.LBL'],
@@ -854,9 +854,7 @@ from .pytest_support import *
               60,
               'vgpps_occ_05',
               'Occultation Profile (5 km)',
-              True): ['volumes/VG_28xx/VG_2801/EASYDATA/KM005/PU2P01DE.TAB',
-                      'volumes/VG_28xx/VG_2801/EASYDATA/KM005/PU2P01DE.LBL',
-                      'volumes/VG_28xx/VG_2801/EASYDATA/KM005/PU1P01DE.TAB',
+              True): ['volumes/VG_28xx/VG_2801/EASYDATA/KM005/PU1P01DE.TAB',
                       'volumes/VG_28xx/VG_2801/EASYDATA/KM005/PU1P01DE.LBL',
                       'volumes/VG_28xx/VG_2801/EASYDATA/KM005/PU1P01DE.TAB',
                       'volumes/VG_28xx/VG_2801/EASYDATA/KM005/PU1P01DE.LBL'],
@@ -905,6 +903,24 @@ from .pytest_support import *
               'Occultation Profile (1/5 res)',
               True): ['volumes/VG_28xx/VG_2802/EASYDATA/FILTER05/UN1F01.TAB',
                       'volumes/VG_28xx/VG_2802/EASYDATA/FILTER05/UN1F01.LBL'],
+             ('Voyager UVS',
+              90,
+              'vguvs_occ_02',
+              'Occultation Profile (2 km)',
+              True): ['volumes/VG_28xx/VG_2802/EASYDATA/KM002/UN1P01.TAB',
+                      'volumes/VG_28xx/VG_2802/EASYDATA/KM002/UN1P01.LBL'],
+             ('Voyager UVS',
+              100,
+              'vguvs_occ_05',
+              'Occultation Profile (5 km)',
+              True): ['volumes/VG_28xx/VG_2802/EASYDATA/KM005/UN1P01.TAB',
+                      'volumes/VG_28xx/VG_2802/EASYDATA/KM005/UN1P01.LBL'],
+             ('Voyager UVS',
+              110,
+              'vguvs_occ_10',
+              'Occultation Profile (10 km)',
+              True): ['volumes/VG_28xx/VG_2802/EASYDATA/KM010/UN1P01.TAB',
+                      'volumes/VG_28xx/VG_2802/EASYDATA/KM010/UN1P01.LBL'],
              ('metadata',
               5,
               'rms_index',
