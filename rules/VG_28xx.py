@@ -546,8 +546,8 @@ opus_id = translator.TranslatorByRegex([
     (r'.*/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM0.*/RU.*2(S|X)E(I|E)\..*', 0, r'vg-rss-2-u-occ-1986-024-epsilon-#LOWER#\g<1>43-\2'),
 
     # VG_2810
-    # 'mission'-'inst'-'inst host'-prof
-    (r'.*/VG_28xx/VG_2810/DATA/IS(\d)_P.*\..*', 0, r'vg-iss-\1-prof'),
+    # 'mission'-'inst'-'inst host'-planet-prof
+    (r'.*/VG_28xx/VG_2810/DATA/IS(\d)_P.*\..*', 0, r'vg-iss-\1-s-prof'),
 ])
 
 
