@@ -623,7 +623,7 @@ opus_id_to_primary_logical_path = translator.TranslatorByRegex([
     (r'vg-rss-2-u-occ-1986-024-epsilon-(.*)43-([ie])', 0, r'volumes/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM00_25/RU4P2#UPPER#\g<1>E\2.TAB'),
 
     # VG_2810, pick the smallest resolutions
-    (r'vg-iss-([12])-prof', 0, r'volumes/VG_28xx/VG_2810/DATA/IS\1_*_KM002.TAB'),
+    (r'vg-iss-([12])-s-prof', 0, r'volumes/VG_28xx/VG_2810/DATA/IS\1_*_KM002.TAB'),
 ])
 
 ####################################################################################################################################
