@@ -52,6 +52,8 @@ class DictionaryCache(PdsCache):
 
         self.pauses = 0
 
+        self.preload_eligible = True
+
     def _trim(self):
         """Trim the dictionary if it is too big."""
 
@@ -76,9 +78,13 @@ class DictionaryCache(PdsCache):
         """Flush any buffered items. Not used for DictionaryCache."""
         return
 
-    def block(self):
-        """Block any process from touching the cache. Not used by
-        DictionaryCache."""
+    def wait_for_unblock(self, funcname=''):
+        """Pause until another process stops blocking, or until timeout."""
+        return
+
+    def wait_and_block(self, funcname=''):
+        """Pause until another process stops blocking, or until timeout, and
+        then obtain the block."""
         return
 
     def unblock(self, flush=True):
@@ -262,7 +268,7 @@ class DictionaryCache(PdsCache):
         return status
 
     def clear(self, block=False):
-        """Clear all concents of the cache."""
+        """Clear all contents of the cache."""
 
         self.dict.clear()
         self.keys = set()
@@ -381,62 +387,77 @@ class MemcachedCache(PdsCache):
         # finds a cached value that differs from its internal value, it knows
         # to clear its own contents.
 
-    def _wait_for_block(self, funcname):
+    def _wait_for_ok(self, funcname='', try_to_block=False):
         """Pause until another process stops blocking, or until timeout."""
 
         was_blocked = False
         broken_block = False
         while True:
-            blocking_pid = self.is_blocked()
-            if not blocking_pid: break
+            blocking_pid = self.mc.get('$OK_PID')
+            if blocking_pid in (0, self.pid):
+                break
 
             was_blocked = True
             unblock_time = time.time() + MAX_BLOCK_SECONDS
             if self.logger:
-                self.logger.debug(f'Process {self.pid} is blocked by ' +
-                                  f'{blocking_pid} at {funcname}() on ' +
-                                  f'MemcacheCache [{self.port}]')
+                if funcname:
+                    self.logger.info(f'Process {self.pid} is blocked by ' +
+                                     f'{blocking_pid} at {funcname}() on ' +
+                                     f'MemcacheCache [{self.port}]')
+                else:
+                    self.logger.info(f'Process {self.pid} is blocked by ' +
+                                     f'{blocking_pid} on ' +
+                                     f'MemcacheCache [{self.port}]')
 
-            broken_block = False
-            while self.is_blocked() == blocking_pid:
-                if time.time() > unblock_time:
-                    broken_block = True
+            while True:
+                time.sleep(0.5 * (1. + random.random())) # A random short delay
+
+                test_pid = self.mc.get('$OK_PID')
+                if test_pid != blocking_pid:
                     break
 
-                time.sleep(0.5 * (1. + random.random()))  # A random short delay
+                if time.time() > unblock_time:
+                    new_pid = self.pid if try_to_block else 0
+                    self.mc.set('$OK_PID', new_pid, time=0)
+                    self.logger.warn(f'Process {self.pid} broke a block by ' +
+                                     f'{blocking_pid} on ' +
+                                     f'MemcacheCache [{self.port}]')
+                    return True
 
-            if self.logger and broken_block:
-                self.mc.set('$OK_PID', 0, time=0)
-                self.logger.warn(f'Process {self.pid} broke a block by ' +
-                                 f'{blocking_pid} on ' +
-                                 f'MemcacheCache [{self.port}]')
-
-        if self.logger and was_blocked and not broken_block:
-            self.logger.debug(f'Process {self.pid} is unblocked at ' +
-                              f'{funcname}() on MemcacheCache [{self.port}]')
-
-    def block(self):
-        """Block any other process from touching the cache. Return True if
-        successful."""
-
-        test_pid = self.mc.get('$OK_PID')
-        if not test_pid:
+        if try_to_block and blocking_pid != self.pid:
             self.mc.set('$OK_PID', self.pid, time=0)
-            if self.logger:
-                self.logger.debug(f'Process {self.pid} is now blocking '
-                                  f'MemcachedCache [{self.port}]')
-            return True
 
-        if test_pid == self.pid:
-            if self.logger:
-                self.logger.error(f'Process {self.pid} is already blocking ' +
-                                  f'MemcachedCache [{self.port}]')
-            return True
+        return was_blocked
 
-        if self.logger:
-            self.logger.debug(f'Process {self.pid} is unable to block '
-                              f'MemcachedCache [{self.port}]')
-        return False
+    def wait_for_unblock(self, funcname=''):
+        """Pause until another process stops blocking, or until timeout. True if
+        any wait was required."""
+
+        was_blocked = self._wait_for_ok(funcname=funcname, try_to_block=False)
+        if was_blocked and self.logger:
+            self.logger.info(f'Process {self.pid} is unblocked on ' +
+                             f'MemcacheCache [{self.port}]')
+
+        return was_blocked
+
+    def wait_and_block(self, funcname=''):
+        """Pause until another process stops blocking, or until timeout, and
+        then obtain the block. True if any wait was required."""
+
+        was_blocked = False
+        while True:
+            was_blocked |= self._wait_for_ok(funcname=funcname,
+                                             try_to_block=True)
+
+            test_pid = self.mc.get('$OK_PID')
+            if test_pid == self.pid:
+                if self.logger:
+                    self.logger.info(f'Process {self.pid} is now blocking '
+                                     f'MemcachedCache [{self.port}]')
+                return was_blocked
+
+            self.logger.warn(f'Process {self.pid} was outraced by {test_pid} ' +
+                             f'while waiting to block')
 
     def unblock(self, flush=True):
         """Remove block preventing processes from touching the cache."""
@@ -458,8 +479,8 @@ class MemcachedCache(PdsCache):
 
         self.mc.set('$OK_PID', 0, time=0)
         if self.logger:
-            self.logger.debug(f'Process {self.pid} removed block of ' +
-                              f'MemcachedCache [{self.port}]')
+            self.logger.info(f'Process {self.pid} removed block of ' +
+                             f'MemcachedCache [{self.port}]')
 
         if flush:
             self.flush()
@@ -549,7 +570,7 @@ class MemcachedCache(PdsCache):
             for k in self.local_keys_by_lifetime[0]:
                 self.permanent_values[k] = self.local_value_by_key[k]
 
-        self._wait_for_block('flush')
+        self.wait_for_unblock('flush')
 
         # Cache items grouped by lifetime
         failures = []
@@ -625,7 +646,7 @@ class MemcachedCache(PdsCache):
             return self.local_value_by_key[key]
 
         # Otherwise, go to memcache
-        self._wait_for_block('get')
+        self.wait_for_unblock('get')
         pair = self.mc.get(key)
 
         # Value not found...
@@ -672,7 +693,7 @@ class MemcachedCache(PdsCache):
 
         # Retrieve non-local keys if any
         if nonlocal_keys:
-            self._wait_for_block('get_multi')
+            self.wait_for_unblock('get_multi')
 
 # Memcached->get_multi hangs on long lists; individual requests work fine
 #             mydict = self.mc.get_multi(nonlocal_keys)
@@ -836,7 +857,7 @@ class MemcachedCache(PdsCache):
     def delete(self, key):
         """Delete one key. Return True if it was deleted, False otherwise."""
 
-        self._wait_for_block('delete')
+        self.wait_for_unblock('delete')
         status1 = self.mc.delete(key)
         status2 = self._delete_local(key)
 
@@ -861,7 +882,7 @@ class MemcachedCache(PdsCache):
         """Delete multiple items based on a list of keys. Keys not found in
         the cache are ignored. Returns True if all keys were deleted."""
 
-        self._wait_for_block('delete_multi')
+        self.wait_for_unblock('delete_multi')
         _ = self.mc.del_multi(keys)
 
         # Save the current length
@@ -905,8 +926,10 @@ class MemcachedCache(PdsCache):
     def clear(self, block=False):
         """Clear all contents of the cache."""
 
-        self._wait_for_block('clear')
-        self.block()
+        if block:
+            self.wait_and_block('clear')
+        else:
+            self.wait_for_unblock('clear')
 
         clear_count = max(self.mc.get('$CLEAR_COUNT'), self.clear_count) + 1
         self.mc.flush_all()
@@ -921,15 +944,15 @@ class MemcachedCache(PdsCache):
         self.clear_count = clear_count
 
         if self.logger:
-            self.logger.debug(f'Process {self.pid} has set clear count to ' +
-                              f'{self.clear_count} on ' +
-                              f'MemcacheCache [{self.port}]')
+            self.logger.info(f'Process {self.pid} has set clear count to ' +
+                             f'{self.clear_count} on ' +
+                             f'MemcacheCache [{self.port}]')
 
         if block:
             if self.logger:
-              self.logger.debug(f'Process {self.pid} has completed clear() ' +
-                                f'of MemcacheCache [{self.port}] ' +
-                                f'but continues to block')
+                self.logger.info(f'Process {self.pid} has completed clear() ' +
+                                 f'of MemcacheCache [{self.port}] ' +
+                                 f'but continues to block')
         else:
             self.unblock()
 
@@ -954,8 +977,8 @@ class MemcachedCache(PdsCache):
         self.clear_count = clear_count
 
         if self.logger:
-            self.logger.debug(f'Process {self.pid} has replicated clear of ' +
-                              f'MemcacheCache [{self.port}]')
+            self.logger.info(f'Process {self.pid} has replicated clear of ' +
+                             f'MemcacheCache [{self.port}]')
         return True
 
     def replicate_clear_if_necessary(self):
@@ -995,10 +1018,29 @@ class MemcachedCache(PdsCache):
                 self.permanent_values[key] = pair[0]
                 del local_dict[key]
 
-        # At this point local_dict contains all the permanent values currently
+        # At this point, local_dict contains all the permanent values currently
         # missing from the cache. Also, self.permanent_values is as up to date
         # as it can be.
 
         mydict = {k:(v,0) for (k,v) in local_dict.items()}
-        self.mc.set_multi(mydict, time=0)
+        try:
+            self.mc.set_multi(mydict, time=0)
+
+        except pylibmc.TooBig:
+
+        # This happens if a "TooBig" item is supposed to be in the permanent
+        # cache. It means that we have to remove it from the permanent_values
+        # dictionary so this doesn't happen again.
+
+            for (k,v) in mydict.items():
+                try:
+                    self.mc.set(k, v, time=0)
+                except pylibmc.TooBig:
+                    self.logger.warn(f'Permanent object is TooBig in process ' +
+                                     f'{self.pid}; ' +
+                                     'removed from permanent list and saved ' +
+                                     'to internal cache', k)
+                    self.toobig_dict[k] = v[0]
+                    del self.permanent_values[k]
+
 

@@ -227,7 +227,8 @@ def require_shelves(status=True):
 #       Returns the PdsFile object associated with the given path, if it has
 #       been cached.
 
-DEFAULT_FILE_CACHE_LIFETIME = 12 * 60 * 60      # 12 hours
+DEFAULT_FILE_CACHE_LIFETIME =  12 * 60 * 60      # 12 hours
+LONG_FILE_CACHE_LIFETIME = 7 * 24 * 60 * 60      # 7 days
 
 def cache_lifetime(arg):
     """Used by caches. Given any object, it returns the default lifetime in
@@ -241,14 +242,14 @@ def cache_lifetime(arg):
     elif not isinstance(arg, PdsFile):
         return 0
 
-    # Cache PdsFile volsets and volumes forever
+    # Cache PdsFile volsets/volumes for a long time, but not necessarily forever
     elif not arg.interior:
-        return 0
+        return LONG_FILE_CACHE_LIFETIME
 
     elif arg.isdir and arg.interior.lower().endswith('data'):
-        return 0                            # .../volname/*data forever
+        return LONG_FILE_CACHE_LIFETIME     # .../volname/*data for a long time
     elif arg.isdir:
-        return 3 * 24 * 60 * 60             # Other directories for three days
+        return 2 * 24 * 60 * 60             # Other directories for two days
     else:
         return DEFAULT_FILE_CACHE_LIFETIME
 
@@ -322,7 +323,7 @@ def preload(holdings_list, port=0, clear=False, force_reload=False):
                                   (MEMCACHE_PORT, 2**k))
                 time.sleep(2.**k)       # try then wait 1 sec, then 2 sec
 
-            else:       # give up after four tries
+            else:       # give up after three tries
                 if LOGGER:
                     LOGGER.error(('Failed to connect PdsFile Memcache [%s]; '+
                                    'using dictionary instead') %
@@ -334,12 +335,6 @@ def preload(holdings_list, port=0, clear=False, force_reload=False):
                                                 limit=DICTIONARY_CACHE_LIMIT,
                                                 logger=LOGGER)
 
-    # Clear if necessary
-    if clear:
-        CACHE.clear(block=True) # For a MemcachedCache, this will pause for any
-                                # other thread's block, then clear, and retain
-                                # the block until the preload is finished.
-
     # Define default caching based on whether MemCache is active
     if MEMCACHE_PORT == 0:
         DEFAULT_CACHING = 'dir'
@@ -349,37 +344,53 @@ def preload(holdings_list, port=0, clear=False, force_reload=False):
     if LOGGER:          # This suppresses long absolute paths in the logs
         LOGGER.add_root(holdings_list)
 
-    # Get the current list of preloaded holdings directories
-    if force_reload:
+    #### Get the current list of preloaded holdings directories and decide how
+    #### to proceed
+
+    if clear:
+        CACHE.clear(block=True) # For a MemcachedCache, this will pause for any
+                                # other thread's block, then clear, and retain
+                                # the block until the preload is finished.
+        LOCAL_PRELOADED = []
+        if LOGGER:
+            LOGGER.info('Cache cleared')
+
+    elif force_reload:
         LOCAL_PRELOADED = []
         if LOGGER:
             LOGGER.info('Forcing a complete new preload')
+        CACHE.wait_and_block()
+
     else:
-        try:
-            LOCAL_PRELOADED = list(CACHE['$PRELOADED'])
-        except KeyError:
-            LOCAL_PRELOADED = []
+        while True:
+            LOCAL_PRELOADED = CACHE.get_now('$PRELOADED') or []
 
-    # If nothing is missing, we're done
-    already_loaded = True
-    for holdings in holdings_list:
-        if holdings in LOCAL_PRELOADED:
-            if LOGGER:
-                LOGGER.info('Holdings are already cached', holdings)
-        else:
-            already_loaded = False
+            # Report status
+            something_is_missing = False
+            for holdings in holdings_list:
+                if holdings in LOCAL_PRELOADED:
+                    if LOGGER:
+                        LOGGER.info('Holdings are already cached', holdings)
+                else:
+                    something_is_missing = True
 
-    if already_loaded:
-        if MEMCACHE_PORT:
-            get_permanent_values(holdings_list, MEMCACHE_PORT)
-            # Note that if any permanently cached values are missing, this call
-            # will recursively clear the cache and preload again. This reduces
-            # the chance of a corrupted cache.
+            if not something_is_missing:
+                if MEMCACHE_PORT:
+                    get_permanent_values(holdings_list, MEMCACHE_PORT)
+                    # Note that if any permanently cached values are missing,
+                    # this call will recursively clear the cache and preload
+                    # again. This reduces the chance of a corrupted cache.
 
-        return
+                return
 
-    # Block the cache before proceeding
-    CACHE.block()       # Blocked means no other thread can use it
+            waited = CACHE.wait_and_block()
+            if not waited:      # A wait suggests the answer might have changed,
+                                # so try again.
+                break
+
+            CACHE.unblock()
+
+    # At this point, the cache is blocked.
 
     # Pause the cache before proceeding--saves I/O
     CACHE.pause()       # Paused means no local changes will be flushed to the
@@ -505,15 +516,6 @@ def pause_caching():
 
 def resume_caching():
     CACHE.resume()
-
-def clear_cache(block=True):
-    CACHE.clear(block)
-
-def block_cache():
-    CACHE.block()
-
-def unblock_cache():
-    CACHE.unblock()
 
 def get_permanent_values(holdings_list, port):
     """Load the most obvious set of permanent values from the cache to ensure
