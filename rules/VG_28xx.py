@@ -792,7 +792,7 @@ opus_id = translator.TranslatorByRegex([
     # U RINGS (1986-01-24):
     # 'mission'-'inst'-'inst host'-planet-occ-'year'-'day of year'-'ring name'-'star name'-'direction'
     (r'.*/VG_28xx/VG_2802/[^D].*/UU(1|2)...([654ABNGDLEX])(I|E)\..*', 0,
-            r'vg-uvs-2-u-occ-1986-024-' + USTAR_DICT + r'[\1]-' + URING_DICT + r'["\2"]' + r'-sigsgr-#LOWER#\3'),
+            r'vg-uvs-2-u-occ-1986-024-' + URING_DICT + r'["\2"]' + USTAR_DICT + r'[\1]-' + r'-#LOWER#\3'),
 #     (r'.*/VG_28xx/VG_2802/EASYDATA/(?:FILTER.*|KM0.*)/UU..*6(I|E)\..*', 0, r'vg-uvs-2-u-occ-1986-024-six-sigsgr-#LOWER#\1'),
 #     (r'.*/VG_28xx/VG_2802/EASYDATA/(?:FILTER.*|KM0.*)/UU..*5(I|E)\..*', 0, r'vg-uvs-2-u-occ-1986-024-five-sigsgr-#LOWER#\1'),
 #     (r'.*/VG_28xx/VG_2802/EASYDATA/(?:FILTER.*|KM0.*)/UU..*4(I|E)\..*', 0, r'vg-uvs-2-u-occ-1986-024-four-sigsgr-#LOWER#\1'),
