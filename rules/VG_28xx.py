@@ -493,7 +493,7 @@ opus_type = translator.TranslatorByRegex([
     (r'volumes/.*/VG_2802/EASYDATA/KM020/.*',     0, ('Voyager UVS', 26, 'vguvs_occ_20',        'Calibrated Profile (20 km binned)',    False)),
     (r'volumes/.*/VG_2802/EASYDATA/KM050/.*',     0, ('Voyager UVS', 27, 'vguvs_occ_50',        'Calibrated Profile (50 km binned)',    False)),
     (r'volumes/.*/VG_2802/EDITDATA/U..D.*',       0, ('Voyager UVS', 30, 'vguvs_occ_coadd',     'Raw Coadded Spectra',         False)),
-    (r'volumes/.*/VG_2802/EDITDATA/U..W.*',       0, ('Voyager UVS', 35, 'vguvs_occ_spec',      'Raw Spectra',                 False)),
+    (r'volumes/.*/VG_2802/EDITDATA/U..W..P.*',    0, ('Voyager UVS', 35, 'vguvs_occ_spec',      'Raw Spectra',                 False)),
     (r'volumes/.*/VG_2802/CALIB/.*',              0, ('Voyager UVS', 40, 'vguvs_occ_cal',       'Calibration Model',           False)),
     (r'volumes/.*/VG_2802/GEOMETRY/.*',           0, ('Voyager UVS', 50, 'vguvs_occ_geo',       'Geometry Model',              False)),
     (r'volumes/.*/VG_2802/IMAGES/.*',             0, ('Voyager UVS', 60, 'vguvs_occ_img',       'Support Image',               False)),
