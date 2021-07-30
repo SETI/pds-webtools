@@ -36,7 +36,7 @@ opus_id_list = [
     'vg-rss-1-s-occ-1980-318-s63-e',
     'vg-rss-1-s-occ-1980-318-x63-e',
     'vg-rss-2-u-occ-1986-024-alpha-s43-e',
-    'vg-rss-2-u-occ-1986-024-alpha-s43-i',,
+    'vg-rss-2-u-occ-1986-024-alpha-s43-i',
     'vg-rss-2-u-occ-1986-024-alpha-x43-e',
     'vg-rss-2-u-occ-1986-024-alpha-x43-i',
     'vg-rss-2-u-occ-1986-024-beta-s43-e',
@@ -75,15 +75,37 @@ opus_id_list = [
     'vg-uvs-2-n-occ-1989-236-sigsgr-i',
     'vg-uvs-2-s-occ-1981-237-delsco-i',
     'vg-uvs-2-s-occ-1981-238-delsco-e',
-    'vg-uvs-2-u-occ-1986-024-delta-sigsgr-e',
-    'vg-uvs-2-u-occ-1986-024-delta-sigsgr-i',
-    'vg-uvs-2-u-occ-1986-024-epsilon-sigsgr-e',
-    'vg-uvs-2-u-occ-1986-024-epsilon-sigsgr-i',
-    'vg-uvs-2-u-occ-1986-024-ringpl-sigsgr-e',
-    'vg-uvs-2-u-occ-1986-024-ringpl-sigsgr-i' 
+    'vg-uvs-2-u-occ-1986-024-sigsgr-delta-e',
+    'vg-uvs-2-u-occ-1986-024-sigsgr-delta-i',
+    'vg-uvs-2-u-occ-1986-024-sigsgr-epsilon-e',
+    'vg-uvs-2-u-occ-1986-024-sigsgr-epsilon-i',
+    'vg-uvs-2-u-occ-1986-024-sigsgr-ringpl-e',
+    'vg-uvs-2-u-occ-1986-024-sigsgr-ringpl-i'
 ]
-
-for id in opus_id_list:
-    pdsf = pdsfile.from_opus_id(id);
-    print('============================')
-    print(pdsf.logical_path)
+list_dir = f"./files_with_missing_cat.txt"
+# Write proposal ids into proposal_ids.txt
+with open(list_dir, "w") as f:
+    for id in opus_id_list:
+        try:
+            pdsf = pdsfile.PdsFile.from_opus_id(id);
+        except ValueError:
+            f.write("%s\n" % '============================')
+            f.write("%s\n" % 'Unrecognized opus id:')
+            f.write("%s\n" % id)
+            continue
+        # print('============================')
+        # print(pdsf.logical_path)
+        # print(files)
+        opus_products_cat = pdsf.opus_products().keys()
+        if '' in opus_products_cat:
+            files = pdsf.opus_products()['']
+            f.write("%s\n" % '============================')
+            f.write("%s\n" % 'Test case:')
+            f.write("%s\n" % pdsf.logical_path)
+            f.write("%s\n" % 'OPUS ID:')
+            f.write("%s\n" % id)
+            f.write("%s\n" % 'Files without opus_type in opus_products return:')
+            # f.write("%s\n" % files)
+            for file_li in files:
+                for file in file_li:
+                    f.write("%s\n" % file.logical_path)
