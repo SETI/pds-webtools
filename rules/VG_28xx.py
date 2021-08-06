@@ -489,7 +489,6 @@ opus_type = translator.TranslatorByRegex([
     (r'volumes/.*/VG_2802/VECTORS/J2000/...VE.*', 0, ('Voyager UVS', 81, 'vguvs_occ_ring',      'Vector Tables (ring frame)',  False)),
 
     # VG_2803
-    # volumes/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM00_2/RU1P2X4I.TAB
     (r'volumes/.*/VG_2803/U_RINGS/EASYDATA/KM00_025/RU1P1.*', 0, ('Voyager RSS', 10, 'vgrss_occ_inv0_05',   '50 m inversion', True )),
     (r'volumes/.*/VG_2803/U_RINGS/EASYDATA/KM00_025/RU2P1.*', 0, ('Voyager RSS', 11, 'vgrss_occ_inv0_2',   '200 m inversion', True )),
     (r'volumes/.*/VG_2803/U_RINGS/EASYDATA/KM00_05/RU3P1.*',  0, ('Voyager RSS', 11, 'vgrss_occ_inv0_2',   '200 m inversion', True )),
@@ -507,8 +506,6 @@ opus_type = translator.TranslatorByRegex([
     (r'volumes/.*/VG_2803/._RINGS/EASYDATA/KM00_25/R.*',      0, ('Voyager RSS', 24, 'vgrss_occ_sam0_25',  '200 m resampled', False)),
     (r'volumes/.*/VG_2803/._RINGS/EASYDATA/KM0+_5/R.*',       0, ('Voyager RSS', 25, 'vgrss_occ_sam0_5',   '500 m resampled', False)),
     (r'volumes/.*/VG_2803/._RINGS/EASYDATA/KM001/R.*',        0, ('Voyager RSS', 26, 'vgrss_occ_sam01',     '1 km resampled', False)),
-#     (r'volumes/.*/VG_2803/._RINGS/EASYDATA/KM000_2/R.*',      0, ('Voyager RSS', 26, 'vgrss_occ_sam0_2',   '200 m resampled', False)),
-#     (r'volumes/.*/VG_2803/._RINGS/EASYDATA/KM000_5/R.*',      0, ('Voyager RSS', 26, 'vgrss_occ_sam0_5',   '500 m resampled', False)),
     (r'volumes/.*/VG_2803/._RINGS/EASYDATA/KM002/R.*',        0, ('Voyager RSS', 27, 'vgrss_occ_sam02',     '2 km resampled', False)),
     (r'volumes/.*/VG_2803/._RINGS/EASYDATA/KM002_5/R.*',      0, ('Voyager RSS', 28, 'vgrss_occ_sam02_5', '2.5 km resampled', False)),
     (r'volumes/.*/VG_2803/._RINGS/EASYDATA/KM005/R.*',        0, ('Voyager RSS', 29, 'vgrss_occ_sam05',     '5 km resampled', False)),
@@ -744,28 +741,6 @@ opus_id = translator.TranslatorByRegex([
     # 'mission'-'inst'-'inst host'-planet-occ-'year'-'day of year'-'star name'-'ring name'-'direction'
     (r'.*/VG_28xx/VG_2801/[^D].*/PU(1|2)...([654ABNGDLEX])(I|E)\..*', 0,
             r'vg-pps-2-u-occ-1986-024-' + USTAR_DICT + r'[\1]-' + URING_DICT + r'["\2"]-#LOWER#\3'),
-#     (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU1.*6(I|E)\..*', 0, r'vg-pps-2-u-occ-1986-024-sigsgr-six-#LOWER#\1'),
-#     (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU1.*5(I|E)\..*', 0, r'vg-pps-2-u-occ-1986-024-sigsgr-five-#LOWER#\1'),
-#     (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU1.*4(I|E)\..*', 0, r'vg-pps-2-u-occ-1986-024-sigsgr-four-#LOWER#\1'),
-#     (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU1.*A(I|E)\..*', 0, r'vg-pps-2-u-occ-1986-024-sigsgr-alpha-#LOWER#\1'),
-#     (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU1.*B(I|E)\..*', 0, r'vg-pps-2-u-occ-1986-024-sigsgr-beta-#LOWER#\1'),
-#     (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU1.*N(I|E)\..*', 0, r'vg-pps-2-u-occ-1986-024-sigsgr-eta-#LOWER#\1'),
-#     (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU1.*G(I|E)\..*', 0, r'vg-pps-2-u-occ-1986-024-sigsgr-gamma-#LOWER#\1'),
-#     (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU1.*D(I|E)\..*', 0, r'vg-pps-2-u-occ-1986-024-sigsgr-delta-#LOWER#\1'),
-#     (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU1.*L(I|E)\..*', 0, r'vg-pps-2-u-occ-1986-024-sigsgr-lambda-#LOWER#\1'),
-#     (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU1.*E(I|E)\..*', 0, r'vg-pps-2-u-occ-1986-024-sigsgr-epsilon-#LOWER#\1'),
-#     (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU1.*X(I|E)\..*', 0, r'vg-pps-2-u-occ-1986-024-sigsgr-ringpl-#LOWER#\1'),
-#     (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU2.*6(I|E)\..*', 0, r'vg-pps-2-u-occ-1986-024-betper-six-#LOWER#\1'),
-#     (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU2.*5(I|E)\..*', 0, r'vg-pps-2-u-occ-1986-024-betper-five-#LOWER#\1'),
-#     (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU2.*4(I|E)\..*', 0, r'vg-pps-2-u-occ-1986-024-betper-four-#LOWER#\1'),
-#     (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU2.*A(I|E)\..*', 0, r'vg-pps-2-u-occ-1986-024-betper-alpha-#LOWER#\1'),
-#     (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU2.*B(I|E)\..*', 0, r'vg-pps-2-u-occ-1986-024-betper-beta-#LOWER#\1'),
-#     (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU2.*N(I|E)\..*', 0, r'vg-pps-2-u-occ-1986-024-betper-eta-#LOWER#\1'),
-#     (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU2.*G(I|E)\..*', 0, r'vg-pps-2-u-occ-1986-024-betper-gamma-#LOWER#\1'),
-#     (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU2.*D(I|E)\..*', 0, r'vg-pps-2-u-occ-1986-024-betper-delta-#LOWER#\1'),
-#     (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU2.*L(I|E)\..*', 0, r'vg-pps-2-u-occ-1986-024-betper-lambda-#LOWER#\1'),
-#     (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU2.*E(I|E)\..*', 0, r'vg-pps-2-u-occ-1986-024-betper-epsilon-#LOWER#\1'),
-#     (r'.*/VG_28xx/VG_2801/EASYDATA/KM0.*/PU2.*X(I|E)\..*', 0, r'vg-pps-2-u-occ-1986-024-betper-ringpl-#LOWER#\1'),
 
     # N RINGS (1989-08-24, ingress):
     # 'mission'-'inst'-'inst host'-planet-occ-'year'-'day of year'-'star name'-'direction'
@@ -783,17 +758,6 @@ opus_id = translator.TranslatorByRegex([
     # 'mission'-'inst'-'inst host'-planet-occ-'year'-'day of year'-'star name'-'ring name'-'direction'
     (r'.*/VG_28xx/VG_2802/[^D].*/UU(1|2)...([654ABNGDLEX])(I|E)\..*', 0,
             r'vg-uvs-2-u-occ-1986-024-' + USTAR_DICT + r'[\1]-' + URING_DICT + r'["\2"]-#LOWER#\3'),
-#     (r'.*/VG_28xx/VG_2802/EASYDATA/(?:FILTER.*|KM0.*)/UU..*6(I|E)\..*', 0, r'vg-uvs-2-u-occ-1986-024-sigsgr-six-#LOWER#\1'),
-#     (r'.*/VG_28xx/VG_2802/EASYDATA/(?:FILTER.*|KM0.*)/UU..*5(I|E)\..*', 0, r'vg-uvs-2-u-occ-1986-024-sigsgr-five-#LOWER#\1'),
-#     (r'.*/VG_28xx/VG_2802/EASYDATA/(?:FILTER.*|KM0.*)/UU..*4(I|E)\..*', 0, r'vg-uvs-2-u-occ-1986-024-sigsgr-four-#LOWER#\1'),
-#     (r'.*/VG_28xx/VG_2802/EASYDATA/(?:FILTER.*|KM0.*)/UU..*A(I|E)\..*', 0, r'vg-uvs-2-u-occ-1986-024-sigsgr-alpha-#LOWER#\1'),
-#     (r'.*/VG_28xx/VG_2802/EASYDATA/(?:FILTER.*|KM0.*)/UU..*B(I|E)\..*', 0, r'vg-uvs-2-u-occ-1986-024-sigsgr-beta-#LOWER#\1'),
-#     (r'.*/VG_28xx/VG_2802/EASYDATA/(?:FILTER.*|KM0.*)/UU..*N(I|E)\..*', 0, r'vg-uvs-2-u-occ-1986-024-sigsgr-eta-#LOWER#\1'),
-#     (r'.*/VG_28xx/VG_2802/EASYDATA/(?:FILTER.*|KM0.*)/UU..*G(I|E)\..*', 0, r'vg-uvs-2-u-occ-1986-024-sigsgr-gamma-#LOWER#\1'),
-#     (r'.*/VG_28xx/VG_2802/EASYDATA/(?:FILTER.*|KM0.*)/UU..*D(I|E)\..*', 0, r'vg-uvs-2-u-occ-1986-024-sigsgr-delta-#LOWER#\1'),
-#     (r'.*/VG_28xx/VG_2802/EASYDATA/(?:FILTER.*|KM0.*)/UU..*L(I|E)\..*', 0, r'vg-uvs-2-u-occ-1986-024-sigsgr-lambda-#LOWER#\1'),
-#     (r'.*/VG_28xx/VG_2802/EASYDATA/(?:FILTER.*|KM0.*)/UU..*E(I|E)\..*', 0, r'vg-uvs-2-u-occ-1986-024-sigsgr-epsilon-#LOWER#\1'),
-#     (r'.*/VG_28xx/VG_2802/EASYDATA/(?:FILTER.*|KM0.*)/UU..*X(I|E)\..*', 0, r'vg-uvs-2-u-occ-1986-024-sigsgr-ringpl-#LOWER#\1'),
 
     # N RINGS (1989-08-24):
     # 'mission'-'inst'-'inst host'-planet-occ-'year'-'day of year'-'star name'-'direction'
@@ -810,16 +774,6 @@ opus_id = translator.TranslatorByRegex([
     # 'mission'-'inst'-'inst host'-planet-occ-'year'-'day of year'-'band name + 2-digit DSN'-'ring name'-'direction'
     (r'.*/VG_28xx.*/VG_2803/U_RINGS/.*/RU...(S|X)([654ABNGDLE])(I|E)\..*', 0,
             r'vg-rss-2-u-occ-1986-024-#LOWER#\g<1>43-' + URING_DICT + r'["\2"]-\3'),
-#     (r'.*/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM0.*/RU.*2(S|X)6(I|E)\..*', 0, r'vg-rss-2-u-occ-1986-024-#LOWER#\g<1>43-six-\2'),
-#     (r'.*/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM0.*/RU.*2(S|X)5(I|E)\..*', 0, r'vg-rss-2-u-occ-1986-024-#LOWER#\g<1>43-five-\2'),
-#     (r'.*/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM0.*/RU.*2(S|X)4(I|E)\..*', 0, r'vg-rss-2-u-occ-1986-024-#LOWER#\g<1>43-four-\2'),
-#     (r'.*/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM0.*/RU.*2(S|X)A(I|E)\..*', 0, r'vg-rss-2-u-occ-1986-024-#LOWER#\g<1>43-alpha-\2'),
-#     (r'.*/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM0.*/RU.*2(S|X)B(I|E)\..*', 0, r'vg-rss-2-u-occ-1986-024-#LOWER#\g<1>43-beta-\2'),
-#     (r'.*/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM0.*/RU.*2(S|X)N(I|E)\..*', 0, r'vg-rss-2-u-occ-1986-024-#LOWER#\g<1>43-eta-\2'),
-#     (r'.*/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM0.*/RU.*2(S|X)G(I|E)\..*', 0, r'vg-rss-2-u-occ-1986-024-#LOWER#\g<1>43-gamma-\2'),
-#     (r'.*/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM0.*/RU.*2(S|X)D(I|E)\..*', 0, r'vg-rss-2-u-occ-1986-024-#LOWER#\g<1>43-delta-\2'),
-#     (r'.*/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM0.*/RU.*2(S|X)L(I|E)\..*', 0, r'vg-rss-2-u-occ-1986-024-#LOWER#\g<1>43-lambda-\2'),
-#     (r'.*/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM0.*/RU.*2(S|X)E(I|E)\..*', 0, r'vg-rss-2-u-occ-1986-024-#LOWER#\g<1>43-epsilon-\2'),
 
     # VG_2810
     # 'mission'-'inst'-'inst host'-prof
@@ -856,33 +810,10 @@ opus_id_to_primary_logical_path = translator.TranslatorByRegex([
     # Neptune: PN1 in KM002
     (r'vg-pps-2-s-occ-1981-238-(.*)-e',  0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM005/PS1P01.TAB'),
     (r'vg-pps-2-s-occ-1981-238-(.*)-e2', 0, r'volumes/VG_28xx/VG_2801/EDITDATA/PS2D01.DAT'),
-
     (r'vg-pps-2-u-occ-1986-024-sigsgr-(\w+)-([ie])',       0,
             r'volumes/VG_28xx/VG_2801/EASYDATA/KM000_1/PU1P01' + URING_INV_DICT + r'["\1"]' + r'#UPPER#\2.TAB'),
     (r'vg-pps-2-u-occ-1986-024-betper-(\w+)-([ie])',       0,
             r'volumes/VG_28xx/VG_2801/EASYDATA/KM001/PU2P01' + URING_INV_DICT + r'["\1"]' + r'#UPPER#\2.TAB'),
-#     (r'vg-pps-2-u-occ-1986-024-sigsgr-six-([ie])',       0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM000_1/PU1P016#UPPER#\1.TAB'),
-#     (r'vg-pps-2-u-occ-1986-024-sigsgr-five-([ie])',      0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM000_1/PU1P015#UPPER#\1.TAB'),
-#     (r'vg-pps-2-u-occ-1986-024-sigsgr-four-([ie])',      0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM000_1/PU1P014#UPPER#\1.TAB'),
-#     (r'vg-pps-2-u-occ-1986-024-sigsgr-alpha-([ie])',     0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM000_1/PU1P01A#UPPER#\1.TAB'),
-#     (r'vg-pps-2-u-occ-1986-024-sigsgr-beta-([ie])',      0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM000_1/PU1P01B#UPPER#\1.TAB'),
-#     (r'vg-pps-2-u-occ-1986-024-sigsgr-eta-([ie])',       0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM000_1/PU1P01N#UPPER#\1.TAB'),
-#     (r'vg-pps-2-u-occ-1986-024-sigsgr-gamma-([ie])',     0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM000_1/PU1P01G#UPPER#\1.TAB'),
-#     (r'vg-pps-2-u-occ-1986-024-sigsgr-delta-([ie])',     0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM000_1/PU1P01D#UPPER#\1.TAB'),
-#     (r'vg-pps-2-u-occ-1986-024-sigsgr-lambda-([ie])',    0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM000_1/PU1P01L#UPPER#\1.TAB'),
-#     (r'vg-pps-2-u-occ-1986-024-sigsgr-epsilon-([ie])',   0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM000_1/PU1P01E#UPPER#\1.TAB'),
-#     (r'vg-pps-2-u-occ-1986-024-sigsgr-ringpl-([ie])',    0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM000_1/PU1P01X#UPPER#\1.TAB'),
-#     (r'vg-pps-2-u-occ-1986-024-betper-six-([ie])',       0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM001/PU2P016#UPPER#\1.TAB'),
-#     (r'vg-pps-2-u-occ-1986-024-betper-five-([ie])',      0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM001/PU2P015#UPPER#\1.TAB'),
-#     (r'vg-pps-2-u-occ-1986-024-betper-four-([ie])',      0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM001/PU2P014#UPPER#\1.TAB'),
-#     (r'vg-pps-2-u-occ-1986-024-betper-alpha-([ie])',     0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM001/PU2P01A#UPPER#\1.TAB'),
-#     (r'vg-pps-2-u-occ-1986-024-betper-beta-([ie])',      0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM001/PU2P01B#UPPER#\1.TAB'),
-#     (r'vg-pps-2-u-occ-1986-024-betper-eta-([ie])',       0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM001/PU2P01N#UPPER#\1.TAB'),
-#     (r'vg-pps-2-u-occ-1986-024-betper-gamma-([ie])',     0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM001/PU2P01G#UPPER#\1.TAB'),
-#     (r'vg-pps-2-u-occ-1986-024-betper-delta-([ie])',     0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM001/PU2P01D#UPPER#\1.TAB'),
-#     (r'vg-pps-2-u-occ-1986-024-betper-lambda-([ie])',    0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM001/PU2P01L#UPPER#\1.TAB'),
-#     (r'vg-pps-2-u-occ-1986-024-betper-epsilon-([ie])',   0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM001/PU2P01E#UPPER#\1.TAB'),
-#     (r'vg-pps-2-u-occ-1986-024-betper-ringpl-([ie])', 0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM001/PU2P01X#UPPER#\1.TAB'),
     (r'vg-pps-2-n-occ-1989-236-(.*)-i',                  0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM002/PN1P01.TAB'),
 
     # VG_2802, Saturn: FILTER01, Uranus: FILTER01, Neptune: FILTER01
@@ -891,17 +822,6 @@ opus_id_to_primary_logical_path = translator.TranslatorByRegex([
     (r'vg-uvs-1-s-occ-1980-317-iother-e',                0, r'volumes/VG_28xx/VG_2802/EASYDATA/FILTER01/US3F01.TAB'),
     (r'vg-uvs-2-u-occ-1986-024-sigsgr-(\w+)-([ie])',     0,
             r'volumes/VG_28xx/VG_2802/EASYDATA/FILTER01/UU1F01' + URING_INV_DICT + r'["\1"]' + r'#UPPER#\2.TAB'),
-#     (r'vg-uvs-2-u-occ-1986-024-sigsgr-six-([ie])',       0, r'volumes/VG_28xx/VG_2802/EASYDATA/FILTER01/UU1F016#UPPER#\1.TAB'),
-#     (r'vg-uvs-2-u-occ-1986-024-sigsgr-five-([ie])',      0, r'volumes/VG_28xx/VG_2802/EASYDATA/FILTER01/UU1F015#UPPER#\1.TAB'),
-#     (r'vg-uvs-2-u-occ-1986-024-sigsgr-four-([ie])',      0, r'volumes/VG_28xx/VG_2802/EASYDATA/FILTER01/UU1F014#UPPER#\1.TAB'),
-#     (r'vg-uvs-2-u-occ-1986-024-sigsgr-alpha-([ie])',     0, r'volumes/VG_28xx/VG_2802/EASYDATA/FILTER01/UU1F01A#UPPER#\1.TAB'),
-#     (r'vg-uvs-2-u-occ-1986-024-sigsgr-beta-([ie])',      0, r'volumes/VG_28xx/VG_2802/EASYDATA/FILTER01/UU1F01B#UPPER#\1.TAB'),
-#     (r'vg-uvs-2-u-occ-1986-024-sigsgr-eta-([ie])',       0, r'volumes/VG_28xx/VG_2802/EASYDATA/FILTER01/UU1F01N#UPPER#\1.TAB'),
-#     (r'vg-uvs-2-u-occ-1986-024-sigsgr-gamma-([ie])',     0, r'volumes/VG_28xx/VG_2802/EASYDATA/FILTER01/UU1F01G#UPPER#\1.TAB'),
-#     (r'vg-uvs-2-u-occ-1986-024-sigsgr-delta-([ie])',     0, r'volumes/VG_28xx/VG_2802/EASYDATA/FILTER01/UU1F01D#UPPER#\1.TAB'),
-#     (r'vg-uvs-2-u-occ-1986-024-sigsgr-lambda-([ie])',    0, r'volumes/VG_28xx/VG_2802/EASYDATA/FILTER01/UU1F01L#UPPER#\1.TAB'),
-#     (r'vg-uvs-2-u-occ-1986-024-sigsgr-epsilon-([ie])',   0, r'volumes/VG_28xx/VG_2802/EASYDATA/FILTER01/UU1F01E#UPPER#\1.TAB'),
-#     (r'vg-uvs-2-u-occ-1986-024-sigsgr-ringpl-([ie])',    0, r'volumes/VG_28xx/VG_2802/EASYDATA/FILTER01/UU1F01X#UPPER#\1.TAB'),
     (r'vg-uvs-2-n-occ-1989-236-sigsgr-i',                0, r'volumes/VG_28xx/VG_2802/EASYDATA/FILTER01/UN1F01.TAB'),
 
     # VG_2803, pick the smallest resolutions
@@ -909,16 +829,6 @@ opus_id_to_primary_logical_path = translator.TranslatorByRegex([
     (r'vg-rss-1-s-occ-1980-318-(.*)63-e',              0, r'volumes/VG_28xx/VG_2803/S_RINGS/EASYDATA/KM002_5/RS3P2#UPPER#\1.TAB'),
     (r'vg-rss-2-u-occ-1986-024-(.*)43-(\w+)-([ie])',   0,
             r'volumes/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM00_25/RU4P2#UPPER#\g<1>' + URING_INV_DICT + r'["\2"]' + r'\3.TAB'),
-#     (r'vg-rss-2-u-occ-1986-024-six-(.*)43-([ie])',     0, r'volumes/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM00_25/RU4P2#UPPER#\g<1>6\2.TAB'),
-#     (r'vg-rss-2-u-occ-1986-024-five-(.*)43-([ie])',    0, r'volumes/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM00_25/RU4P2#UPPER#\g<1>5\2.TAB'),
-#     (r'vg-rss-2-u-occ-1986-024-four-(.*)43-([ie])',    0, r'volumes/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM00_25/RU4P2#UPPER#\g<1>4\2.TAB'),
-#     (r'vg-rss-2-u-occ-1986-024-alpha-(.*)43-([ie])',   0, r'volumes/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM00_25/RU4P2#UPPER#\g<1>A\2.TAB'),
-#     (r'vg-rss-2-u-occ-1986-024-beta-(.*)43-([ie])',    0, r'volumes/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM00_25/RU4P2#UPPER#\g<1>B\2.TAB'),
-#     (r'vg-rss-2-u-occ-1986-024-eta-(.*)43-([ie])',     0, r'volumes/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM00_25/RU4P2#UPPER#\g<1>N\2.TAB'),
-#     (r'vg-rss-2-u-occ-1986-024-gamma-(.*)43-([ie])',   0, r'volumes/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM00_25/RU4P2#UPPER#\g<1>G\2.TAB'),
-#     (r'vg-rss-2-u-occ-1986-024-delta-(.*)43-([ie])',   0, r'volumes/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM00_25/RU4P2#UPPER#\g<1>D\2.TAB'),
-#     (r'vg-rss-2-u-occ-1986-024-lambda-(.*)43-([ie])',  0, r'volumes/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM00_25/RU4P2#UPPER#\g<1>L\2.TAB'),
-#     (r'vg-rss-2-u-occ-1986-024-epsilon-(.*)43-([ie])', 0, r'volumes/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM00_25/RU4P2#UPPER#\g<1>E\2.TAB'),
 
     # VG_2810, pick the smallest resolutions
     (r'vg-iss-([12])-s-prof', 0, r'volumes/VG_28xx/VG_2810/DATA/IS\1_*_KM002.TAB'),
