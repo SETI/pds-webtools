@@ -490,8 +490,8 @@ opus_type = translator.TranslatorByRegex([
 
     # VG_2803
     (r'volumes/.*/VG_2803/U_RINGS/EASYDATA/KM00_025/RU1P1.*', 0, ('Voyager RSS', 10, 'vgrss_occ_inv0_05',   '50 m inversion', True )),
-    (r'volumes/.*/VG_2803/U_RINGS/EASYDATA/KM00_025/RU2P1.*', 0, ('Voyager RSS', 11, 'vgrss_occ_inv0_2',   '200 m inversion', True )),
-    (r'volumes/.*/VG_2803/U_RINGS/EASYDATA/KM00_05/RU3P1.*',  0, ('Voyager RSS', 11, 'vgrss_occ_inv0_2',   '200 m inversion', True )),
+    (r'volumes/.*/VG_2803/U_RINGS/EASYDATA/KM00_025/RU2P1.*', 0, ('Voyager RSS', 11, 'vgrss_occ_inv0_05',   '50 m inversion', True )),
+    (r'volumes/.*/VG_2803/U_RINGS/EASYDATA/KM00_05/RU3P1.*',  0, ('Voyager RSS', 11, 'vgrss_occ_inv0_1',   '100 m inversion', True )),
     (r'volumes/.*/VG_2803/U_RINGS/EASYDATA/KM00_25/RU4P1.*',  0, ('Voyager RSS', 14, 'vgrss_occ_inv0_5',   '500 m inversion', True )),
     (r'volumes/.*/VG_2803/U_RINGS/EASYDATA/KM00_05/RU5P1.*',  0, ('Voyager RSS', 15, 'vgrss_occ_inv01',     '1 km inversion', True )),
 
@@ -503,7 +503,7 @@ opus_type = translator.TranslatorByRegex([
     (r'volumes/.*/VG_2803/._RINGS/EASYDATA/KM00_05/R.*',      0, ('Voyager RSS', 21, 'vgrss_occ_sam0_05',   '50 m resampled', False)),
     (r'volumes/.*/VG_2803/._RINGS/EASYDATA/KM00_1/R.*',       0, ('Voyager RSS', 22, 'vgrss_occ_sam0_1',   '100 m resampled', False)),
     (r'volumes/.*/VG_2803/._RINGS/EASYDATA/KM0+_2/R.*',       0, ('Voyager RSS', 23, 'vgrss_occ_sam0_2',   '200 m resampled', False)),
-    (r'volumes/.*/VG_2803/._RINGS/EASYDATA/KM00_25/R.*',      0, ('Voyager RSS', 24, 'vgrss_occ_sam0_25',  '200 m resampled', False)),
+    (r'volumes/.*/VG_2803/._RINGS/EASYDATA/KM00_25/R.*',      0, ('Voyager RSS', 24, 'vgrss_occ_sam0_25',  '250 m resampled', False)),
     (r'volumes/.*/VG_2803/._RINGS/EASYDATA/KM0+_5/R.*',       0, ('Voyager RSS', 25, 'vgrss_occ_sam0_5',   '500 m resampled', False)),
     (r'volumes/.*/VG_2803/._RINGS/EASYDATA/KM001/R.*',        0, ('Voyager RSS', 26, 'vgrss_occ_sam01',     '1 km resampled', False)),
     (r'volumes/.*/VG_2803/._RINGS/EASYDATA/KM002/R.*',        0, ('Voyager RSS', 27, 'vgrss_occ_sam02',     '2 km resampled', False)),
