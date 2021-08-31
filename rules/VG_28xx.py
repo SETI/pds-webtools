@@ -489,8 +489,7 @@ opus_type = translator.TranslatorByRegex([
     (r'volumes/.*/VG_2802/VECTORS/J2000/...VE.*', 0, ('Voyager UVS', 81, 'vguvs_occ_ring',      'Vector Tables (ring frame)',  False)),
 
     # VG_2803
-    (r'volumes/.*/VG_2803/U_RINGS/EASYDATA/KM00_025/RU1P1.*', 0, ('Voyager RSS', 10, 'vgrss_occ_inv0_05',   '50 m inversion', True )),
-    (r'volumes/.*/VG_2803/U_RINGS/EASYDATA/KM00_025/RU2P1.*', 0, ('Voyager RSS', 11, 'vgrss_occ_inv0_05',   '50 m inversion', True )),
+    (r'volumes/.*/VG_2803/U_RINGS/EASYDATA/KM00_025/RU(1|2)P1.*', 0, ('Voyager RSS', 10, 'vgrss_occ_inv0_05',   '50 m inversion', True )),
     (r'volumes/.*/VG_2803/U_RINGS/EASYDATA/KM00_05/RU3P1.*',  0, ('Voyager RSS', 11, 'vgrss_occ_inv0_1',   '100 m inversion', True )),
     (r'volumes/.*/VG_2803/U_RINGS/EASYDATA/KM00_25/RU4P1.*',  0, ('Voyager RSS', 14, 'vgrss_occ_inv0_5',   '500 m inversion', True )),
     (r'volumes/.*/VG_2803/U_RINGS/EASYDATA/KM00_05/RU5P1.*',  0, ('Voyager RSS', 15, 'vgrss_occ_inv01',     '1 km inversion', True )),
