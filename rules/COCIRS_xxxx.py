@@ -392,6 +392,12 @@ associations_to_documents = translator.TranslatorByRegex([
             r'documents/COCIRS_xxxx/CIRS-Diagram-Interpretation-Guide.txt'),
 ])
 
+# For COCIRS_0xxx and COCIRS_1xxx CUBE
+associations_to_metadata = translator.TranslatorByRegex([
+    (r'volumes/COCIRS_([01]xxx).*/(COCIRS_[01]...)/DATA/CUBE/(....).*/.*\.(gz|LBL)', 0,
+            r'metadata/COCIRS_\1/\2/.*#LOWER#\3.*\.tab'),
+])
+
 ####################################################################################################################################
 # VERSIONS
 ####################################################################################################################################
@@ -629,6 +635,19 @@ opus_products = translator.TranslatorByRegex([
 
 opus_id = translator.TranslatorByRegex([
     (r'.*COCIRS_[56]xxx.*/(DATA|BROWSE)/\w+/[A-Z]+([0-9]{10})_FP(.).*', 0, r'co-cirs-\2-fp\3'),
+
+    # COCIRS_0xxx and COCIRS_1xxx
+    # Cube file naming convention: Activity - subactivity - target code - focal plane - sepctral resoultion
+    # EX: 000PH_FP13LTCRV005_CI005_609_F3_038P.LBL
+    # Activity: 000PH_FP13LTCRV005
+    # Subactivity: CI005 (CI: prime instrument, 005: index of subactivity )
+    # Target code: 609
+    # Focal plane: F3
+    # Spectral resolution: 038, P: POINT
+    # TODO: Check with Mark/Rob, same activity or activity + subactivity has the same opus id? For now, every record in the index file has an opus id
+    # 'mission'-'inst'-'activity'-'subactivity'-'target_code'-'focal plane'-'spectral resolution'
+    (r'.*COCIRS_[01]xxx.*/DATA/CUBE/(EQUI|POINT|RING).*/(\w{5}_\w+[^_])_{1,4}(\w+[^_])_{1,4}(...)_F(\d)_(\w+[EPR]).*', 0, r'co-cirs-\3-\4-fp\5-\6'),
+    # (r'.*COCIRS_[01]xxx.*/DATA/CUBE/(EQUI|POINT|RING).*/(\w{5}_\w+[^_])_{1,4}(\w+[^_])_{1,4}(...)_F(\d)_(\w+[EPR]).*', 0, r'co-cirs-\2-\3-\4-fp\5-\6'),
 ])
 
 ####################################################################################################################################
@@ -637,6 +656,8 @@ opus_id = translator.TranslatorByRegex([
 
 opus_id_to_primary_logical_path = translator.TranslatorByRegex([
     (r'co-cirs-(.*)-fp(.)', 0, r'volumes/COCIRS_[56]xxx/COCIRS_[56]???/DATA/APODSPEC/SPEC\1_FP\2.DAT'),
+    # TODO: Check with Mark about the primary logical path
+    # (r'co-cirs-cube-(.*)', 0, r'volumes/COCIRS_[01]xxx/COCIRS_[01]???/DATA/CUBE/SPEC\1_FP\2.DAT'),
 ])
 
 ####################################################################################################################################
@@ -707,6 +728,7 @@ class COCIRS_xxxx(pdsfile.PdsFile):
     ASSOCIATIONS['previews']  += associations_to_previews
     ASSOCIATIONS['diagrams']  += associations_to_diagrams
     ASSOCIATIONS['documents'] += associations_to_documents
+    ASSOCIATIONS['metadata']  += associations_to_metadata
 
     VERSIONS = versions + pdsfile.PdsFile.VERSIONS
 
