@@ -640,8 +640,8 @@ opus_products = translator.TranslatorByRegex([
              r'volumes/\1*/\2/DATA/CUBE/\3/\5.tar.gz',
              r'metadata/\1*/\2/\2_cube_#LOWER#\4_index.lbl',
              r'metadata/\1*/\2/\2_cube_#LOWER#\4_index.tab',
-             # r'metadata/\1*/\2/\2_cube_profile_index.lbl',
-             # r'metadata/\1*/\2/\2_cube_profile_index.tab',
+             # r'metadata/\1*/\2/\2_cube_#LOWER#\4_profile_index.lbl',
+             # r'metadata/\1*/\2/\2_cube_#LOWER#\4_profile_index.tab',
              r'metadata/\1*/\2/\2_cube_#LOWER#\4_supplemental_index.lbl',
              r'metadata/\1*/\2/\2_cube_#LOWER#\4_supplemental_index.tab',
             ]),
@@ -665,8 +665,6 @@ opus_id = translator.TranslatorByRegex([
     # TODO: Check with Mark/Rob, same activity or activity + subactivity has the same opus id? For now, every record in the index file has an opus id
     # 'mission'-'inst'-'activity'-'subactivity'-'target_code'-'focal plane'-'spectral resolution'
     (r'.*COCIRS_[01]xxx.*/DATA/CUBE/(EQUI|POINT|RING).*/(\w{5}_\w+[^_])_{1,12}(\w+[^_])_{1,4}(...)_F(\d)_(\w+[EPR]).*', 0, r'co-cirs-\2-\3-\4-fp\5-\6'),
-    # (r'.*COCIRS_[01]xxx.*/DATA/CUBE/(EQUI|POINT|RING).*/(\w{5}_\w+[^_])_{1,12}(\w+[^_])_{1,4}(...)_F(\d)_(\w+[EPR]).*', 0, r'co-cirs-\3-\4-fp\5-\6'),
-    # (r'.*COCIRS_[01]xxx.*/DATA/CUBE/(EQUI|POINT|RING).*/(\w{5}_\w+[^_])_{1,4}(\w+[^_])_{1,4}(...)_F(\d)_(\w+[EPR]).*', 0, r'co-cirs-\2-\3-\4-fp\5-\6'),
 ])
 
 ####################################################################################################################################
