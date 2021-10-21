@@ -584,10 +584,11 @@ opus_type = translator.TranslatorByRegex([
     (r'diagrams/.*/TARGETS/.*_med\..*',   0, ('browse', 30, 'browse_medium', 'Browse Image (medium)',    False)),
     (r'diagrams/.*/TARGETS/.*_full\..*',  0, ('browse', 40, 'browse_full',   'Browse Image (full)',      True)),
 
-    # CUBE
+    # CUBE 0xxx/1xxx
     (r'volumes/COCIRS_[01]xxx.*/DATA/CUBE/EQUI.*/.*\..*',  0, ('Cassini CIRS', 160, 'cocirs_cube_equi',  'Spectral Image Cubes (Equirectangular)',   True)),
     (r'volumes/COCIRS_[01]xxx.*/DATA/CUBE/POINT.*/.*\..*', 0, ('Cassini CIRS', 170, 'cocirs_cube_point', 'Spectral Image Cubes (Point perspective)', True)),
     (r'volumes/COCIRS_[01]xxx.*/DATA/CUBE/RING.*/.*\..*',  0, ('Cassini CIRS', 180, 'cocirs_cube_ring',  'Spectral Image Cubes (Ring polar)',        True)),
+    # BROWSE / PREVIEW
 
 ])
 
@@ -662,9 +663,13 @@ opus_id = translator.TranslatorByRegex([
     # Target code: 609
     # Focal plane: F3
     # Spectral resolution: 038, P: POINT
-    # TODO: Check with Mark/Rob, same activity or activity + subactivity has the same opus id? For now, every record in the index file has an opus id
-    # 'mission'-'inst'-'activity'-'subactivity'-'target_code'-'focal plane'-'spectral resolution'
-    (r'.*COCIRS_[01]xxx.*/DATA/CUBE/(EQUI|POINT|RING).*/(\w{5}_\w+[^_])_{1,12}(\w+[^_])_{1,4}(...)_F(\d)_(\w+[EPR]).*', 0, r'co-cirs-\2-\3-\4-fp\5-\6'),
+    # Every record in the index file has an opus id in this format:
+    # 'co-cirs-cube-(filename)'
+    (r'.*COCIRS_[01]xxx.*/DATA/CUBE/(?:EQUI|POINT|RING).*/(.*)\..*', 0, r'co-cirs-cube-\1'),
+    # (r'.*COCIRS_[01]xxx.*/DATA/CUBE/(EQUI|POINT|RING).*/(\w{5}_\w+[^_])_{1,12}(\w+[^_])_{1,4}(...)_F(\d)_(\w+[EPR]).*', 0, r'co-cirs-\2-\3-\4-fp\5-\6'),
+
+
+
 ])
 
 ####################################################################################################################################
