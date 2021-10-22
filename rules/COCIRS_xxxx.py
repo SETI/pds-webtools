@@ -585,10 +585,21 @@ opus_type = translator.TranslatorByRegex([
     (r'diagrams/.*/TARGETS/.*_full\..*',  0, ('browse', 40, 'browse_full',   'Browse Image (full)',      True)),
 
     # CUBE 0xxx/1xxx
+    # Cube index
+    (r'metadata/.*cube.*(?<!supplemental)_index\..*',      0, ('metadata',       8, 'cube_index',        'Cube Index',           False)),
+    # Data
     (r'volumes/COCIRS_[01]xxx.*/DATA/CUBE/EQUI.*/.*\..*',  0, ('Cassini CIRS', 160, 'cocirs_cube_equi',  'Spectral Image Cubes (Equirectangular)',   True)),
     (r'volumes/COCIRS_[01]xxx.*/DATA/CUBE/POINT.*/.*\..*', 0, ('Cassini CIRS', 170, 'cocirs_cube_point', 'Spectral Image Cubes (Point perspective)', True)),
     (r'volumes/COCIRS_[01]xxx.*/DATA/CUBE/RING.*/.*\..*',  0, ('Cassini CIRS', 180, 'cocirs_cube_ring',  'Spectral Image Cubes (Ring polar)',        True)),
-    # BROWSE / PREVIEW
+    # Extra viewable image
+    (r'volumes/.*/EXTRAS/CUBE_OVERVIEW/EQUI.*/.*\..*',     0, ('Cassini CIRS', 190, 'cocirs_extras_equi',  'Extra Image (Equirectangular)',   False)),
+    (r'volumes/.*/EXTRAS/CUBE_OVERVIEW/POINT.*/.*\..*',    0, ('Cassini CIRS', 200, 'cocirs_extras_point', 'Extra Image (Point perspective)',        False)),
+    (r'volumes/.*/EXTRAS/CUBE_OVERVIEW/RING.*/.*\..*',     0, ('Cassini CIRS', 210, 'cocirs_extras_ring',  'Extra Image (Ring polar)',              False)),
+    # Browse
+    (r'previews/.*/DATA/CUBE/.*\_thumb\..*',       0, ('browse', 10, 'browse_thumb',  'Browse Image (thumbnail)', False)),
+    (r'previews/.*/DATA/CUBE/.*\_small\..*',       0, ('browse', 20, 'browse_small',  'Browse Image (small)',     False)),
+    (r'previews/.*/DATA/CUBE/.*\_med\..*',         0, ('browse', 30, 'browse_medium', 'Browse Image (medium)',    False)),
+    (r'previews/.*/DATA/CUBE/.*\_full\..*',        0, ('browse', 40, 'browse_full',   'Browse Image (full)',      True)),
 
 ])
 
@@ -639,6 +650,12 @@ opus_products = translator.TranslatorByRegex([
     (r'.*/(COCIRS_[01]xxx)/(COCIRS_[01]...)/DATA/CUBE/((EQUI|POINT|RING).*)/(.*)\..*', 0,
             [r'volumes/\1*/\2/DATA/CUBE/\3/\5.LBL',
              r'volumes/\1*/\2/DATA/CUBE/\3/\5.tar.gz',
+             r'volumes/\1*/\2/EXTRAS/CUBE_OVERVIEW/\3/\5.JPG',
+             r'volumes/\1*/\2/EXTRAS/CUBE_OVERVIEW/\3/\5.LBL',
+             r'previews/\1*/\2/DATA/CUBE/\3/\5_full.jpg',
+             r'previews/\1*/\2/DATA/CUBE/\3/\5_med.jpg',
+             r'previews/\1*/\2/DATA/CUBE/\3/\5_small.jpg',
+             r'previews/\1*/\2/DATA/CUBE/\3/\5_thumb.jpg',
              r'metadata/\1*/\2/\2_cube_#LOWER#\4_index.lbl',
              r'metadata/\1*/\2/\2_cube_#LOWER#\4_index.tab',
              r'metadata/\1*/\2/\2_cube_#LOWER#\4_supplemental_index.lbl',
