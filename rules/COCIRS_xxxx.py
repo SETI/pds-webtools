@@ -635,14 +635,12 @@ opus_products = translator.TranslatorByRegex([
              r'diagrams/\1/\3/BROWSE/TARGETS/IMG\4_\5_thumb.jpg',
             ]),
 
-    # CUBE
+    # CUBE (COCIRS_0xxx, COCIRS_1xxx)
     (r'.*/(COCIRS_[01]xxx)/(COCIRS_[01]...)/DATA/CUBE/((EQUI|POINT|RING).*)/(.*)\..*', 0,
             [r'volumes/\1*/\2/DATA/CUBE/\3/\5.LBL',
              r'volumes/\1*/\2/DATA/CUBE/\3/\5.tar.gz',
              r'metadata/\1*/\2/\2_cube_#LOWER#\4_index.lbl',
              r'metadata/\1*/\2/\2_cube_#LOWER#\4_index.tab',
-             # r'metadata/\1*/\2/\2_cube_#LOWER#\4_profile_index.lbl',
-             # r'metadata/\1*/\2/\2_cube_#LOWER#\4_profile_index.tab',
              r'metadata/\1*/\2/\2_cube_#LOWER#\4_supplemental_index.lbl',
              r'metadata/\1*/\2/\2_cube_#LOWER#\4_supplemental_index.tab',
             ]),
