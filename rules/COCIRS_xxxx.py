@@ -693,8 +693,8 @@ opus_id = translator.TranslatorByRegex([
 
 opus_id_to_primary_logical_path = translator.TranslatorByRegex([
     (r'co-cirs-(.*)-fp(.)', 0, r'volumes/COCIRS_[56]xxx/COCIRS_[56]???/DATA/APODSPEC/SPEC\1_FP\2.DAT'),
-    # TODO: Check with Mark about the primary logical path
-    # (r'co-cirs-cube-(.*)', 0, r'volumes/COCIRS_[01]xxx/COCIRS_[01]???/DATA/CUBE/SPEC\1_FP\2.DAT'),
+    # For COCIRS_0xxx & COCIRS_1xxx, point to .tar.gz (.DAT is in it)
+    (r'co-cirs-cube-(.*([EPR]))', 0, r'volumes/COCIRS_[01]xxx/COCIRS_[01]???/DATA/CUBE/\2*/\1.tar.gz'),
 ])
 
 ####################################################################################################################################
