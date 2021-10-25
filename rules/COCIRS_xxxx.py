@@ -394,8 +394,10 @@ associations_to_documents = translator.TranslatorByRegex([
 
 # For COCIRS_0xxx and COCIRS_1xxx CUBE
 associations_to_metadata = translator.TranslatorByRegex([
-    (r'volumes/COCIRS_([01]xxx).*/(COCIRS_[01]...)/DATA/CUBE/(....).*/.*\.(gz|LBL)', 0,
-            r'metadata/COCIRS_\1/\2/.*#LOWER#\3.*\.tab'),
+    (r'volumes/(COCIRS_[01]xxx).*/(COCIRS_[01]...)/(:?DATA/CUBE|EXTRAS/CUBE_OVERVIEW)/(EQUI|POINT|RING)\w+/(.*)\.(tar.gz|LBL|JPG)', 0,
+            [r'metadata/\1/\2/\2_cube_#LOWER#\3_index.tab/\4',
+             r'metadata/\1/\2/\2_cube_#LOWER#\3_supplemental_index.tab/\4',
+            ]),
 ])
 
 ####################################################################################################################################
