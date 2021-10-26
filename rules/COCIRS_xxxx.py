@@ -678,11 +678,8 @@ opus_id = translator.TranslatorByRegex([
     # Spectral resolution: 038, P: POINT
     # Every record in the index file has an opus id in this format:
     # 'co-cirs-cube-(filename)'
-    (r'.*COCIRS_[01]xxx.*/DATA/CUBE/(?:EQUI|POINT|RING).*/(.*)\..*', 0, r'co-cirs-cube-\1'),
-    # (r'.*COCIRS_[01]xxx.*/DATA/CUBE/(EQUI|POINT|RING).*/(\w{5}_\w+[^_])_{1,12}(\w+[^_])_{1,4}(...)_F(\d)_(\w+[EPR]).*', 0, r'co-cirs-\2-\3-\4-fp\5-\6'),
-
-
-
+    (r'.*COCIRS_[01]xxx.*/DATA/CUBE/(?:EQUI|POINT|RING).*/(.*?)\..*', 0, r'co-cirs-cube-#LOWER#\1'),
+    (r'.*COCIRS_[01]xxx.*/EXTRAS/CUBE_OVERVIEW/(?:EQUI|POINT|RING).*/(.*?)\..*', 0, r'co-cirs-cube-#LOWER#\1'),
 ])
 
 ####################################################################################################################################
