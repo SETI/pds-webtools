@@ -689,7 +689,9 @@ opus_id = translator.TranslatorByRegex([
 opus_id_to_primary_logical_path = translator.TranslatorByRegex([
     (r'co-cirs-(.*)-fp(.)', 0, r'volumes/COCIRS_[56]xxx/COCIRS_[56]???/DATA/APODSPEC/SPEC\1_FP\2.DAT'),
     # For COCIRS_0xxx & COCIRS_1xxx, point to .tar.gz (.DAT is in it)
-    (r'co-cirs-cube-(.*([EPR]))', 0, r'volumes/COCIRS_[01]xxx/COCIRS_[01]???/DATA/CUBE/\2*/\1.tar.gz'),
+    (r'co-cirs-cube-(.*e)', 0, r'volumes/COCIRS_[01]xxx/COCIRS_[01]???/DATA/CUBE/EQUIRECTANGULAR/#UPPER#\1#LOWER#.tar.gz'),
+    (r'co-cirs-cube-(.*p)', 0, r'volumes/COCIRS_[01]xxx/COCIRS_[01]???/DATA/CUBE/POINT_PERSPECTIVE/#UPPER#\1#LOWER#.tar.gz'),
+    (r'co-cirs-cube-(.*r)', 0, r'volumes/COCIRS_[01]xxx/COCIRS_[01]???/DATA/CUBE/RING_POLAR/#UPPER#\1#LOWER#.tar.gz'),
 ])
 
 ####################################################################################################################################
