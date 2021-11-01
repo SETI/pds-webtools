@@ -1016,7 +1016,7 @@ def test_associations_to_diagrams():
           False): ['metadata/COCIRS_0xxx/COCIRS_0406/COCIRS_0406_cube_point_index.tab',
                    'metadata/COCIRS_0xxx/COCIRS_0406/COCIRS_0406_cube_point_index.lbl'],
          ('metadata',
-          10,
+          9,
           'supplemental_index',
           'Supplemental Index',
           False): ['metadata/COCIRS_0xxx/COCIRS_0406/COCIRS_0406_cube_point_supplemental_index.tab',
