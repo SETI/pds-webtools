@@ -1833,7 +1833,7 @@ from .pytest_support import *
              ('Voyager RSS',
               24,
               'vgrss_occ_sam0_25',
-              '200 m resampled',
+              '250 m resampled',
               False): ['volumes/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM00_25/RU4P2X4I.TAB',
                        'volumes/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM00_25/RU4P2X4I.LBL',
                        'volumes/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM00_25/RU1P2X4I.TAB',
