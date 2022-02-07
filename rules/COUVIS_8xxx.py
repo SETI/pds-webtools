@@ -115,6 +115,9 @@ view_options = translator.TranslatorByRegex([
 
 split_rules = translator.TranslatorByRegex([
     (r'(UVIS_HSP_...._..._\w+_[IE])_(\w+)\.(.*)', 0, (r'\1', r'_\2', r'.\3')),
+
+    # Group atlas files and their label
+    (r'(.*atlas.*)\.(pdf|lbl)', re.I, ('atlas', r'\1', r'.\2')),
 ])
 
 ####################################################################################################################################

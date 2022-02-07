@@ -235,11 +235,13 @@ neighbors = translator.TranslatorByRegex([
 
 sort_key = translator.TranslatorByRegex([
 
-    # Order volumes by LA, JU, PC, PE
+    # Order volumes by LA, JU, PC, PE, KC, KE
     (r'NHLA(.._[0-9]{4}.*)', 0, r'NH1LA\1'),
     (r'NHJU(.._[0-9]{4}.*)', 0, r'NH2JU\1'),
     (r'NHPC(.._[0-9]{4}.*)', 0, r'NH3PC\1'),
     (r'NHPE(.._[0-9]{4}.*)', 0, r'NH4PE\1'),
+    (r'NHKC(.._[0-9]{4}.*)', 0, r'NH5KC\1'),
+    (r'NHKE(.._[0-9]{4}.*)', 0, r'NH6KE\1'),
     (r'(\w{3})_([0-9]{10})(.*)', re.I, r'\2\1\3'),
 ])
 
