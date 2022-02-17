@@ -1480,7 +1480,7 @@ class PdsFile(object):
 
     @property
     def islabel(self):
-        """True if the file is a PDS3 label."""
+        """True if the file is a PDS3 label; deprecated name."""
 
         if self._islabel_filled is not None:
             return self._islabel_filled
@@ -4250,7 +4250,7 @@ class PdsFile(object):
                     pdsf.shelf_lookup('links')
                 except (OSError, KeyError, ValueError):
                     LOGGER.warn('Missing links info',
-                                label_pdsfile.logical_path)
+                                pdsf.logical_path)
                     continue
                 links = set(pdsf.linked_abspaths)
                 fmts = [f for f in links if f.lower().endswith('.fmt')]
@@ -4601,7 +4601,7 @@ class PdsFile(object):
             # to open every info shelf file during preload.
             if id == 'info':
                 py_path = shelf_path.replace('.pickle', '.py')
-                LOGGER.debug('Retrieving key ""', py_path)
+                LOGGER.debug('Retrieving key "%s"' % py_path)
 
                 with open(py_path) as f:
                     rec = f.readline()
