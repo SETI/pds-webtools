@@ -1494,7 +1494,7 @@ class PdsFile(object):
     def is_label(self):
         """True if the file is a PDS3 label; alternative name for islabel."""
 
-        return self.islabel(self)
+        return self.islabel
 
     @property
     def is_viewable(self):
