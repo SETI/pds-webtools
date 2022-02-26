@@ -687,14 +687,14 @@ opus_products = translator.TranslatorByRegex([
              r'metadata/VG_28xx/\1/\1_supplemental_index.tab',
             ]),
 
-    # VG_2803
-    (r'.*/VG_28xx/(VG_2803)/S_RINGS/.*/RS...(S|X).*', 0,        # best of solution #1, all of solution #2
+    # VG_2803, best of old pole (RxxP1) and all of new pole (RxxP2)
+    (r'.*/VG_28xx/(VG_2803)/S_RINGS/.*/RS...(S|X).*', 0,
             [r'volumes/VG_28xx/\1/S_RINGS/EASYDATA/KM000_2/RS1P1\2*',
              r'volumes/VG_28xx/\1/S_RINGS/EASYDATA/KM000_5/RS3P1\2*',
              r'volumes/VG_28xx/\1/S_RINGS/EASYDATA/KM002_5/RS4P1\2*',
              r'volumes/VG_28xx/\1/S_RINGS/EASYDATA/KM*/RS?P2\2*',
             ]),
-    (r'.*/VG_28xx/(VG_2803)/U_RINGS/.*/RU...([SX]\w[IE]).*', 0, # best of solution #1, all of solution #2
+    (r'.*/VG_28xx/(VG_2803)/U_RINGS/.*/RU...([SX]\w[IE]).*', 0,
             [r'volumes/VG_28xx/\1/U_RINGS/EASYDATA/KM00_025/RU[12]P1\2*',
              r'volumes/VG_28xx/\1/U_RINGS/EASYDATA/KM00_05/RU[35]P1\2*',
              r'volumes/VG_28xx/\1/U_RINGS/EASYDATA/KM00_25/RU4P1\2*',
@@ -808,24 +808,25 @@ opus_id_to_primary_logical_path = translator.TranslatorByRegex([
     # Neptune: PN1 in KM002
     (r'vg-pps-2-s-occ-1981-238-(.*)-e',  0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM005/PS1P01.TAB'),
     (r'vg-pps-2-s-occ-1981-238-(.*)-e2', 0, r'volumes/VG_28xx/VG_2801/EDITDATA/PS2D01.DAT'),
-    (r'vg-pps-2-u-occ-1986-024-sigsgr-(\w+)-([ie])',       0,
+    (r'vg-pps-2-u-occ-1986-024-sigsgr-(\w+)-([ie])', 0,
             r'volumes/VG_28xx/VG_2801/EASYDATA/KM000_1/PU1P01' + URING_INV_DICT + r'["\1"]' + r'#UPPER#\2.TAB'),
-    (r'vg-pps-2-u-occ-1986-024-betper-(\w+)-([ie])',       0,
+    (r'vg-pps-2-u-occ-1986-024-betper-(\w+)-([ie])', 0,
             r'volumes/VG_28xx/VG_2801/EASYDATA/KM001/PU2P01' + URING_INV_DICT + r'["\1"]' + r'#UPPER#\2.TAB'),
-    (r'vg-pps-2-n-occ-1989-236-(.*)-i',                  0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM002/PN1P01.TAB'),
+    (r'vg-pps-2-n-occ-1989-236-(.*)-i', 0, r'volumes/VG_28xx/VG_2801/EASYDATA/KM002/PN1P01.TAB'),
 
     # VG_2802, Saturn: FILTER01, Uranus: FILTER01, Neptune: FILTER01
-    (r'vg-uvs-2-s-occ-1981-238-delsco-e',                0, r'volumes/VG_28xx/VG_2802/EASYDATA/FILTER01/US1F01.TAB'),
-    (r'vg-uvs-2-s-occ-1981-237-delsco-i',                0, r'volumes/VG_28xx/VG_2802/EASYDATA/FILTER01/US2F01.TAB'),
-    (r'vg-uvs-1-s-occ-1980-317-iother-e',                0, r'volumes/VG_28xx/VG_2802/EASYDATA/FILTER01/US3F01.TAB'),
-    (r'vg-uvs-2-u-occ-1986-024-sigsgr-(\w+)-([ie])',     0,
+    (r'vg-uvs-2-s-occ-1981-238-delsco-e', 0, r'volumes/VG_28xx/VG_2802/EASYDATA/FILTER01/US1F01.TAB'),
+    (r'vg-uvs-2-s-occ-1981-237-delsco-i', 0, r'volumes/VG_28xx/VG_2802/EASYDATA/FILTER01/US2F01.TAB'),
+    (r'vg-uvs-1-s-occ-1980-317-iother-e', 0, r'volumes/VG_28xx/VG_2802/EASYDATA/FILTER01/US3F01.TAB'),
+    (r'vg-uvs-2-u-occ-1986-024-sigsgr-(\w+)-([ie])', 0,
             r'volumes/VG_28xx/VG_2802/EASYDATA/FILTER01/UU1F01' + URING_INV_DICT + r'["\1"]' + r'#UPPER#\2.TAB'),
-    (r'vg-uvs-2-n-occ-1989-236-sigsgr-i',                0, r'volumes/VG_28xx/VG_2802/EASYDATA/FILTER01/UN1F01.TAB'),
+    (r'vg-uvs-2-n-occ-1989-236-sigsgr-i', 0, r'volumes/VG_28xx/VG_2802/EASYDATA/FILTER01/UN1F01.TAB'),
 
-    # VG_2803, pick the smallest resolutions
-    # S RINGS: KM000_2, U RINGS: KM00_25
-    (r'vg-rss-1-s-occ-1980-318-(.*)63-e',              0, r'volumes/VG_28xx/VG_2803/S_RINGS/EASYDATA/KM002_5/RS3P2#UPPER#\1.TAB'),
-    (r'vg-rss-2-u-occ-1986-024-(.*)43-(\w+)-([ie])',   0,
+    # VG_2803
+    # "Best" Saturn solution KM002_5/RS3P2 (5-km inversion, 2.5-km sampling, new pole, full ring system)
+    # "Best" Uranus solutions are KM00_25/RU4P2 (500-m inversion, 250-m sampling, new pole)
+    (r'vg-rss-1-s-occ-1980-318-(.*)63-e', 0, r'volumes/VG_28xx/VG_2803/S_RINGS/EASYDATA/KM002_5/RS3P2#UPPER#\1.TAB'),
+    (r'vg-rss-2-u-occ-1986-024-(.*)43-(\w+)-([ie])',0,
             r'volumes/VG_28xx/VG_2803/U_RINGS/EASYDATA/KM00_25/RU4P2#UPPER#\g<1>' + URING_INV_DICT + r'["\2"]' + r'\3.TAB'),
 
     # VG_2810, pick the smallest resolutions
