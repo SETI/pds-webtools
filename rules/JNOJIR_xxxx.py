@@ -131,7 +131,7 @@ sort_key = translator.TranslatorByRegex([
 
     # Sort volumes with the same last three digits together
     (r'JNOJIR_([12])(\d\d\d)', 0, r'JNOJIR_\2\1'),
-])
+ ])
 
 ####################################################################################################################################
 # SPLIT_RULES
