@@ -44,6 +44,7 @@ class TestPdsFileBlackBox:
                 'HSTxx_xxxx': rules.HSTxx_xxxx.HSTxx_xxxx,
                 'JNOJIR_xxxx': rules.JNOJIR_xxxx.JNOJIR_xxxx,
                 'JNOJNC_xxxx': rules.JNOJNC_xxxx.JNOJNC_xxxx,
+                'JNOSP_xxxx': rules.JNOSP_xxxx.JNOSP_xxxx,
                 'NHSP_xxxx': rules.NHSP_xxxx.NHSP_xxxx,
                 'NHxxxx_xxxx': rules.NHxxxx_xxxx.NHxxxx_xxxx,
                 'RES_xxxx': rules.RES_xxxx.RES_xxxx,
