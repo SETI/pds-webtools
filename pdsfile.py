@@ -1856,7 +1856,7 @@ class PdsFile(object):
                 shape = (0,0)
 
             self._info_filled = self._info[:4] + (shape,)
-            self._recache( )
+            self._recache()
 
     @property
     def alt(self):
