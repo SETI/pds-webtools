@@ -685,7 +685,7 @@ class PdsFile(object):
     VERSIONS = pdsfile_rules.VERSIONS
     INFO_FILE_BASENAMES = pdsfile_rules.INFO_FILE_BASENAMES
     NEIGHBORS = pdsfile_rules.NEIGHBORS
-    SIBLINGS = pdsfile_rules.SIBLINGS
+    SIBLINGS = pdsfile_rules.SIBLINGS       # just used by Viewmaster right now
     SORT_KEY = pdsfile_rules.SORT_KEY
     SPLIT_RULES = pdsfile_rules.SPLIT_RULES
     VIEW_OPTIONS = pdsfile_rules.VIEW_OPTIONS
@@ -1843,7 +1843,7 @@ class PdsFile(object):
         return self._info[4][1]
 
     def _repair_width_height(self):
-        """Internal function to fill in the shape of viewwables, if needed."""
+        """Internal function to fill in the shape of viewables, if needed."""
 
         if len(self._info[4]) > 2:      # 'TBD' means check the size if needed
 
@@ -1855,7 +1855,7 @@ class PdsFile(object):
             except Exception:
                 shape = (0,0)
 
-            self._info = self._info[:4] + (shape,)
+            self._info_filled = self._info[:4] + (shape,)
             self._recache()
 
     @property
@@ -4829,7 +4829,12 @@ class PdsFile(object):
         # Special case: volname[_...]_md5.txt, volname[_...].tar.gz
         matchobj = VOLNAME_PLUS_REGEX.match(basename)
         if matchobj is not None:
-            return (matchobj.group(1), matchobj.group(2), matchobj.group(3))
+            test = self.SPLIT_RULES.first(basename) # a split rule overrides
+                                                    # the default behavior
+            if test == basename:
+                return (matchobj.group(1), matchobj.group(2), matchobj.group(3))
+            else:
+                return test
 
         return self.SPLIT_RULES.first(basename)
 

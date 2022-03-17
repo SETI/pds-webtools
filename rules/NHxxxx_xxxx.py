@@ -243,6 +243,15 @@ sort_key = translator.TranslatorByRegex([
 ])
 
 ####################################################################################################################################
+# SPLIT_RULES
+####################################################################################################################################
+
+split_rules = translator.TranslatorByRegex([
+    # Group volumes with the same leading six characters, e.g., NHJULO_1001 and NHJULO_2001
+    (r'(NH....)_([12])(\d\d\d)(|_[a-z]+)(|_md5\.txt|\.tar\.gz)', 0, (r'\1_x\3', r'_\2xxx\4', r'\5')),
+])
+
+####################################################################################################################################
 # OPUS_TYPE
 ####################################################################################################################################
 
@@ -455,6 +464,7 @@ class NHxxxx_xxxx(pdsfile.PdsFile):
     VIEW_OPTIONS = view_options + pdsfile.PdsFile.VIEW_OPTIONS
     NEIGHBORS = neighbors + pdsfile.PdsFile.NEIGHBORS
     SORT_KEY = sort_key + pdsfile.PdsFile.SORT_KEY
+    SPLIT_RULES = split_rules + pdsfile.PdsFile.SPLIT_RULES
 
     OPUS_TYPE = opus_type + pdsfile.PdsFile.OPUS_TYPE
     OPUS_PRODUCTS = opus_products
