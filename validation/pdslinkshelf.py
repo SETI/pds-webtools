@@ -365,10 +365,30 @@ REPAIRS = translator.TranslatorByRegex([
         {'JUNO_REF.CAT'         : 'JUNO_PROJREF.CAT'})),
 
     # NHSP
-    ('.*/NHSP.*/AAREADME\.TXT', 0,
+    ('.*/NHSP_xxxx_v1.*/AAREADME\.TXT', 0,
       translator.TranslatorByDict(
         {'personel.cat'         : 'CATALOG/PERSONNEL.CAT',
          'spiceds.cat'          : 'CATALOG/SPICE_INST.CAT'})),
+    ('.*SP_xxxx.*/aareadme\.txt', 0,
+      translator.TranslatorByDict(
+        {'dataset.cat'          : 'catalog/spiceds.cat',
+         'ckinfo.txt'           : 'data/ck/ckinfo.txt',
+         'ekinfo.txt'           : 'data/ek/ekinfo.txt',
+         'fkinfo.txt'           : 'data/fk/fkinfo.txt',
+         'ikinfo.txt'           : 'data/ik/ikinfo.txt',
+         'lskinfo.txt'          : 'data/lsk/lskinfo.txt',
+         'pckinfo.txt'          : 'data/pck/pckinfo.txt',
+         'sclkinfo.txt'         : 'data/sclk/sclkinfo.txt',
+         'spkinfo.txt'          : 'data/spk/spkinfo.txt',
+         'ckdoc.txt'            : 'document/ck/ckdoc.txt',
+         'ekdoc.txt'            : 'document/ek/ekdoc.txt',
+         'mkinfo.txt'           : 'extras/mk/mkinfo.txt',
+         'orbinfo.txt'          : 'extras/orbnum/orbinfo.txt',
+         'spkxinfo.txt'         : 'extras/spkxtra/spkxinfo.txt',
+         'covinfo.txt'          : 'extras/spkxtra/covtab/covinfo.txt',
+         'ckxtinfo.txt'         : 'extras/ckxtra/ckxtinfo.txt',
+         'navinfo.txt'          : 'extras/ckxtra/cknav/navinfo.txt',
+         'issinfo.txt'          : 'extras/ckxtra/ckiss/issinfo.txt'})),
 
     # NHxxMV/NHxxLO
     ('.*/NHxx.._xxxx_v1/NH(JU|LA).*/aareadme\.txt', 0,
@@ -573,7 +593,7 @@ KNOWN_MISSING_LABELS = translator.TranslatorByRegex([
     (r'.*/NH.*/browse/.*\.jpg',                             0,    'missing'),
     (r'.*/NH.*/index/newline',                              0,    'missing'),
     (r'.*/NHxxMV.*/calib/.*\.png',                          0,    'missing'),
-    (r'.*/NHSP_xxxx/.*/DATASET.HTML',                       0,    'missing'),
+    (r'.*/NHSP_xxxx.*/DATASET.HTML',                        0,    'missing'),
     (r'.*/RPX.*/UNZIP532.*',                                0,    'missing'),
     (r'.*/RPX_xxxx/RPX_0201/CALIB/.*/(-180|128)',           0,    'missing'),
     (r'.*/VG.*/VG..NESR\.DAT',                              0,    'missing'),

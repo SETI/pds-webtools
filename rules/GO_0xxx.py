@@ -372,7 +372,7 @@ associations_to_previews = translator.TranslatorByRegex([
 ])
 
 associations_to_metadata = translator.TranslatorByRegex([
-    (r'volumes/(GO_0xxx)/(GO_....)/.*/(C\d{10})[A-Z].*', 0,
+    (r'volumes/(GO_0xxx)/(GO_....)/.*/(C\d{10})[RS].*', 0,
             r'metadata/\1/\2/\2_index.tab/\3'),
     (r'volumes/(GO_0xxx_v1)/(GO_....).*', 0,
             r'metadata/\1/\2'),
@@ -382,6 +382,8 @@ associations_to_metadata = translator.TranslatorByRegex([
             [r'metadata/GO_0xxx/GO_0999/GO_0999_\2.tab',
              r'metadata/GO_0xxx/GO_0999/GO_0999_\2.lbl',
             ]),
+    (r'volumes/GO_0xxx/GO_0016/SL9/(C\d{10})[RG].*', 0,
+            r'metadata/GO_0xxx/GO_0016/GO_0016_sl9_index.tab/\1'),
 ])
 
 ####################################################################################################################################
