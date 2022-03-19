@@ -7,6 +7,15 @@ import translator
 import re
 
 ####################################################################################################################################
+# ASSOCIATIONS
+####################################################################################################################################
+
+associations_to_documents = translator.TranslatorByRegex([
+    (r'volumes/NHSP_xxxx.*', 0,
+        r'documents/NHSP_xxxx/*'),
+])
+
+####################################################################################################################################
 # FILESPEC_TO_VOLSET
 ####################################################################################################################################
 
@@ -28,7 +37,7 @@ info_file_basenames = translator.TranslatorByRegex([
 
 class NHSP_xxxx(pdsfile.PdsFile):
 
-    pdsfile.PdsFile.VOLSET_TRANSLATOR = translator.TranslatorByRegex([('NHSP_xxxx', re.I, 'NHSP_xxxx')]) + \
+    pdsfile.PdsFile.VOLSET_TRANSLATOR = translator.TranslatorByRegex([('NHSP_xxxx.*', re.I, 'NHSP_xxxx')]) + \
                                         pdsfile.PdsFile.VOLSET_TRANSLATOR
 
     INFO_FILE_BASENAMES = info_file_basenames + pdsfile.PdsFile.INFO_FILE_BASENAMES

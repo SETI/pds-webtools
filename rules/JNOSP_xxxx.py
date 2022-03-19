@@ -7,6 +7,15 @@ import translator
 import re
 
 ####################################################################################################################################
+# ASSOCIATIONS
+####################################################################################################################################
+
+associations_to_documents = translator.TranslatorByRegex([
+    (r'volumes/JNOSP_xxxx.*', 0,
+        r'documents/JNOSP_xxxx/*'),
+])
+
+####################################################################################################################################
 # FILESPEC_TO_VOLSET
 ####################################################################################################################################
 
@@ -30,6 +39,9 @@ class JNOSP_xxxx(pdsfile.PdsFile):
 
     pdsfile.PdsFile.VOLSET_TRANSLATOR = translator.TranslatorByRegex([('JNOSP_xxxx', re.I, 'JNOSP_xxxx')]) + \
                                         pdsfile.PdsFile.VOLSET_TRANSLATOR
+
+    ASSOCIATIONS = pdsfile.PdsFile.ASSOCIATIONS.copy()
+    ASSOCIATIONS['documents'] += associations_to_documents
 
     INFO_FILE_BASENAMES = info_file_basenames + pdsfile.PdsFile.INFO_FILE_BASENAMES
 

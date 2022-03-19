@@ -7,6 +7,15 @@ import translator
 import re
 
 ####################################################################################################################################
+# ASSOCIATIONS
+####################################################################################################################################
+
+associations_to_documents = translator.TranslatorByRegex([
+    (r'volumes/COSP_xxxx.*', 0,
+        r'documents/COSP_xxxx/*'),
+])
+
+####################################################################################################################################
 # FILESPEC_TO_VOLSET
 ####################################################################################################################################
 
@@ -30,6 +39,9 @@ class COSP_xxxx(pdsfile.PdsFile):
 
     pdsfile.PdsFile.VOLSET_TRANSLATOR = translator.TranslatorByRegex([('COSP_xxxx', re.I, 'COSP_xxxx')]) + \
                                         pdsfile.PdsFile.VOLSET_TRANSLATOR
+
+    ASSOCIATIONS = pdsfile.PdsFile.ASSOCIATIONS.copy()
+    ASSOCIATIONS['documents'] += associations_to_documents
 
     INFO_FILE_BASENAMES = info_file_basenames + pdsfile.PdsFile.INFO_FILE_BASENAMES
 

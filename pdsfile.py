@@ -505,7 +505,7 @@ def preload(holdings_list, port=0, clear=False, force_reload=False,
     # system as case-insensitive.
     FS_IS_CASE_INSENSITIVE = False
     for holdings_dir in LOCAL_PRELOADED:
-        testfile = holdings_dir.replace('/holdings', '/ShElVeS')
+        testfile = holdings_dir.replace('/holdings', '/HoLdInGs')
         if os.path.exists(testfile):
             FS_IS_CASE_INSENSITIVE = True
             break
@@ -1524,8 +1524,8 @@ class PdsFile(object):
 
     @property
     def html_path(self):
-        """URL to this file after the domain name and slash, starting with
-        "/holdings"; alias for property "url".
+        """URL to this file after the domain name, starting with "/holdings";
+        alias for property "url".
         """
 
         if self._html_path_filled is not None:
@@ -1552,9 +1552,7 @@ class PdsFile(object):
 
     @property
     def url(self):
-        """URL to this file after the domain name and slash, starting with
-        "/holdings"; alias for property "url".
-        """
+        """URL to this file after the domain name, starting with "/holdings"."""
 
         return self.html_path
 
@@ -1612,7 +1610,7 @@ class PdsFile(object):
             else:
                 abspath = self.abspath
                 abspath = abspath.replace('/holdings/',
-                                          '/holdings/_infoshelf-')
+                                          '/holdings/_indexshelf-')
                 abspath = abspath.replace('.tab', '.pickle')
                 abspath = abspath.replace('.TAB', '.pickle')
                 self._indexshelf_abspath = abspath
@@ -4189,11 +4187,20 @@ class PdsFile(object):
         if len(matches) == 0:
             raise ValueError('Unrecognized OPUS ID: ' + opus_id)
 
-        for k, abspath in enumerate(matches):
-            LOGGER.warn('Ambiguous primary product for OPUS ID ' + opus_id,
-                        abspath + (' (selected)' if k == 0 else ''))
+        # Call a special product prioritizer if available
+        pdsfiles = PdsFile.pdsfiles_for_abspaths(matches)
+        if hasattr(pdsfiles[0], 'opus_prioritizer'):
+            fake_opus_key = ('', 0, '', '', True)
+            fake_opus_sublists = [[pdsf] for pdsf in pdsfiles]
+            fake_product_dict = {fake_opus_key: fake_opus_sublists}
+            fake_product_dict = pdsfiles[0].opus_prioritizer(fake_product_dict)
+            return fake_product_dict[fake_opus_key][0][0]
 
-        return PdsFile.from_abspath(matches[0])
+        for k, pdsf in enumerate(pdsfiles):
+            LOGGER.warn('Ambiguous primary product for OPUS ID ' + opus_id,
+                        pdsf.abspath + (' (selected)' if k == 0 else ''))
+
+        return pdsfiles[0]
 
     def opus_products(self):
         """For this primary data product or label, return a dictionary keyed
@@ -4215,12 +4222,14 @@ class PdsFile(object):
              PdsFile for the first embedded .FMT file (if any),
              PdsFile for the second embedded .FMT file (if any), etc.]
         This sublist contains every file that should be added to the OPUS
-        results if that data product is requested.
+        results if that data product is requested. The sublists appear in order
+        of decreasing version.
 
-        The dictionary returns a list of sublists because it is possible for
-        multiple data products to have the same key. However, most of the time,
-        the list contains only one sublist. The list is sorted with the most
-        recent versions first.
+        If a class function opus_prioritizer exists, this is called before the
+        dictionary is returned. In cases where multiple products with the same
+        OPUS ID and version exists, an opus_prioritizer can be used to alter the
+        dictionary returned in order to highlight the "best" among the
+        alternative products.
         """
 
         # Get the associated absolute paths
@@ -4275,29 +4284,29 @@ class PdsFile(object):
                 data_pdsfiles.append(pdsf)
 
         # Construct the dictionary to return
-        opus_pdsfiles = {}
+        pdsfile_dict = {}
         for pdsf in data_pdsfiles:
             key = opus_type_for_abspath.get(pdsf.abspath, pdsf.opus_type)
-            if key not in opus_pdsfiles:
-                opus_pdsfiles[key] = []
+            if key not in pdsfile_dict:
+                pdsfile_dict[key] = []
 
             if pdsf.label_abspath:
                 sublist = [pdsf] + label_pdsfiles[pdsf.label_abspath]
             else:
                 sublist = [pdsf]
 
-            opus_pdsfiles[key].append(sublist)
+            pdsfile_dict[key].append(sublist)
 
         # Sort by version and filepath
-        for (header, sublists) in opus_pdsfiles.items():
+        for (header, sublists) in pdsfile_dict.items():
             sublists.sort(key=lambda x: (x[0].version_rank, x[0].abspath))
             sublists.reverse()
 
         # Call a special product prioritizer if available
         if hasattr(self, 'opus_prioritizer'):
-            self.opus_prioritizer(opus_pdsfiles)
+            self.opus_prioritizer(pdsfile_dict)
 
-        return opus_pdsfiles
+        return pdsfile_dict
 
     ############################################################################
     # Checksum path associations
