@@ -1120,7 +1120,7 @@ def load_links(dirpath, limits={}, logger=None):
     logger.open('Reading link shelf file for', dirpath, limits)
 
     try:
-        (link_path, lskip) = pdsdir.shelf_path_and_lskip(id='links')
+        (link_path, lskip) = pdsdir.shelf_path_and_lskip('link')
         prefix_ = pdsdir.volume_abspath() + '/'
 
         logger.info('Link shelf file', link_path)
@@ -1177,7 +1177,7 @@ def write_linkdict(dirpath, link_dict, limits={}, logger=None):
     logger.open('Writing link shelf file for', dirpath, limits)
 
     try:
-        (link_path, lskip) = pdsdir.shelf_path_and_lskip(id='links')
+        (link_path, lskip) = pdsdir.shelf_path_and_lskip('link')
         logger.info('Link shelf file', link_path)
 
         # Create a dictionary using interior paths instead of absolute paths
@@ -1382,7 +1382,7 @@ def move_old_links(shelf_file, logger=None):
 
 def initialize(pdsdir, logger=None):
 
-    link_path = pdsdir.shelf_path_and_lskip(id='links')[0]
+    link_path = pdsdir.shelf_path_and_lskip('link')[0]
 
     # Make sure file does not exist
     if os.path.exists(link_path):
@@ -1402,7 +1402,7 @@ def initialize(pdsdir, logger=None):
 
 def reinitialize(pdsdir, logger=None):
 
-    link_path = pdsdir.shelf_path_and_lskip(id='links')[0]
+    link_path = pdsdir.shelf_path_and_lskip('link')[0]
 
     # Warn if shelf file does not exist
     if not os.path.exists(link_path):
@@ -1423,7 +1423,7 @@ def reinitialize(pdsdir, logger=None):
 
 def validate(pdsdir, logger=None):
 
-    link_path = pdsdir.shelf_path_and_lskip(id='links')[0]
+    link_path = pdsdir.shelf_path_and_lskip('link')[0]
 
     # Make sure file exists
     if not os.path.exists(link_path):
@@ -1442,7 +1442,7 @@ def validate(pdsdir, logger=None):
 
 def repair(pdsdir, logger=None):
 
-    link_path = pdsdir.shelf_path_and_lskip(id='links')[0]
+    link_path = pdsdir.shelf_path_and_lskip('link')[0]
 
     # Make sure file exists
     if not os.path.exists(link_path):
@@ -1500,7 +1500,7 @@ def repair(pdsdir, logger=None):
 
 def update(pdsdir,  logger=None):
 
-    link_path = pdsdir.shelf_path_and_lskip(id='links')[0]
+    link_path = pdsdir.shelf_path_and_lskip('link')[0]
 
     # Make sure link shelf file exists
     if not os.path.exists(link_path):
@@ -1651,10 +1651,10 @@ if __name__ == '__main__':
                 continue
 
             # Save logs in up to two places
-            logfiles = set([pdsdir.log_path_for_volume(id='links',
+            logfiles = set([pdsdir.log_path_for_volume('_links',
                                                        task=args.task,
                                                        dir='pdslinkshelf'),
-                            pdsdir.log_path_for_volume(id='links',
+                            pdsdir.log_path_for_volume('_links',
                                                        task=args.task,
                                                        dir='pdslinkshelf',
                                                        place='parallel')])
