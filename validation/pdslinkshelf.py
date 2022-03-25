@@ -364,7 +364,7 @@ REPAIRS = translator.TranslatorByRegex([
       translator.TranslatorByDict(
         {'JUNO_REF.CAT'         : 'JUNO_PROJREF.CAT'})),
 
-    # NHSP
+    # NHSP (and *SP_xxxx)
     ('.*/NHSP_xxxx_v1.*/AAREADME\.TXT', 0,
       translator.TranslatorByDict(
         {'personel.cat'         : 'CATALOG/PERSONNEL.CAT',
@@ -403,7 +403,8 @@ REPAIRS = translator.TranslatorByRegex([
          'SOC_INST_ICD.LBL'     : 'DOCUMENT/SOC_INST_ICD/SOC_INST_ICD.LBL'})),
     ('.*/NHxxLO_xxxx.*/NH..LO_2001/data/\w+/.*\.lbl', 0,
       translator.TranslatorByRegex(
-        [(r'(cflat|dead|delta|dsmear|hot|sap)_(\w+\.fit)', 0, r'../../calib/\1_\2')])),
+        [(r'cflat_grnd_SFA_(\w+\.fit)', 0, r'../../calib/cflat_grnd_sfa_\1'),
+         (r'(cflat|dead|delta|dsmear|hot|sap)_(\w+\.fit)', 0, r'../../calib/\1_\2')])),
     ('.*/NHxxMV_xxxx.*/NH..MV_2001/data/\w+/.*\.lbl', 0,
       translator.TranslatorByRegex(
         [(r'(mc[0-3])_(flat_\w+\.fit)s', 0, r'../../calib/mcl/\1_\2'),
@@ -665,10 +666,10 @@ def generate_links(dirpath, old_links={},
 
     Keys ending in .LBL, .CAT and .TXT return a list of tuples
         (recno, link, target)
-    for each link found found. Here,
-        recno = record number in file
-        link = the text of the link
-        target = absolute path to the target of the link
+    for each link found. Here,
+        recno = record number in file;
+        link = the text of the link;
+        target = absolute path to the target of the link.
 
     Other keys return a single string, which indicates the absolute path to the
     label file describing this file.
