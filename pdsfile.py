@@ -4758,7 +4758,10 @@ class PdsFile(object):
         if dir:
             parts += [dir.rstrip('/'), '/']
 
-        parts += [self.category_, self.volset_, self.volname, suffix]
+        parts += [self.category_, self.volset_, self.volname]
+
+        if suffix:
+            parts += ['_', suffix.lstrip('_')]  # exactly one "_" before suffix
 
         timetag = datetime.datetime.now().strftime(LOGFILE_TIME_FMT)
         parts += ['_', timetag]
@@ -4792,7 +4795,10 @@ class PdsFile(object):
         if dir:
             parts += [dir.rstrip('/'), '/']
 
-        parts += [self.category_, self.volset, self.suffix, suffix]
+        parts += [self.category_, self.volset, self.suffix]
+
+        if suffix:
+            parts += ['_', suffix.lstrip('_')]  # exactly one "_" before suffix
 
         timetag = datetime.datetime.now().strftime(LOGFILE_TIME_FMT)
         parts += ['_', timetag]
@@ -4809,6 +4815,9 @@ class PdsFile(object):
 
         The file name is [dir/]<logical_path_wo_ext>_timetag[_task].log.
         """
+
+        if not self.is_index:
+            raise ValueError('Not an index file: ' + self.logical_path)
 
         # This option provides for a temporary override of the default log root
         if place == 'default':
