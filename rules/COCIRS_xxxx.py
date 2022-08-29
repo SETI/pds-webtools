@@ -600,6 +600,8 @@ opus_type = translator.TranslatorByRegex([
     # Extra viewable image
     (r'volumes/COCIRS_[01]xxx.*/EXTRAS/CUBE_OVERVIEW/.*',  0, ('Cassini CIRS', 20, 'cocirs_extra', 'Extra Cube Preview Image', False)),
 
+    # Documentation
+    (r'documents/COCIRS_[05]xxx/.*',  0, ('Cassini CIRS', 700, 'cocirs_documentation', 'Documentation', True)),
 ])
 
 ####################################################################################################################################
@@ -643,6 +645,7 @@ opus_products = translator.TranslatorByRegex([
              r'diagrams/\1/\3/BROWSE/TARGETS/IMG\4_\5_med.jpg',
              r'diagrams/\1/\3/BROWSE/TARGETS/IMG\4_\5_small.jpg',
              r'diagrams/\1/\3/BROWSE/TARGETS/IMG\4_\5_thumb.jpg',
+             r'documents/COCIRS_5xxx/*',
             ]),
 
     # CUBE (COCIRS_0xxx, COCIRS_1xxx)
@@ -659,6 +662,7 @@ opus_products = translator.TranslatorByRegex([
              r'metadata/\1/\2/\2_cube_#LOWER#\4_index.tab',
              r'metadata/\1/\2/\2_cube_#LOWER#\4_supplemental_index.lbl',
              r'metadata/\1/\2/\2_cube_#LOWER#\4_supplemental_index.tab',
+             r'documents/COCIRS_0xxx/*',
             ]),
 ])
 

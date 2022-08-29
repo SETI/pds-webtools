@@ -44,7 +44,7 @@ VOLSET_REGEX_I      = re.compile(VOLSET_REGEX.pattern, re.I)
 VOLSET_PLUS_REGEX   = re.compile(VOLSET_REGEX.pattern[:-1] +
                         r'(_v[0-9]+\.[0-9]+\.[0-9]+|_v[0-9]+\.[0-9]+|_v[0-9]+|'+
                         r'_in_prep|_prelim|_peer_review|_lien_resolution|)' +
-                        r'((|_calibrated|_diagrams|_metadata|_previews)' +
+                        r'((|_calibrated|_diagrams|_metadata|_previews|_documents)' +
                         r'(|_md5\.txt|\.tar\.gz))$')
 VOLSET_PLUS_REGEX_I = re.compile(VOLSET_PLUS_REGEX.pattern, re.I)
 # Groups are (volset, version_suffix, other_suffix, extension)
@@ -1479,6 +1479,12 @@ class PdsFile(object):
 
         self._recache()
         return self._isdir_filled
+
+    @property
+    def isdocuments(self):
+        """True if the file is under documents directory."""
+
+        return self.voltype_ == 'documents/'
 
     @property
     def filespec(self):
@@ -3261,7 +3267,7 @@ class PdsFile(object):
             if self.volset_:                # if parent is a volset
 
                 # Handle documents directory
-                if self.voltype_ == 'documents/':
+                if self.isdocuments:
                     this.volname_ = ''
                     this.interior = basename
                     return this._complete(must_exist, caching, lifetime)
@@ -4334,7 +4340,7 @@ class PdsFile(object):
         else:
             suffix = '_' + self.voltype_[:-1]
 
-        if self.archives_:
+        if self.archives_ or self.isdocuments:
             abspath = ''.join([self.root_, 'checksums-', self.category_,
                                self.volset, self.suffix, suffix, '_md5.txt'])
             lskip = (len(self.root_) + len('checksums_') + len(self.category_))
@@ -4491,7 +4497,7 @@ class PdsFile(object):
 
         (dir_prefix, file_suffix) = SHELF_PATH_INFO[shelf_type]
 
-        if self.archives_:
+        if self.archives_ or self.isdocuments:
             if not self.volset_:
                 raise ValueError('Archive shelves require volume sets: ' +
                                  self.logical_path)
@@ -4667,7 +4673,7 @@ class PdsFile(object):
         (dir_prefix, file_suffix) = SHELF_PATH_INFO[shelf_type]
 
         # For archive files, the shelf is associated with the volset
-        if logical_path.startswith('archives'):
+        if logical_path.startswith('archives') or logical_path.startswith('documents'):
             parts = logical_path.split('/')
             if len(parts) < 2:
                 raise ValueError('Archive shelves require volume sets: ' +
@@ -4702,7 +4708,7 @@ class PdsFile(object):
             return False
 
         # The document tree does not have info shelves
-        if self.voltype_ == 'documents/':
+        if self.isdocuments:
             return False
 
         # Category-level directories are merged
