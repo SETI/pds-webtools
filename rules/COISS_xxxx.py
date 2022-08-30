@@ -242,7 +242,7 @@ opus_type = translator.TranslatorByRegex([
     (r'volumes/.*/extras/(tiff|full)/.*\.\w+',      0, ('Cassini ISS', 130, 'coiss_full',   'Extra Preview (full)',      False)),
     (r'volumes/.*/extras/(tiff|full)/.*\.\w+',      0, ('Cassini ISS', 130, 'coiss_full',   'Extra Preview (full)',      False)),
     # Documentation
-    (r'documents/COISS_0xxx/.*',                    0, ('Cassini ISS', 700, 'coiss_documentation', 'Documentation', False)),
+    (r'documents/COISS_0xxx/.*',                    0, ('Cassini ISS', 140, 'coiss_documentation', 'Documentation', False)),
 ])
 
 ####################################################################################################################################

@@ -143,7 +143,7 @@ opus_type = translator.TranslatorByRegex([
     (r'volumes/.*/DATA/.*\.DAT',  0, ('Cassini UVIS', 10, 'couvis_raw',        'Raw Data',         True)),
     (r'volumes/.*/CALIB/.*\.DAT', 0, ('Cassini UVIS', 20, 'couvis_calib_corr', 'Calibration Data', True)),
     # Documentation
-    (r'documents/COUVIS_0xxx/.*', 0, ('Cassini UVIS', 700, 'couvis_documentation', 'Documentation', False)),
+    (r'documents/COUVIS_0xxx/.*', 0, ('Cassini UVIS', 30, 'couvis_documentation', 'Documentation', False)),
 ])
 
 ####################################################################################################################################
@@ -250,6 +250,7 @@ class COUVIS_0xxx(pdsfile.PdsFile):
     ASSOCIATIONS['volumes']  += associations_to_volumes
     ASSOCIATIONS['previews'] += associations_to_previews
     ASSOCIATIONS['metadata'] += associations_to_metadata
+    ASSOCIATIONS['documents']  += associations_to_documents
 
     ############################################################################
     # DATA_SET_ID is defined as a function rather than a translator

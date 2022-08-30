@@ -152,7 +152,7 @@ opus_type = translator.TranslatorByRegex([
     (r'volumes/.*_TAU_?01KM\.(TAB|LBL)', 0, ('Cassini UVIS', 10, 'couvis_occ_01', 'Occultation Profile (1 km)',  True)),
     (r'volumes/.*_TAU_?10KM\.(TAB|LBL)', 0, ('Cassini UVIS', 20, 'couvis_occ_10', 'Occultation Profile (10 km)', True)),
     # Documentation
-    (r'documents/COUVIS_8xxx/.*',        0, ('Cassini UVIS', 700, 'couvis_documentation', 'Documentation', False)),
+    (r'documents/COUVIS_8xxx/.*',        0, ('Cassini UVIS', 30, 'couvis_documentation', 'Documentation', False)),
 ])
 
 ####################################################################################################################################
@@ -232,6 +232,7 @@ class COUVIS_8xxx(pdsfile.PdsFile):
     ASSOCIATIONS['previews'] += associations_to_previews
     ASSOCIATIONS['diagrams'] += associations_to_diagrams
     ASSOCIATIONS['metadata'] += associations_to_metadata
+    ASSOCIATIONS['documents'] += associations_to_documents
 
     VERSIONS = versions + pdsfile.PdsFile.VERSIONS
 

@@ -78,6 +78,8 @@ associations_to_volumes = translator.TranslatorByRegex([
             [r'volumes/COVIMS_8xxx/COVIMS_8001/data',
              r'volumes/COVIMS_8xxx/COVIMS_8001/browse',
             ]),
+    (r'documents/COVIMS_8xxx.*', 0,
+            r'volumes/COVIMS_8xxx'),
 ])
 
 associations_to_previews = translator.TranslatorByRegex([
@@ -128,6 +130,11 @@ associations_to_metadata = translator.TranslatorByRegex([
             ]),
 ])
 
+associations_to_documents = translator.TranslatorByRegex([
+        (r'volumes/COVIMS_8xxx.*', 0,
+                r'documents/COVIMS_8xxx/*'),
+])
+
 ####################################################################################################################################
 # VERSIONS
 ####################################################################################################################################
@@ -170,6 +177,8 @@ split_rules = translator.TranslatorByRegex([
 opus_type = translator.TranslatorByRegex([
     (r'volumes/.*_TAU_01KM\.(TAB|LBL)', 0, ('Cassini VIMS', 10, 'covims_occ_01', 'Occultation Profile (1 km)',  True)),
     (r'volumes/.*_TAU_10KM\.(TAB|LBL)', 0, ('Cassini VIMS', 20, 'covims_occ_10', 'Occultation Profile (10 km)', True)),
+    # Documentation
+    (r'documents/COVIMS_8xxx/.*',       0, ('Cassini VIMS', 30, 'covims_documentation', 'Documentation', False)),
 ])
 
 ####################################################################################################################################
@@ -217,6 +226,7 @@ opus_products = translator.TranslatorByRegex([
              r'metadata/COVIMS_8xxx/\2/\2_profile_index.tab',
              r'metadata/COVIMS_8xxx/\2/\2_supplemental_index.lbl',
              r'metadata/COVIMS_8xxx/\2/\2_supplemental_index.tab',
+             r'documents/COVIMS_8xxx/*'
             ]),
 ])
 
@@ -264,6 +274,7 @@ class COVIMS_8xxx(pdsfile.PdsFile):
     ASSOCIATIONS['previews'] += associations_to_previews
     ASSOCIATIONS['diagrams'] += associations_to_diagrams
     ASSOCIATIONS['metadata'] += associations_to_metadata
+    ASSOCIATIONS['documents'] = associations_to_documents
 
     VERSIONS = versions + pdsfile.PdsFile.VERSIONS
 

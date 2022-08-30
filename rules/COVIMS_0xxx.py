@@ -63,6 +63,8 @@ associations_to_volumes = translator.TranslatorByRegex([
     (r'.*/COVIMS_0xxx(|_v[0-9\.]+)/(COVIMS_....)/extras', 0,
             r'volumes/COVIMS_0xxx\1/\2/data'),
     (r'.*/COVIMS_0999.*', 0, r'volumes/COVIMS_0xxx'),
+    (r'documents/COVIMS_0xxx.*', 0,
+            r'volumes/COVIMS_0xxx'),
 ])
 
 associations_to_previews = translator.TranslatorByRegex([
@@ -106,10 +108,10 @@ associations_to_documents = translator.TranslatorByRegex([
                  r'volumes/\1/document/*',
                 ]),
 
-    (r'volumes/COVIMS_0xxx.*', 0,
-            r'documents/COVIMS_0xxx/*'),
-    (r'previews/COVIMS_0xxx.*', 0,
-            r'documents/COVIMS_0xxx/VIMS-Preview-Interpretation-Guide.pdf'),
+        (r'volumes/COVIMS_0xxx.*', 0,
+                r'documents/COVIMS_0xxx/*'),
+        (r'previews/COVIMS_0xxx.*', 0,
+                r'documents/COVIMS_0xxx/VIMS-Preview-Interpretation-Guide.pdf'),
 ])
 
 ####################################################################################################################################
@@ -138,6 +140,8 @@ opus_type = translator.TranslatorByRegex([
     (r'volumes/.*/extras/thumbnail/.*\.jpeg_small', 0, ('Cassini VIMS', 110, 'covims_thumb',  'Extra Preview (thumbnail)', False)),
     (r'volumes/.*/extras/browse/.*\.jpeg',          0, ('Cassini VIMS', 120, 'covims_medium', 'Extra Preview (medium)',    False)),
     (r'volumes/.*/extras/(tiff|full)/.*\.\w+',      0, ('Cassini VIMS', 130, 'covims_full',   'Extra Preview (full)',      False)),
+    # Documentation
+    (r'documents/COVIMS_0xxx/.*',                   0, ('Cassini VIMS', 140, 'covims_documentation', 'Documentation', False)),
 ])
 
 ####################################################################################################################################
@@ -179,6 +183,7 @@ opus_products = translator.TranslatorByRegex([
              r'metadata/COVIMS_0xxx/\2/\2_index.lbl',
              r'metadata/COVIMS_0xxx/\2/\2_supplemental_index.tab',
              r'metadata/COVIMS_0xxx/\2/\2_supplemental_index.lbl',
+             r'documents/COVIMS_0xxx/*'
             ]),
 ])
 

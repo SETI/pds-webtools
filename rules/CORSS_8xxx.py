@@ -378,7 +378,7 @@ opus_type = translator.TranslatorByRegex([
     (r'volumes/.*_(DSN_Elevation|TimeLine_Figure|TimeLine_Table|Summary|OccTrack_Geometry)\.(pdf|LBL)',
                                          0, ('Cassini RSS', 60, 'corss_occ_doc', 'Occultation Documentation', True)),
     # Documentation
-    (r'documents/CORSS_8xxx/.*',         0, ('Cassini RSS', 50, 'corss_documentation', 'Documentation',     False)),
+    (r'documents/CORSS_8xxx/.*',         0, ('Cassini RSS', 70, 'corss_documentation', 'Documentation',     False)),
 ])
 
 ####################################################################################################################################

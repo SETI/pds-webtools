@@ -346,6 +346,8 @@ associations_to_volumes = translator.TranslatorByRegex([
     (r'volumes/GO_0xxx/GO_0023/G28/GARBLED/(C0552447569)R.*'    , 0, r'volumes/GO_0xxx/GO_0023/G28/REPAIRED/\1S.*'),
     (r'volumes/GO_0xxx/GO_0023/G29/GARBLED/(C060049.*)R.*'      , 0, r'volumes/GO_0xxx/GO_0023/G29/REPAIRED/\1S.*'),
     (r'volumes/GO_0xxx/GO_0023/G29/GARBLED/(C060066.*)R.*'      , 0, r'volumes/GO_0xxx/GO_0023/G29/REPAIRED/\1S.*'),
+
+    (r'documents/GO_0xxx.*'                                     , 0, r'volumes/GO_0xxx'),
 ])
 
 associations_to_previews = translator.TranslatorByRegex([
@@ -384,6 +386,11 @@ associations_to_metadata = translator.TranslatorByRegex([
             ]),
     (r'volumes/GO_0xxx/GO_0016/SL9/(C\d{10})[RG].*', 0,
             r'metadata/GO_0xxx/GO_0016/GO_0016_sl9_index.tab/\1'),
+])
+
+associations_to_documents = translator.TranslatorByRegex([
+    (r'volumes/GO_0xxx.*', 0,
+            r'documents/GO_0xxx/*'),
 ])
 
 ####################################################################################################################################
@@ -465,6 +472,8 @@ split_rules = translator.TranslatorByRegex([
 opus_type = translator.TranslatorByRegex([
     (r'volumes/GO_0xxx/GO_0.../(?!CATALOG|DOCUMENT|INDEX|LABEL).*[^G]\.(IMG|LBL)', 0, ('Galileo SSI', 10, 'gossi_raw', 'Raw Image', True)),
     (r'volumes/GO_0xxx/GO_0016/SL9/.*G.(IMG|LBL)',                                 0, ('Galileo SSI', 12, 'gossi_sl9', 'Image with SL9 graphics overlay', True)),
+    # Documentation
+    (r'documents/GO_0xxx/.*',                                                      0, ('Galileo SSI', 13, 'gossi_documentation', 'Documentation', False)),
 ])
 
 ####################################################################################################################################
@@ -492,6 +501,7 @@ opus_products = translator.TranslatorByRegex([
              r'previews/GO_0xxx/\1/\2_thumb.jpg',
              r'metadata/GO_0xxx/\1/\1_index.lbl',
              r'metadata/GO_0xxx/\1/\1_index.tab',
+             r'documents/GO_0xxx/*'
             ]),
 
     # SL9 "graphics" file associations
@@ -502,6 +512,7 @@ opus_products = translator.TranslatorByRegex([
              r'previews/GO_0xxx/GO_0016/SL9/\1G_med.jpg',
              r'previews/GO_0xxx/GO_0016/SL9/\1G_small.jpg',
              r'previews/GO_0xxx/GO_0016/SL9/\1G_thumb.jpg',
+             r'documents/GO_0xxx/*'
             ]),
 
     (r'.*volumes/GO_0xxx/GO_0016/SL9/(C\d{10})G\.(IMG|LBL)', 0,
@@ -511,78 +522,79 @@ opus_products = translator.TranslatorByRegex([
              r'previews/GO_0xxx/GO_0016/SL9/\1R_med.jpg',
              r'previews/GO_0xxx/GO_0016/SL9/\1R_small.jpg',
              r'previews/GO_0xxx/GO_0016/SL9/\1R_thumb.jpg',
+             r'documents/GO_0xxx/*'
             ]),
 
     # Known duplicates...
-    (r'.*/GO_0006/REDO/(C0018062639R).*'   , 0, [r'volumes/GO_0xxx/GO_0002/VENUS/\1.*'  , r'previews/GO_0xxx/GO_0002/VENUS/\1*.jpg'  , r'metadata/GO_0xxx/GO_0002/GO_0???_index.*']),
-    (r'.*/GO_0006/REDO/(C0018241745R).*'   , 0, [r'volumes/GO_0xxx/GO_0002/VENUS/\1.*'  , r'previews/GO_0xxx/GO_0002/VENUS/\1*.jpg'  , r'metadata/GO_0xxx/GO_0002/GO_0???_index.*']),
-    (r'.*/GO_0006/REDO/(C0018353518R).*'   , 0, [r'volumes/GO_0xxx/GO_0002/VENUS/\1.*'  , r'previews/GO_0xxx/GO_0002/VENUS/\1*.jpg'  , r'metadata/GO_0xxx/GO_0002/GO_0???_index.*']),
-    (r'.*/GO_0006/REDO/(C0018518445R).*'   , 0, [r'volumes/GO_0xxx/GO_0002/VENUS/\1.*'  , r'previews/GO_0xxx/GO_0002/VENUS/\1*.jpg'  , r'metadata/GO_0xxx/GO_0002/GO_0???_index.*']),
-    (r'.*/GO_0006/REDO/(C0059469700R).*'   , 0, [r'volumes/GO_0xxx/GO_0002/RAW_CAL/\1.*', r'previews/GO_0xxx/GO_0002/RAW_CAL/\1*.jpg', r'metadata/GO_0xxx/GO_0002/GO_0???_index.*']),
-    (r'.*/GO_0006/REDO/(C0059471700R).*'   , 0, [r'volumes/GO_0xxx/GO_0002/RAW_CAL/\1.*', r'previews/GO_0xxx/GO_0002/RAW_CAL/\1*.jpg', r'metadata/GO_0xxx/GO_0002/GO_0???_index.*']),
-    (r'.*/GO_0006/REDO/(C0060964000R).*'   , 0, [r'volumes/GO_0xxx/GO_0003/MOON/\1.*'   , r'previews/GO_0xxx/GO_0003/MOON/\1*.jpg'   , r'metadata/GO_0xxx/GO_0003/GO_0???_index.*']),
-    (r'.*/GO_0006/REDO/(C0061078900R).*'   , 0, [r'volumes/GO_0xxx/GO_0004/EARTH/\1.*'  , r'previews/GO_0xxx/GO_0004/EARTH/\1*.jpg'  , r'metadata/GO_0xxx/GO_0004/GO_0???_index.*']),
-    (r'.*/GO_0006/REDO/(C0061116.00R).*'   , 0, [r'volumes/GO_0xxx/GO_0004/MOON/\1.*'   , r'previews/GO_0xxx/GO_0004/MOON/\1*.jpg'   , r'metadata/GO_0xxx/GO_0004/GO_0???_index.*']),
-    (r'.*/GO_0006/REDO/(C0061424500R).*'   , 0, [r'volumes/GO_0xxx/GO_0004/EARTH/\1.*'  , r'previews/GO_0xxx/GO_0004/EARTH/\1*.jpg'  , r'metadata/GO_0xxx/GO_0004/GO_0???_index.*']),
-    (r'.*/GO_0006/REDO/(C0061441500R).*'   , 0, [r'volumes/GO_0xxx/GO_0004/EARTH/\1.*'  , r'previews/GO_0xxx/GO_0004/EARTH/\1*.jpg'  , r'metadata/GO_0xxx/GO_0004/GO_0???_index.*']),
-    (r'.*/GO_0006/REDO/(C0061469100R).*'   , 0, [r'volumes/GO_0xxx/GO_0005/EARTH/\1.*'  , r'previews/GO_0xxx/GO_0005/EARTH/\1*.jpg'  , r'metadata/GO_0xxx/GO_0005/GO_0???_index.*']),
-    (r'.*/GO_0006/REDO/(C006150..00R).*'   , 0, [r'volumes/GO_0xxx/GO_0005/EARTH/\1.*'  , r'previews/GO_0xxx/GO_0005/EARTH/\1*.jpg'  , r'metadata/GO_0xxx/GO_0005/GO_0???_index.*']),
-    (r'.*/GO_0006/REDO/(C006151..00R).*'   , 0, [r'volumes/GO_0xxx/GO_0005/EARTH/\1.*'  , r'previews/GO_0xxx/GO_0005/EARTH/\1*.jpg'  , r'metadata/GO_0xxx/GO_0005/GO_0???_index.*']),
-    (r'.*/GO_0006/REDO/(C006152..00R).*'   , 0, [r'volumes/GO_0xxx/GO_0005/EARTH/\1.*'  , r'previews/GO_0xxx/GO_0005/EARTH/\1*.jpg'  , r'metadata/GO_0xxx/GO_0005/GO_0???_index.*']),
-    (r'.*/GO_0006/REDO/(C006153..00R).*'   , 0, [r'volumes/GO_0xxx/GO_0005/EARTH/\1.*'  , r'previews/GO_0xxx/GO_0005/EARTH/\1*.jpg'  , r'metadata/GO_0xxx/GO_0005/GO_0???_index.*']),
-    (r'.*/GO_0006/REDO/(C0061542500R).*'   , 0, [r'volumes/GO_0xxx/GO_0006/EARTH/\1.*'  , r'previews/GO_0xxx/GO_0006/EARTH/\1*.jpg'  , r'metadata/GO_0xxx/GO_0006/GO_0???_index.*']),
-    (r'.*/GO_0015/REDO/(C0165242700R).*'   , 0, [r'volumes/GO_0xxx/GO_0012/EARTH/\1.*'  , r'previews/GO_0xxx/GO_0012/EARTH/\1*.jpg'  , r'metadata/GO_0xxx/GO_0012/GO_0???_index.*']),
+    (r'.*/GO_0006/REDO/(C0018062639R).*'   , 0, [r'volumes/GO_0xxx/GO_0002/VENUS/\1.*'  , r'previews/GO_0xxx/GO_0002/VENUS/\1*.jpg'  , r'metadata/GO_0xxx/GO_0002/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0006/REDO/(C0018241745R).*'   , 0, [r'volumes/GO_0xxx/GO_0002/VENUS/\1.*'  , r'previews/GO_0xxx/GO_0002/VENUS/\1*.jpg'  , r'metadata/GO_0xxx/GO_0002/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0006/REDO/(C0018353518R).*'   , 0, [r'volumes/GO_0xxx/GO_0002/VENUS/\1.*'  , r'previews/GO_0xxx/GO_0002/VENUS/\1*.jpg'  , r'metadata/GO_0xxx/GO_0002/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0006/REDO/(C0018518445R).*'   , 0, [r'volumes/GO_0xxx/GO_0002/VENUS/\1.*'  , r'previews/GO_0xxx/GO_0002/VENUS/\1*.jpg'  , r'metadata/GO_0xxx/GO_0002/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0006/REDO/(C0059469700R).*'   , 0, [r'volumes/GO_0xxx/GO_0002/RAW_CAL/\1.*', r'previews/GO_0xxx/GO_0002/RAW_CAL/\1*.jpg', r'metadata/GO_0xxx/GO_0002/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0006/REDO/(C0059471700R).*'   , 0, [r'volumes/GO_0xxx/GO_0002/RAW_CAL/\1.*', r'previews/GO_0xxx/GO_0002/RAW_CAL/\1*.jpg', r'metadata/GO_0xxx/GO_0002/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0006/REDO/(C0060964000R).*'   , 0, [r'volumes/GO_0xxx/GO_0003/MOON/\1.*'   , r'previews/GO_0xxx/GO_0003/MOON/\1*.jpg'   , r'metadata/GO_0xxx/GO_0003/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0006/REDO/(C0061078900R).*'   , 0, [r'volumes/GO_0xxx/GO_0004/EARTH/\1.*'  , r'previews/GO_0xxx/GO_0004/EARTH/\1*.jpg'  , r'metadata/GO_0xxx/GO_0004/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0006/REDO/(C0061116.00R).*'   , 0, [r'volumes/GO_0xxx/GO_0004/MOON/\1.*'   , r'previews/GO_0xxx/GO_0004/MOON/\1*.jpg'   , r'metadata/GO_0xxx/GO_0004/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0006/REDO/(C0061424500R).*'   , 0, [r'volumes/GO_0xxx/GO_0004/EARTH/\1.*'  , r'previews/GO_0xxx/GO_0004/EARTH/\1*.jpg'  , r'metadata/GO_0xxx/GO_0004/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0006/REDO/(C0061441500R).*'   , 0, [r'volumes/GO_0xxx/GO_0004/EARTH/\1.*'  , r'previews/GO_0xxx/GO_0004/EARTH/\1*.jpg'  , r'metadata/GO_0xxx/GO_0004/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0006/REDO/(C0061469100R).*'   , 0, [r'volumes/GO_0xxx/GO_0005/EARTH/\1.*'  , r'previews/GO_0xxx/GO_0005/EARTH/\1*.jpg'  , r'metadata/GO_0xxx/GO_0005/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0006/REDO/(C006150..00R).*'   , 0, [r'volumes/GO_0xxx/GO_0005/EARTH/\1.*'  , r'previews/GO_0xxx/GO_0005/EARTH/\1*.jpg'  , r'metadata/GO_0xxx/GO_0005/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0006/REDO/(C006151..00R).*'   , 0, [r'volumes/GO_0xxx/GO_0005/EARTH/\1.*'  , r'previews/GO_0xxx/GO_0005/EARTH/\1*.jpg'  , r'metadata/GO_0xxx/GO_0005/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0006/REDO/(C006152..00R).*'   , 0, [r'volumes/GO_0xxx/GO_0005/EARTH/\1.*'  , r'previews/GO_0xxx/GO_0005/EARTH/\1*.jpg'  , r'metadata/GO_0xxx/GO_0005/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0006/REDO/(C006153..00R).*'   , 0, [r'volumes/GO_0xxx/GO_0005/EARTH/\1.*'  , r'previews/GO_0xxx/GO_0005/EARTH/\1*.jpg'  , r'metadata/GO_0xxx/GO_0005/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0006/REDO/(C0061542500R).*'   , 0, [r'volumes/GO_0xxx/GO_0006/EARTH/\1.*'  , r'previews/GO_0xxx/GO_0006/EARTH/\1*.jpg'  , r'metadata/GO_0xxx/GO_0006/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0015/REDO/(C0165242700R).*'   , 0, [r'volumes/GO_0xxx/GO_0012/EARTH/\1.*'  , r'previews/GO_0xxx/GO_0012/EARTH/\1*.jpg'  , r'metadata/GO_0xxx/GO_0012/GO_0???_index.*', r'documents/GO_0xxx/*']),
 
-    (r'.*/GO_0002/VENUS/(C0018062639R).*'  , 0, [r'volumes/GO_0xxx/GO_0006/REDO/\1.*', r'previews/GO_0xxx/GO_0006/REDO/\1*.jpg', r'metadata/GO_0xxx/GO_0006/GO_0???_index.*']),
-    (r'.*/GO_0002/VENUS/(C0018241745R).*'  , 0, [r'volumes/GO_0xxx/GO_0006/REDO/\1.*', r'previews/GO_0xxx/GO_0006/REDO/\1*.jpg', r'metadata/GO_0xxx/GO_0006/GO_0???_index.*']),
-    (r'.*/GO_0002/VENUS/(C0018353518R).*'  , 0, [r'volumes/GO_0xxx/GO_0006/REDO/\1.*', r'previews/GO_0xxx/GO_0006/REDO/\1*.jpg', r'metadata/GO_0xxx/GO_0006/GO_0???_index.*']),
-    (r'.*/GO_0002/VENUS/(C0018518445R).*'  , 0, [r'volumes/GO_0xxx/GO_0006/REDO/\1.*', r'previews/GO_0xxx/GO_0006/REDO/\1*.jpg', r'metadata/GO_0xxx/GO_0006/GO_0???_index.*']),
-    (r'.*/GO_0002/RAW_CAL/(C0059469700R).*', 0, [r'volumes/GO_0xxx/GO_0006/REDO/\1.*', r'previews/GO_0xxx/GO_0006/REDO/\1*.jpg', r'metadata/GO_0xxx/GO_0006/GO_0???_index.*']),
-    (r'.*/GO_0002/RAW_CAL/(C0059471700R).*', 0, [r'volumes/GO_0xxx/GO_0006/REDO/\1.*', r'previews/GO_0xxx/GO_0006/REDO/\1*.jpg', r'metadata/GO_0xxx/GO_0006/GO_0???_index.*']),
-    (r'.*/GO_0003/MOON/(C0060964000R).*'   , 0, [r'volumes/GO_0xxx/GO_0006/REDO/\1.*', r'previews/GO_0xxx/GO_0006/REDO/\1*.jpg', r'metadata/GO_0xxx/GO_0006/GO_0???_index.*']),
-    (r'.*/GO_0004/EARTH/(C0061078900R).*'  , 0, [r'volumes/GO_0xxx/GO_0006/REDO/\1.*', r'previews/GO_0xxx/GO_0006/REDO/\1*.jpg', r'metadata/GO_0xxx/GO_0006/GO_0???_index.*']),
-    (r'.*/GO_0004/MOON/(C0061116.00R).*'   , 0, [r'volumes/GO_0xxx/GO_0006/REDO/\1.*', r'previews/GO_0xxx/GO_0006/REDO/\1*.jpg', r'metadata/GO_0xxx/GO_0006/GO_0???_index.*']),
-    (r'.*/GO_0004/EARTH/(C0061424500R).*'  , 0, [r'volumes/GO_0xxx/GO_0006/REDO/\1.*', r'previews/GO_0xxx/GO_0006/REDO/\1*.jpg', r'metadata/GO_0xxx/GO_0006/GO_0???_index.*']),
-    (r'.*/GO_0004/EARTH/(C0061441500R).*'  , 0, [r'volumes/GO_0xxx/GO_0006/REDO/\1.*', r'previews/GO_0xxx/GO_0006/REDO/\1*.jpg', r'metadata/GO_0xxx/GO_0006/GO_0???_index.*']),
-    (r'.*/GO_0005/EARTH/(C0061469100R).*'  , 0, [r'volumes/GO_0xxx/GO_0006/REDO/\1.*', r'previews/GO_0xxx/GO_0006/REDO/\1*.jpg', r'metadata/GO_0xxx/GO_0006/GO_0???_index.*']),
-    (r'.*/GO_0005/EARTH/(C006150..00R).*'  , 0, [r'volumes/GO_0xxx/GO_0006/REDO/\1.*', r'previews/GO_0xxx/GO_0006/REDO/\1*.jpg', r'metadata/GO_0xxx/GO_0006/GO_0???_index.*']),
-    (r'.*/GO_0005/EARTH/(C006151..00R).*'  , 0, [r'volumes/GO_0xxx/GO_0006/REDO/\1.*', r'previews/GO_0xxx/GO_0006/REDO/\1*.jpg', r'metadata/GO_0xxx/GO_0006/GO_0???_index.*']),
-    (r'.*/GO_0005/EARTH/(C006152..00R).*'  , 0, [r'volumes/GO_0xxx/GO_0006/REDO/\1.*', r'previews/GO_0xxx/GO_0006/REDO/\1*.jpg', r'metadata/GO_0xxx/GO_0006/GO_0???_index.*']),
-    (r'.*/GO_0005/EARTH/(C006153..00R).*'  , 0, [r'volumes/GO_0xxx/GO_0006/REDO/\1.*', r'previews/GO_0xxx/GO_0006/REDO/\1*.jpg', r'metadata/GO_0xxx/GO_0006/GO_0???_index.*']),
-    (r'.*/GO_0006/EARTH/(C0061542500R).*'  , 0, [r'volumes/GO_0xxx/GO_0006/REDO/\1.*', r'previews/GO_0xxx/GO_0006/REDO/\1*.jpg', r'metadata/GO_0xxx/GO_0006/GO_0???_index.*']),
-    (r'.*/GO_0012/EARTH/(C0165242700R).*'  , 0, [r'volumes/GO_0xxx/GO_0015/REDO/\1.*', r'previews/GO_0xxx/GO_0015/REDO/\1*.jpg', r'metadata/GO_0xxx/GO_0015/GO_0???_index.*']),
+    (r'.*/GO_0002/VENUS/(C0018062639R).*'  , 0, [r'volumes/GO_0xxx/GO_0006/REDO/\1.*', r'previews/GO_0xxx/GO_0006/REDO/\1*.jpg', r'metadata/GO_0xxx/GO_0006/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0002/VENUS/(C0018241745R).*'  , 0, [r'volumes/GO_0xxx/GO_0006/REDO/\1.*', r'previews/GO_0xxx/GO_0006/REDO/\1*.jpg', r'metadata/GO_0xxx/GO_0006/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0002/VENUS/(C0018353518R).*'  , 0, [r'volumes/GO_0xxx/GO_0006/REDO/\1.*', r'previews/GO_0xxx/GO_0006/REDO/\1*.jpg', r'metadata/GO_0xxx/GO_0006/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0002/VENUS/(C0018518445R).*'  , 0, [r'volumes/GO_0xxx/GO_0006/REDO/\1.*', r'previews/GO_0xxx/GO_0006/REDO/\1*.jpg', r'metadata/GO_0xxx/GO_0006/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0002/RAW_CAL/(C0059469700R).*', 0, [r'volumes/GO_0xxx/GO_0006/REDO/\1.*', r'previews/GO_0xxx/GO_0006/REDO/\1*.jpg', r'metadata/GO_0xxx/GO_0006/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0002/RAW_CAL/(C0059471700R).*', 0, [r'volumes/GO_0xxx/GO_0006/REDO/\1.*', r'previews/GO_0xxx/GO_0006/REDO/\1*.jpg', r'metadata/GO_0xxx/GO_0006/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0003/MOON/(C0060964000R).*'   , 0, [r'volumes/GO_0xxx/GO_0006/REDO/\1.*', r'previews/GO_0xxx/GO_0006/REDO/\1*.jpg', r'metadata/GO_0xxx/GO_0006/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0004/EARTH/(C0061078900R).*'  , 0, [r'volumes/GO_0xxx/GO_0006/REDO/\1.*', r'previews/GO_0xxx/GO_0006/REDO/\1*.jpg', r'metadata/GO_0xxx/GO_0006/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0004/MOON/(C0061116.00R).*'   , 0, [r'volumes/GO_0xxx/GO_0006/REDO/\1.*', r'previews/GO_0xxx/GO_0006/REDO/\1*.jpg', r'metadata/GO_0xxx/GO_0006/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0004/EARTH/(C0061424500R).*'  , 0, [r'volumes/GO_0xxx/GO_0006/REDO/\1.*', r'previews/GO_0xxx/GO_0006/REDO/\1*.jpg', r'metadata/GO_0xxx/GO_0006/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0004/EARTH/(C0061441500R).*'  , 0, [r'volumes/GO_0xxx/GO_0006/REDO/\1.*', r'previews/GO_0xxx/GO_0006/REDO/\1*.jpg', r'metadata/GO_0xxx/GO_0006/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0005/EARTH/(C0061469100R).*'  , 0, [r'volumes/GO_0xxx/GO_0006/REDO/\1.*', r'previews/GO_0xxx/GO_0006/REDO/\1*.jpg', r'metadata/GO_0xxx/GO_0006/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0005/EARTH/(C006150..00R).*'  , 0, [r'volumes/GO_0xxx/GO_0006/REDO/\1.*', r'previews/GO_0xxx/GO_0006/REDO/\1*.jpg', r'metadata/GO_0xxx/GO_0006/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0005/EARTH/(C006151..00R).*'  , 0, [r'volumes/GO_0xxx/GO_0006/REDO/\1.*', r'previews/GO_0xxx/GO_0006/REDO/\1*.jpg', r'metadata/GO_0xxx/GO_0006/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0005/EARTH/(C006152..00R).*'  , 0, [r'volumes/GO_0xxx/GO_0006/REDO/\1.*', r'previews/GO_0xxx/GO_0006/REDO/\1*.jpg', r'metadata/GO_0xxx/GO_0006/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0005/EARTH/(C006153..00R).*'  , 0, [r'volumes/GO_0xxx/GO_0006/REDO/\1.*', r'previews/GO_0xxx/GO_0006/REDO/\1*.jpg', r'metadata/GO_0xxx/GO_0006/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0006/EARTH/(C0061542500R).*'  , 0, [r'volumes/GO_0xxx/GO_0006/REDO/\1.*', r'previews/GO_0xxx/GO_0006/REDO/\1*.jpg', r'metadata/GO_0xxx/GO_0006/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0012/EARTH/(C0165242700R).*'  , 0, [r'volumes/GO_0xxx/GO_0015/REDO/\1.*', r'previews/GO_0xxx/GO_0015/REDO/\1*.jpg', r'metadata/GO_0xxx/GO_0015/GO_0???_index.*', r'documents/GO_0xxx/*']),
 
-    (r'.*/GO_0018/REDO/(C3/JUPITER/C036897..00R).*', 0, [r'volumes/GO_0xxx/GO_0017/\1.*', r'previews/GO_0xxx/GO_0017/\1*.jpg', r'metadata/GO_0xxx/GO_0017/GO_0???_index.*']),
-    (r'.*/GO_0018/REDO/(C3/JUPITER/C036898..00R).*', 0, [r'volumes/GO_0xxx/GO_0017/\1.*', r'previews/GO_0xxx/GO_0017/\1*.jpg', r'metadata/GO_0xxx/GO_0017/GO_0???_index.*']),
-    (r'.*/GO_0018/REDO/(C3/JUPITER/C036899..00R).*', 0, [r'volumes/GO_0xxx/GO_0017/\1.*', r'previews/GO_0xxx/GO_0017/\1*.jpg', r'metadata/GO_0xxx/GO_0017/GO_0???_index.*']),
-    (r'.*/GO_0019/REDO/(C3/EUROPA/C0368976...R).*' , 0, [r'volumes/GO_0xxx/GO_0017/\1.*', r'previews/GO_0xxx/GO_0017/\1*.jpg', r'metadata/GO_0xxx/GO_0017/GO_0???_index.*']),
-    (r'.*/GO_0019/REDO/(C3/JUPITER/C0368369268R).*', 0, [r'volumes/GO_0xxx/GO_0017/\1.*', r'previews/GO_0xxx/GO_0017/\1*.jpg', r'metadata/GO_0xxx/GO_0017/GO_0???_index.*']),
-    (r'.*/GO_0019/REDO/(C3/JUPITER/C0368441600R).*', 0, [r'volumes/GO_0xxx/GO_0017/\1.*', r'previews/GO_0xxx/GO_0017/\1*.jpg', r'metadata/GO_0xxx/GO_0017/GO_0???_index.*']),
-    (r'.*/GO_0019/REDO/(E4/EUROPA/C0374667300R).*' , 0, [r'volumes/GO_0xxx/GO_0018/\1.*', r'previews/GO_0xxx/GO_0018/\1*.jpg', r'metadata/GO_0xxx/GO_0018/GO_0???_index.*']),
-    (r'.*/GO_0019/REDO/(E6/IO/C0383655111R).*'     , 0, [r'volumes/GO_0xxx/GO_0018/\1.*', r'previews/GO_0xxx/GO_0018/\1*.jpg', r'metadata/GO_0xxx/GO_0018/GO_0???_index.*']),
+    (r'.*/GO_0018/REDO/(C3/JUPITER/C036897..00R).*', 0, [r'volumes/GO_0xxx/GO_0017/\1.*', r'previews/GO_0xxx/GO_0017/\1*.jpg', r'metadata/GO_0xxx/GO_0017/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0018/REDO/(C3/JUPITER/C036898..00R).*', 0, [r'volumes/GO_0xxx/GO_0017/\1.*', r'previews/GO_0xxx/GO_0017/\1*.jpg', r'metadata/GO_0xxx/GO_0017/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0018/REDO/(C3/JUPITER/C036899..00R).*', 0, [r'volumes/GO_0xxx/GO_0017/\1.*', r'previews/GO_0xxx/GO_0017/\1*.jpg', r'metadata/GO_0xxx/GO_0017/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0019/REDO/(C3/EUROPA/C0368976...R).*' , 0, [r'volumes/GO_0xxx/GO_0017/\1.*', r'previews/GO_0xxx/GO_0017/\1*.jpg', r'metadata/GO_0xxx/GO_0017/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0019/REDO/(C3/JUPITER/C0368369268R).*', 0, [r'volumes/GO_0xxx/GO_0017/\1.*', r'previews/GO_0xxx/GO_0017/\1*.jpg', r'metadata/GO_0xxx/GO_0017/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0019/REDO/(C3/JUPITER/C0368441600R).*', 0, [r'volumes/GO_0xxx/GO_0017/\1.*', r'previews/GO_0xxx/GO_0017/\1*.jpg', r'metadata/GO_0xxx/GO_0017/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0019/REDO/(E4/EUROPA/C0374667300R).*' , 0, [r'volumes/GO_0xxx/GO_0018/\1.*', r'previews/GO_0xxx/GO_0018/\1*.jpg', r'metadata/GO_0xxx/GO_0018/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0019/REDO/(E6/IO/C0383655111R).*'     , 0, [r'volumes/GO_0xxx/GO_0018/\1.*', r'previews/GO_0xxx/GO_0018/\1*.jpg', r'metadata/GO_0xxx/GO_0018/GO_0???_index.*', r'documents/GO_0xxx/*']),
 
-    (r'.*/GO_0017/(C3/JUPITER/C036897..00R).*'     , 0, [r'volumes/GO_0xxx/GO_0018/REDO/\1.*', r'previews/GO_0xxx/GO_0018/REDO/\1*.jpg', r'metadata/GO_0xxx/GO_0018/GO_0???_index.*']),
-    (r'.*/GO_0017/(C3/JUPITER/C036898..00R).*'     , 0, [r'volumes/GO_0xxx/GO_0018/REDO/\1.*', r'previews/GO_0xxx/GO_0018/REDO/\1*.jpg', r'metadata/GO_0xxx/GO_0018/GO_0???_index.*']),
-    (r'.*/GO_0017/(C3/JUPITER/C036899..00R).*'     , 0, [r'volumes/GO_0xxx/GO_0018/REDO/\1.*', r'previews/GO_0xxx/GO_0018/REDO/\1*.jpg', r'metadata/GO_0xxx/GO_0018/GO_0???_index.*']),
-    (r'.*/GO_0017/(C3/EUROPA/C0368976...R).*'      , 0, [r'volumes/GO_0xxx/GO_0019/REDO/\1.*', r'previews/GO_0xxx/GO_0019/REDO/\1*.jpg', r'metadata/GO_0xxx/GO_0019/GO_0???_index.*']),
-    (r'.*/GO_0017/(C3/JUPITER/C0368369268R).*'     , 0, [r'volumes/GO_0xxx/GO_0019/REDO/\1.*', r'previews/GO_0xxx/GO_0019/REDO/\1*.jpg', r'metadata/GO_0xxx/GO_0019/GO_0???_index.*']),
-    (r'.*/GO_0017/(C3/JUPITER/C0368441600R).*'     , 0, [r'volumes/GO_0xxx/GO_0019/REDO/\1.*', r'previews/GO_0xxx/GO_0019/REDO/\1*.jpg', r'metadata/GO_0xxx/GO_0019/GO_0???_index.*']),
-    (r'.*/GO_0018/(E4/EUROPA/C0374667300R).*'      , 0, [r'volumes/GO_0xxx/GO_0019/REDO/\1.*', r'previews/GO_0xxx/GO_0019/REDO/\1*.jpg', r'metadata/GO_0xxx/GO_0019/GO_0???_index.*']),
-    (r'.*/GO_0018/(E6/IO/C0383655111R).*'          , 0, [r'volumes/GO_0xxx/GO_0019/REDO/\1.*', r'previews/GO_0xxx/GO_0019/REDO/\1*.jpg', r'metadata/GO_0xxx/GO_0019/GO_0???_index.*']),
+    (r'.*/GO_0017/(C3/JUPITER/C036897..00R).*'     , 0, [r'volumes/GO_0xxx/GO_0018/REDO/\1.*', r'previews/GO_0xxx/GO_0018/REDO/\1*.jpg', r'metadata/GO_0xxx/GO_0018/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0017/(C3/JUPITER/C036898..00R).*'     , 0, [r'volumes/GO_0xxx/GO_0018/REDO/\1.*', r'previews/GO_0xxx/GO_0018/REDO/\1*.jpg', r'metadata/GO_0xxx/GO_0018/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0017/(C3/JUPITER/C036899..00R).*'     , 0, [r'volumes/GO_0xxx/GO_0018/REDO/\1.*', r'previews/GO_0xxx/GO_0018/REDO/\1*.jpg', r'metadata/GO_0xxx/GO_0018/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0017/(C3/EUROPA/C0368976...R).*'      , 0, [r'volumes/GO_0xxx/GO_0019/REDO/\1.*', r'previews/GO_0xxx/GO_0019/REDO/\1*.jpg', r'metadata/GO_0xxx/GO_0019/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0017/(C3/JUPITER/C0368369268R).*'     , 0, [r'volumes/GO_0xxx/GO_0019/REDO/\1.*', r'previews/GO_0xxx/GO_0019/REDO/\1*.jpg', r'metadata/GO_0xxx/GO_0019/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0017/(C3/JUPITER/C0368441600R).*'     , 0, [r'volumes/GO_0xxx/GO_0019/REDO/\1.*', r'previews/GO_0xxx/GO_0019/REDO/\1*.jpg', r'metadata/GO_0xxx/GO_0019/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0018/(E4/EUROPA/C0374667300R).*'      , 0, [r'volumes/GO_0xxx/GO_0019/REDO/\1.*', r'previews/GO_0xxx/GO_0019/REDO/\1*.jpg', r'metadata/GO_0xxx/GO_0019/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0018/(E6/IO/C0383655111R).*'          , 0, [r'volumes/GO_0xxx/GO_0019/REDO/\1.*', r'previews/GO_0xxx/GO_0019/REDO/\1*.jpg', r'metadata/GO_0xxx/GO_0019/GO_0???_index.*', r'documents/GO_0xxx/*']),
 
-    (r'.*/GO_0020/E12/TIRETRACK/(C04262728..)S.*'  , 0, [r'volumes/GO_0xxx/GO_0020/E12/EUROPA/\1R.*'    , r'previews/GO_0xxx/GO_0020/E12/EUROPA/\1*.jpg'    , r'metadata/GO_0xxx/GO_0020/GO_0???_index.*']),
-    (r'.*/GO_0022/I24/IO/REPAIRED/(C052079....)S.*', 0, [r'volumes/GO_0xxx/GO_0022/I24/IO/GARBLED/\1R.*', r'previews/GO_0xxx/GO_0022/I24/IO/GARBLED/\1*.jpg', r'metadata/GO_0xxx/GO_0022/GO_0???_index.*']),
-    (r'.*/GO_0022/I24/IO/REPAIRED/(C052080630.)S.*', 0, [r'volumes/GO_0xxx/GO_0022/I24/IO/GARBLED/\1R.*', r'previews/GO_0xxx/GO_0022/I24/IO/GARBLED/\1*.jpg', r'metadata/GO_0xxx/GO_0022/GO_0???_index.*']),
-    (r'.*/GO_0023/G28/REPAIRED/(C0552447569)S.*'   , 0, [r'volumes/GO_0xxx/GO_0023/G28/GARBLED/\1R.*'   , r'previews/GO_0xxx/GO_0023/G28/GARBLED/\1*.jpg'   , r'metadata/GO_0xxx/GO_0023/GO_0???_index.*']),
-    (r'.*/GO_0023/G29/REPAIRED/(C060049....)S.*'   , 0, [r'volumes/GO_0xxx/GO_0023/G29/GARBLED/\1R.*'   , r'previews/GO_0xxx/GO_0023/G29/GARBLED/\1*.jpg'   , r'metadata/GO_0xxx/GO_0023/GO_0???_index.*']),
-    (r'.*/GO_0023/G29/REPAIRED/(C060066....)S.*'   , 0, [r'volumes/GO_0xxx/GO_0023/G29/GARBLED/\1R.*'   , r'previews/GO_0xxx/GO_0023/G29/GARBLED/\1*.jpg'   , r'metadata/GO_0xxx/GO_0023/GO_0???_index.*']),
+    (r'.*/GO_0020/E12/TIRETRACK/(C04262728..)S.*'  , 0, [r'volumes/GO_0xxx/GO_0020/E12/EUROPA/\1R.*'    , r'previews/GO_0xxx/GO_0020/E12/EUROPA/\1*.jpg'    , r'metadata/GO_0xxx/GO_0020/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0022/I24/IO/REPAIRED/(C052079....)S.*', 0, [r'volumes/GO_0xxx/GO_0022/I24/IO/GARBLED/\1R.*', r'previews/GO_0xxx/GO_0022/I24/IO/GARBLED/\1*.jpg', r'metadata/GO_0xxx/GO_0022/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0022/I24/IO/REPAIRED/(C052080630.)S.*', 0, [r'volumes/GO_0xxx/GO_0022/I24/IO/GARBLED/\1R.*', r'previews/GO_0xxx/GO_0022/I24/IO/GARBLED/\1*.jpg', r'metadata/GO_0xxx/GO_0022/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0023/G28/REPAIRED/(C0552447569)S.*'   , 0, [r'volumes/GO_0xxx/GO_0023/G28/GARBLED/\1R.*'   , r'previews/GO_0xxx/GO_0023/G28/GARBLED/\1*.jpg'   , r'metadata/GO_0xxx/GO_0023/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0023/G29/REPAIRED/(C060049....)S.*'   , 0, [r'volumes/GO_0xxx/GO_0023/G29/GARBLED/\1R.*'   , r'previews/GO_0xxx/GO_0023/G29/GARBLED/\1*.jpg'   , r'metadata/GO_0xxx/GO_0023/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0023/G29/REPAIRED/(C060066....)S.*'   , 0, [r'volumes/GO_0xxx/GO_0023/G29/GARBLED/\1R.*'   , r'previews/GO_0xxx/GO_0023/G29/GARBLED/\1*.jpg'   , r'metadata/GO_0xxx/GO_0023/GO_0???_index.*', r'documents/GO_0xxx/*']),
 
-    (r'.*/GO_0020/E12/EUROPA/(C04262728..)R.*'     , 0, [r'volumes/GO_0xxx/GO_0020/E12/TIRETRACK/\1S.*'  , r'previews/GO_0xxx/GO_0020/E12/TIRETRACK/\1*.jpg'  , r'metadata/GO_0xxx/GO_0020/GO_0???_index.*']),
-    (r'.*/GO_0022/I24/IO/GARBLED/(C052079....)R.*' , 0, [r'volumes/GO_0xxx/GO_0022/I24/IO/REPAIRED/\1S.*', r'previews/GO_0xxx/GO_0022/I24/IO/REPAIRED/\1*.jpg', r'metadata/GO_0xxx/GO_0022/GO_0???_index.*']),
-    (r'.*/GO_0022/I24/IO/GARBLED/(C052080630.)R.*' , 0, [r'volumes/GO_0xxx/GO_0022/I24/IO/REPAIRED/\1S.*', r'previews/GO_0xxx/GO_0022/I24/IO/REPAIRED/\1*.jpg', r'metadata/GO_0xxx/GO_0022/GO_0???_index.*']),
-    (r'.*/GO_0023/G28/GARBLED/(C0552447569)R.*'    , 0, [r'volumes/GO_0xxx/GO_0023/G28/REPAIRED/\1S.*'   , r'previews/GO_0xxx/GO_0023/G28/REPAIRED/\1*.jpg'   , r'metadata/GO_0xxx/GO_0023/GO_0???_index.*']),
-    (r'.*/GO_0023/G29/GARBLED/(C060049....)R.*'    , 0, [r'volumes/GO_0xxx/GO_0023/G29/REPAIRED/\1S.*'   , r'previews/GO_0xxx/GO_0023/G29/REPAIRED/\1*.jpg'   , r'metadata/GO_0xxx/GO_0023/GO_0???_index.*']),
-    (r'.*/GO_0023/G29/GARBLED/(C060066....)R.*'    , 0, [r'volumes/GO_0xxx/GO_0023/G29/REPAIRED/\1S.*'   , r'previews/GO_0xxx/GO_0023/G29/REPAIRED/\1*.jpg'   , r'metadata/GO_0xxx/GO_0023/GO_0???_index.*']),
+    (r'.*/GO_0020/E12/EUROPA/(C04262728..)R.*'     , 0, [r'volumes/GO_0xxx/GO_0020/E12/TIRETRACK/\1S.*'  , r'previews/GO_0xxx/GO_0020/E12/TIRETRACK/\1*.jpg'  , r'metadata/GO_0xxx/GO_0020/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0022/I24/IO/GARBLED/(C052079....)R.*' , 0, [r'volumes/GO_0xxx/GO_0022/I24/IO/REPAIRED/\1S.*', r'previews/GO_0xxx/GO_0022/I24/IO/REPAIRED/\1*.jpg', r'metadata/GO_0xxx/GO_0022/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0022/I24/IO/GARBLED/(C052080630.)R.*' , 0, [r'volumes/GO_0xxx/GO_0022/I24/IO/REPAIRED/\1S.*', r'previews/GO_0xxx/GO_0022/I24/IO/REPAIRED/\1*.jpg', r'metadata/GO_0xxx/GO_0022/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0023/G28/GARBLED/(C0552447569)R.*'    , 0, [r'volumes/GO_0xxx/GO_0023/G28/REPAIRED/\1S.*'   , r'previews/GO_0xxx/GO_0023/G28/REPAIRED/\1*.jpg'   , r'metadata/GO_0xxx/GO_0023/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0023/G29/GARBLED/(C060049....)R.*'    , 0, [r'volumes/GO_0xxx/GO_0023/G29/REPAIRED/\1S.*'   , r'previews/GO_0xxx/GO_0023/G29/REPAIRED/\1*.jpg'   , r'metadata/GO_0xxx/GO_0023/GO_0???_index.*', r'documents/GO_0xxx/*']),
+    (r'.*/GO_0023/G29/GARBLED/(C060066....)R.*'    , 0, [r'volumes/GO_0xxx/GO_0023/G29/REPAIRED/\1S.*'   , r'previews/GO_0xxx/GO_0023/G29/REPAIRED/\1*.jpg'   , r'metadata/GO_0xxx/GO_0023/GO_0???_index.*', r'documents/GO_0xxx/*']),
 ])
 
 ####################################################################################################################################
@@ -703,6 +715,7 @@ class GO_0xxx(pdsfile.PdsFile):
     ASSOCIATIONS['volumes']  += associations_to_volumes
     ASSOCIATIONS['previews'] += associations_to_previews
     ASSOCIATIONS['metadata'] += associations_to_metadata
+    ASSOCIATIONS['documents'] += associations_to_documents
 
     VERSIONS = versions + pdsfile.PdsFile.VERSIONS
 
