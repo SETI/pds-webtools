@@ -66,6 +66,8 @@ associations_to_volumes = translator.TranslatorByRegex([
             ]),
     (r'.*/COUVIS_0999.*', 0,
             r'volumes/COUVIS_0xxx'),
+    (r'documents/COUVIS_0xxx.*', 0,
+             r'volumes/COUVIS_0xxx'),
 ])
 
 associations_to_previews = translator.TranslatorByRegex([
@@ -95,6 +97,11 @@ associations_to_metadata = translator.TranslatorByRegex([
              r'metadata/COUVIS_0xxx\1/COUVIS_0999/COUVIS_0999_\2.csv',
              r'metadata/COUVIS_0xxx\1/COUVIS_0999/COUVIS_0999_\2.lbl',
             ]),
+])
+
+associations_to_documents = translator.TranslatorByRegex([
+    (r'volumes/COUVIS_0xxx/COUVIS_0\d\d\d', 0,
+            r'documents/COUVIS_0xxx/*'),
 ])
 
 ####################################################################################################################################
@@ -135,6 +142,8 @@ sort_key = translator.TranslatorByRegex([
 opus_type = translator.TranslatorByRegex([
     (r'volumes/.*/DATA/.*\.DAT',  0, ('Cassini UVIS', 10, 'couvis_raw',        'Raw Data',         True)),
     (r'volumes/.*/CALIB/.*\.DAT', 0, ('Cassini UVIS', 20, 'couvis_calib_corr', 'Calibration Data', True)),
+    # Documentation
+    (r'documents/COUVIS_0xxx/.*', 0, ('Cassini UVIS', 700, 'couvis_documentation', 'Documentation', False)),
 ])
 
 ####################################################################################################################################
@@ -173,6 +182,7 @@ opus_products = translator.TranslatorByRegex([
              r'metadata/COUVIS_0xxx/\2/\2_index.lbl',
              r'metadata/COUVIS_0xxx/\2/\2_supplemental_index.tab',
              r'metadata/COUVIS_0xxx/\2/\2_supplemental_index.lbl',
+             r'documents/COUVIS_0xxx/*',
             ]),
 ])
 

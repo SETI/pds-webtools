@@ -601,7 +601,7 @@ opus_type = translator.TranslatorByRegex([
     (r'volumes/COCIRS_[01]xxx.*/EXTRAS/CUBE_OVERVIEW/.*',  0, ('Cassini CIRS', 20, 'cocirs_extra', 'Extra Cube Preview Image', False)),
 
     # Documentation
-    (r'documents/COCIRS_[05]xxx/.*',  0, ('Cassini CIRS', 700, 'cocirs_documentation', 'Documentation', True)),
+    (r'documents/COCIRS_[05]xxx/.*',                       0, ('Cassini CIRS', 700, 'cocirs_documentation', 'Documentation', False)),
 ])
 
 ####################################################################################################################################

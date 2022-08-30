@@ -240,6 +240,9 @@ opus_type = translator.TranslatorByRegex([
     (r'volumes/.*/extras/thumbnail/.*\.jpeg_small', 0, ('Cassini ISS', 110, 'coiss_thumb',  'Extra Preview (thumbnail)', False)),
     (r'volumes/.*/extras/browse/.*\.jpeg',          0, ('Cassini ISS', 120, 'coiss_medium', 'Extra Preview (medium)',    False)),
     (r'volumes/.*/extras/(tiff|full)/.*\.\w+',      0, ('Cassini ISS', 130, 'coiss_full',   'Extra Preview (full)',      False)),
+    (r'volumes/.*/extras/(tiff|full)/.*\.\w+',      0, ('Cassini ISS', 130, 'coiss_full',   'Extra Preview (full)',      False)),
+    # Documentation
+    (r'documents/COISS_0xxx/.*',                    0, ('Cassini ISS', 700, 'coiss_documentation', 'Documentation', False)),
 ])
 
 ####################################################################################################################################
@@ -281,6 +284,8 @@ opus_products = translator.TranslatorByRegex([
              r'metadata/\1/\3/\3_inventory.lbl',
              r'metadata/\1/\3/\3_index.tab',
              r'metadata/\1/\3/\3_index.lbl',
+             r'metadata/\1/\3/\3_index.lbl',
+             r'documents/COISS_0xxx/*',
             ]),
 ])
 

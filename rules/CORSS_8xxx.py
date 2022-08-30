@@ -194,6 +194,8 @@ associations_to_volumes = translator.TranslatorByRegex([
             ]),
     (r'volumes/CORSS_8xxx_v1/CORSS_8001/EASYDATA/Rev(\d\d)(C?[EI])(\w+)(|/.*)', 0,
             r'volumes/CORSS_8xxx/CORSS_8001/data/Rev0\1/Rev0\1\2/Rev0\1\2\3'),
+    (r'documents/CORSS_8xxx.*', 0,
+            r'volumes/CORSS_8xxx'),
 ])
 
 associations_to_previews = translator.TranslatorByRegex([
@@ -375,6 +377,8 @@ opus_type = translator.TranslatorByRegex([
 
     (r'volumes/.*_(DSN_Elevation|TimeLine_Figure|TimeLine_Table|Summary|OccTrack_Geometry)\.(pdf|LBL)',
                                          0, ('Cassini RSS', 60, 'corss_occ_doc', 'Occultation Documentation', True)),
+    # Documentation
+    (r'documents/CORSS_8xxx/.*',         0, ('Cassini RSS', 50, 'corss_documentation', 'Documentation',     False)),
 ])
 
 ####################################################################################################################################
@@ -416,6 +420,7 @@ opus_products = translator.TranslatorByRegex([
              r'metadata/CORSS_8xxx/\2/CORSS_8001_profile_index.tab',
              r'metadata/CORSS_8xxx/\2/CORSS_8001_supplemental_index.lbl',
              r'metadata/CORSS_8xxx/\2/CORSS_8001_supplemental_index.tab',
+             r'documents/CORSS_8xxx/*',
             ]),
 ])
 

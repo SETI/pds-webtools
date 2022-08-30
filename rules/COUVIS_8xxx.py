@@ -48,6 +48,8 @@ associations_to_volumes = translator.TranslatorByRegex([
              r'volumes/COUVIS_8xxx\1/\2/\3/\4_TAU_10KM.LBL',
              r'volumes/COUVIS_8xxx\1/\2/\3/\4_TAU_10KM.TAB',
             ]),
+    (r'documents/COUVIS_8xxx.*', 0,
+             r'volumes/COUVIS_8xxx'),
 ])
 
 associations_to_previews = translator.TranslatorByRegex([
@@ -74,6 +76,11 @@ associations_to_metadata = translator.TranslatorByRegex([
              r'metadata/COUVIS_8xxx/\2/\2_profile_index.tab/\4_TAU01',
              r'metadata/COUVIS_8xxx/\2/\2_supplemental_index.tab/\4_TAU01',
             ]),
+])
+
+associations_to_documents = translator.TranslatorByRegex([
+    (r'volumes/COUVIS_8xxx/COUVIS_0\d\d\d', 0,
+            r'documents/COUVIS_8xxx/*'),
 ])
 
 ####################################################################################################################################
@@ -144,6 +151,8 @@ split_rules = translator.TranslatorByRegex([
 opus_type = translator.TranslatorByRegex([
     (r'volumes/.*_TAU_?01KM\.(TAB|LBL)', 0, ('Cassini UVIS', 10, 'couvis_occ_01', 'Occultation Profile (1 km)',  True)),
     (r'volumes/.*_TAU_?10KM\.(TAB|LBL)', 0, ('Cassini UVIS', 20, 'couvis_occ_10', 'Occultation Profile (10 km)', True)),
+    # Documentation
+    (r'documents/COUVIS_8xxx/.*',        0, ('Cassini UVIS', 700, 'couvis_documentation', 'Documentation', False)),
 ])
 
 ####################################################################################################################################
@@ -175,6 +184,7 @@ opus_products = translator.TranslatorByRegex([
              r'metadata/COUVIS_8xxx/\2/\2_profile_index.tab',
              r'metadata/COUVIS_8xxx/\2/\2_supplemental_index.lbl',
              r'metadata/COUVIS_8xxx/\2/\2_supplemental_index.tab',
+             r'documents/COUVIS_8xxx/*',
             ]),
 ])
 
