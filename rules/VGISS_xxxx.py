@@ -452,7 +452,7 @@ opus_products = translator.TranslatorByRegex([
              r'metadata/\1/\2/\2_raw_image_index.lbl',
              r'metadata/\1/\2/\2_supplemental_index.tab',
              r'metadata/\1/\2/\2_supplemental_index.lbl',
-             r'documents/VGISS_.xxx/*'
+             r'documents/VGISS_5xxx/*'
             ]),
 ])
 
