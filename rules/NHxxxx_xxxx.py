@@ -187,8 +187,10 @@ associations_to_documents = translator.TranslatorByRegex([
              r'\1/document/ralph_ssr.pdf',
              r'\1/document/payload_ssr.pdf',
             ]),
-    (r'volumes/NH...._xxxx.*', 0,
-            r'documents/NHxxxx_xxxx/*'),
+    (r'volumes/NH..LO_xxxx.*', 0,
+            r'documents/NHxxLO_xxxx/*'),
+    (r'volumes/NH..MV_xxxx.*', 0,
+            r'documents/NHxxMV_xxxx/*'),
 ])
 
 ####################################################################################################################################
@@ -263,6 +265,10 @@ opus_type = translator.TranslatorByRegex([
     (r'volumes/.*/NH..MV_1.../data/.*\.(fit|lbl)', re.I, ('New Horizons MVIC',   0, 'nh_mvic_raw',            'Raw Image',        True)),
     (r'volumes/.*/NH..MV_2.../data/.*\.(fit|lbl)', re.I, ('New Horizons MVIC', 100, 'nh_mvic_calib',          'Calibrated Image', True)),
     (r'previews/.*/NH..MV_2.../data/.*\.jpg',      0,    ('New Horizons MVIC', 200, 'nh_mvic_calib_browse',   'Extra Preview (calibrated)', False)),
+
+    # Documentation
+    (r'documents/NHxxLO_xxxx/.*',                  0, ('New Horizons LORRI', 300, 'nh_lorri_documentation', 'Documentation', False)),
+    (r'documents/NHxxMV_xxxx/.*',                  0, ('New Horizons MVIC',  300, 'nh_mvic_documentation', 'Documentation', False)),
 ])
 
 ####################################################################################################################################
@@ -292,6 +298,7 @@ opus_products = translator.TranslatorByRegex([
              r'metadata/\1/\3_1\5/\3_1\5_pluto_summary.lbl',
              r'metadata/\1/\3_1\5/\3_1\5_charon_summary.tab',
              r'metadata/\1/\3_1\5/\3_1\5_charon_summary.lbl',
+             r'documents/\1/*'
             ]),
 ])
 

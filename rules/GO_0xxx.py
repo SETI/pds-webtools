@@ -473,7 +473,7 @@ opus_type = translator.TranslatorByRegex([
     (r'volumes/GO_0xxx/GO_0.../(?!CATALOG|DOCUMENT|INDEX|LABEL).*[^G]\.(IMG|LBL)', 0, ('Galileo SSI', 10, 'gossi_raw', 'Raw Image', True)),
     (r'volumes/GO_0xxx/GO_0016/SL9/.*G.(IMG|LBL)',                                 0, ('Galileo SSI', 12, 'gossi_sl9', 'Image with SL9 graphics overlay', True)),
     # Documentation
-    (r'documents/GO_0xxx/.*',                                                      0, ('Galileo SSI', 13, 'gossi_documentation', 'Documentation', False)),
+    (r'documents/GO_0xxx/.*',                                                      0, ('Galileo SSI', 20, 'gossi_documentation', 'Documentation', False)),
 ])
 
 ####################################################################################################################################

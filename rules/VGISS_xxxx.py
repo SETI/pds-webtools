@@ -383,6 +383,9 @@ opus_type = translator.TranslatorByRegex([
     (r'volumes/.*/BROWSE/.*/C\d{7}_CLEANED\..*', 0, ('Voyager ISS', 70, 'vgiss_cleaned_browse', 'Extra Preview (cleaned)',                 False)),
     (r'volumes/.*/BROWSE/.*/C\d{7}_CALIB\..*',   0, ('Voyager ISS', 80, 'vgiss_calib_browse',   'Extra Preview (calibrated)',              False)),
     (r'volumes/.*/BROWSE/.*/C\d{7}_GEOMED\..*',  0, ('Voyager ISS', 90, 'vgiss_geomed_browse',  'Extra Preview (geometrically corrected)', False)),
+    (r'volumes/.*/BROWSE/.*/C\d{7}_GEOMED\..*',  0, ('Voyager ISS', 90, 'vgiss_geomed_browse',  'Extra Preview (geometrically corrected)', False)),
+    # Documentation
+    (r'documents/VGISS_.xxx/.*',                 0, ('Voyager ISS', 100, 'vgiss_documentation', 'Documentation', False)),
 ])
 
 ####################################################################################################################################
@@ -449,6 +452,7 @@ opus_products = translator.TranslatorByRegex([
              r'metadata/\1/\2/\2_raw_image_index.lbl',
              r'metadata/\1/\2/\2_supplemental_index.tab',
              r'metadata/\1/\2/\2_supplemental_index.lbl',
+             r'documents/VGISS_.xxx/*'
             ]),
 ])
 
