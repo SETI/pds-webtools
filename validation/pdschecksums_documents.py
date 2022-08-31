@@ -92,10 +92,6 @@ def generate_checksums(pdsdir, selection=None, oldpairs=[], regardless=True,
                 if '/.' in abspath:             # flag invisible files
                     logger.invisible('Invisible file', abspath)
 
-                if file.endswith('.link'):       # skip .link files
-                    logger.warn('.link file skipped', abspath)
-                    continue
-
                 if regardless and selection:
                     md5 = hashfile(abspath)
                     newtuples.append((abspath, md5, file))

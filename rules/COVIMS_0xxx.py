@@ -183,7 +183,6 @@ opus_products = translator.TranslatorByRegex([
              r'metadata/COVIMS_0xxx/\2/\2_index.lbl',
              r'metadata/COVIMS_0xxx/\2/\2_supplemental_index.tab',
              r'metadata/COVIMS_0xxx/\2/\2_supplemental_index.lbl',
-             r'documents/COVIMS_0xxx/*'
             ]),
 ])
 
@@ -280,7 +279,7 @@ class COVIMS_0xxx(pdsfile.PdsFile):
 
     OPUS_TYPE = opus_type + pdsfile.PdsFile.OPUS_TYPE
     OPUS_FORMAT = opus_format + pdsfile.PdsFile.OPUS_FORMAT
-    OPUS_PRODUCTS = opus_products
+    OPUS_PRODUCTS = opus_products + pdsfile.PdsFile.OPUS_PRODUCTS
     OPUS_ID = opus_id
     OPUS_ID_TO_PRIMARY_LOGICAL_PATH = opus_id_to_primary_logical_path
 

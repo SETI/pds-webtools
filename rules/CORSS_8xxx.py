@@ -420,7 +420,6 @@ opus_products = translator.TranslatorByRegex([
              r'metadata/CORSS_8xxx/\2/CORSS_8001_profile_index.tab',
              r'metadata/CORSS_8xxx/\2/CORSS_8001_supplemental_index.lbl',
              r'metadata/CORSS_8xxx/\2/CORSS_8001_supplemental_index.tab',
-             r'documents/CORSS_8xxx/*',
             ]),
 ])
 
@@ -461,7 +460,7 @@ class CORSS_8xxx(pdsfile.PdsFile):
     SPLIT_RULES = split_rules + pdsfile.PdsFile.SPLIT_RULES
 
     OPUS_TYPE = opus_type + pdsfile.PdsFile.OPUS_TYPE
-    OPUS_PRODUCTS = opus_products
+    OPUS_PRODUCTS = opus_products + pdsfile.PdsFile.OPUS_PRODUCTS
     OPUS_ID = opus_id
     OPUS_ID_TO_PRIMARY_LOGICAL_PATH = opus_id_to_primary_logical_path
 

@@ -538,6 +538,18 @@ OPUS_FORMAT = translator.TranslatorByRegex([
 # Default is to return an empty list
 OPUS_PRODUCTS = translator.TranslatorByRegex([
     (r'.*', 0, []),
+    (r'.*/COCIRS_[56]xxx.*',  0, [r'documents/COCIRS_5xxx/*[!\.link][!\.zip]']),
+    (r'.*/COCIRS_[0-2]xxx.*', 0, [r'documents/COCIRS_0xxx/*[!\.link][!\.zip]']),
+    (r'.*/COISS_.xxx.*',      0, [r'documents/COISS_0xxx/*[!\.link][!\.zip]']),
+    (r'.*/CORSS_8xxx.*',      0, [r'documents/CORSS_8xxx/*[!\.link][!\.zip]']),
+    (r'.*/COUVIS_0xxx.*',     0, [r'documents/COUVIS_0xxx/*[!\.link][!\.zip]']),
+    (r'.*/COUVIS_8xxx.*',     0, [r'documents/COUVIS_8xxx/*[!\.link][!\.zip]']),
+    (r'.*/COVIMS_0xxx.*',     0, [r'documents/COVIMS_0xxx/*[!\.link][!\.zip]']),
+    (r'.*/COVIMS_8xxx.*',     0, [r'documents/COVIMS_8xxx/*[!\.link][!\.zip]']),
+    (r'.*/GO_0xxx.*',         0, [r'documents/GO_0xxx/*[!\.link][!\.zip]']),
+    (r'.*/(HST.x_xxxx).*',    0, [r'documents/\1/*[!\.link][!\.zip]']),
+    (r'.*/(NHxx.._xxxx).*',   0, [r'documents/\1/*[!\.link][!\.zip]']),
+    (r'.*/VGISS_[5-8]xxx.*',  0, [r'documents/VGISS_5xxx/*[!\.link][!\.zip]']),
 ])
 
 ####################################################################################################################################

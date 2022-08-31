@@ -501,7 +501,6 @@ opus_products = translator.TranslatorByRegex([
              r'previews/GO_0xxx/\1/\2_thumb.jpg',
              r'metadata/GO_0xxx/\1/\1_index.lbl',
              r'metadata/GO_0xxx/\1/\1_index.tab',
-             r'documents/GO_0xxx/*'
             ]),
 
     # SL9 "graphics" file associations
@@ -512,7 +511,6 @@ opus_products = translator.TranslatorByRegex([
              r'previews/GO_0xxx/GO_0016/SL9/\1G_med.jpg',
              r'previews/GO_0xxx/GO_0016/SL9/\1G_small.jpg',
              r'previews/GO_0xxx/GO_0016/SL9/\1G_thumb.jpg',
-             r'documents/GO_0xxx/*'
             ]),
 
     (r'.*volumes/GO_0xxx/GO_0016/SL9/(C\d{10})G\.(IMG|LBL)', 0,
@@ -522,7 +520,6 @@ opus_products = translator.TranslatorByRegex([
              r'previews/GO_0xxx/GO_0016/SL9/\1R_med.jpg',
              r'previews/GO_0xxx/GO_0016/SL9/\1R_small.jpg',
              r'previews/GO_0xxx/GO_0016/SL9/\1R_thumb.jpg',
-             r'documents/GO_0xxx/*'
             ]),
 
     # Known duplicates...
@@ -705,7 +702,7 @@ class GO_0xxx(pdsfile.PdsFile):
 
     OPUS_TYPE = opus_type + pdsfile.PdsFile.OPUS_TYPE
     OPUS_FORMAT = opus_format + pdsfile.PdsFile.OPUS_FORMAT
-    OPUS_PRODUCTS = opus_products
+    OPUS_PRODUCTS = opus_products + pdsfile.PdsFile.OPUS_PRODUCTS
     OPUS_ID = opus_id
     OPUS_ID_TO_PRIMARY_LOGICAL_PATH = opus_id_to_primary_logical_path
 

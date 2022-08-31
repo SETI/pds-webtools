@@ -100,10 +100,6 @@ def generate_infodict(pdsdir, selection, old_infodict={},
                 if '/.' in abspath:             # flag invisible files
                     logger.invisible('Invisible file', absfile)
 
-                if file.endswith('.link'):       # skip .link files
-                    logger.warn('.link file skipped', absfile)
-                    continue
-
                 info = get_info(absfile, infodict, old_infodict, checkdict,
                                          latest_mtime)
                 nbytes += info[0]

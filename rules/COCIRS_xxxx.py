@@ -645,7 +645,6 @@ opus_products = translator.TranslatorByRegex([
              r'diagrams/\1/\3/BROWSE/TARGETS/IMG\4_\5_med.jpg',
              r'diagrams/\1/\3/BROWSE/TARGETS/IMG\4_\5_small.jpg',
              r'diagrams/\1/\3/BROWSE/TARGETS/IMG\4_\5_thumb.jpg',
-             r'documents/COCIRS_5xxx/*',
             ]),
 
     # CUBE (COCIRS_0xxx, COCIRS_1xxx)
@@ -662,7 +661,6 @@ opus_products = translator.TranslatorByRegex([
              r'metadata/\1/\2/\2_cube_#LOWER#\4_index.tab',
              r'metadata/\1/\2/\2_cube_#LOWER#\4_supplemental_index.lbl',
              r'metadata/\1/\2/\2_cube_#LOWER#\4_supplemental_index.tab',
-             r'documents/COCIRS_0xxx/*',
             ]),
 ])
 
@@ -732,7 +730,7 @@ class COCIRS_xxxx(pdsfile.PdsFile):
 
     OPUS_TYPE = opus_type + pdsfile.PdsFile.OPUS_TYPE
     OPUS_FORMAT = opus_format + pdsfile.PdsFile.OPUS_FORMAT
-    OPUS_PRODUCTS = opus_products
+    OPUS_PRODUCTS = opus_products + pdsfile.PdsFile.OPUS_PRODUCTS
     OPUS_ID = opus_id
     OPUS_ID_TO_PRIMARY_LOGICAL_PATH = opus_id_to_primary_logical_path
 
@@ -1068,6 +1066,9 @@ def test_opus_id_to_primary_logical_path():
                                  if pdsf.voltype_ != 'metadata/']
         product_pdsfiles = [pdsf for pdsf in product_pdsfiles
                                  if pdsf.extension.lower() != '.fmt']
+        # Filter out the documents products
+        product_pdsfiles = [pdsf for pdsf in product_pdsfiles
+                                 if pdsf.voltype_ != 'documents/']
 
         # Gather the set of absolute paths
         opus_id_abspaths = set()
