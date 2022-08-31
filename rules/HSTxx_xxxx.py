@@ -57,6 +57,7 @@ associations_to_volumes = translator.TranslatorByRegex([
     (r'.*/(HST.x_xxxx)(|_.*)/(HST.._..../DATA/VISIT_..)',           0, r'volumes/\1/\3'),
     (r'.*/(HST.x_xxxx)(|_.*)/(HST.._..../DATA)',                    0, r'volumes/\1/\3'),
     (r'.*/(HST.)9_9999.*',                                          0, r'volumes/\1x_xxxx'),
+    (r'documents/(HST.x_xxxx).*',                                   0, r'volumes/\1'),
 ])
 
 associations_to_previews = translator.TranslatorByRegex([
@@ -121,6 +122,12 @@ opus_type = translator.TranslatorByRegex([
     (r'volumes/.*_MOS\.JPG',             0, ('HST',  90, 'hst_mosaic',      'Mosaic Preview',                             True)),
     (r'volumes/.*_(X1D|SX1)\.JPG',       0, ('HST', 100, 'hst_1d_spectrum', '1-D Spectrum Preview',                       True)),
     (r'volumes/.*_(X2D|SX2)\.JPG',       0, ('HST', 110, 'hst_2d_spectrum', '2-D Spectrum Preview',                       True)),
+    # Documentation
+    (r'documents/HSTIx_xxxx/.*',         0, ('HST', 120, 'hst_documentation', 'Documentation', False)),
+    (r'documents/HSTJx_xxxx/.*',         0, ('HST', 120, 'hst_documentation', 'Documentation', False)),
+    (r'documents/HSTNx_xxxx/.*',         0, ('HST', 120, 'hst_documentation', 'Documentation', False)),
+    (r'documents/HSTOx_xxxx/.*',         0, ('HST', 120, 'hst_documentation', 'Documentation', False)),
+    (r'documents/HSTUx_xxxx/.*',         0, ('HST', 120, 'hst_documentation', 'Documentation', False)),
 ])
 
 ####################################################################################################################################
@@ -138,6 +145,7 @@ opus_products = translator.TranslatorByRegex([
              r'metadata/\1/\3/\3_index.tab',
              r'metadata/\1/\3/\3_hstfiles.lbl',
              r'metadata/\1/\3/\3_hstfiles.tab',
+             r'documents/\1/*'
             ])
 ])
 
