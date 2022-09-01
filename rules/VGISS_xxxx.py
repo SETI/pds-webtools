@@ -726,7 +726,16 @@ from .pytest_support import *
           'supplemental_index',
           'Supplemental Index',
           False): ['metadata/VGISS_5xxx/VGISS_5101/VGISS_5101_supplemental_index.tab',
-                   'metadata/VGISS_5xxx/VGISS_5101/VGISS_5101_supplemental_index.lbl']}
+                   'metadata/VGISS_5xxx/VGISS_5101/VGISS_5101_supplemental_index.lbl'],
+         ('Voyager ISS',
+          100,
+          'vgiss_documentation',
+          'Documentation',
+          False): ['documents/VGISS_5xxx/VICAR-File-Format.pdf',
+                   'documents/VGISS_5xxx/User-Tutorial.txt',
+                   'documents/VGISS_5xxx/Saturn-Image-Anomalies.txt',
+                   'documents/VGISS_5xxx/Jupiter-Image-Anomalies.txt',
+                   'documents/VGISS_5xxx/CDROM-Info.txt']}
         )
     ]
 )
@@ -998,9 +1007,10 @@ def test_opus_id_to_primary_logical_path():
             for pdsf_list in pdsf_lists:
                 product_pdsfiles += pdsf_list
 
-        # Filter out the metadata products and format files
+        # Filter out the metadata/documents products and format files
         product_pdsfiles = [pdsf for pdsf in product_pdsfiles
-                                 if pdsf.voltype_ != 'metadata/']
+                                 if pdsf.voltype_ != 'metadata/'
+                                 and pdsf.voltype_ != 'documents/']
         product_pdsfiles = [pdsf for pdsf in product_pdsfiles
                                  if pdsf.extension.lower() != '.fmt']
 

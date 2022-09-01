@@ -4709,7 +4709,7 @@ class PdsFile(object):
 
         # The document tree does not have info shelves
         if self.isdocuments:
-            return False
+            return True
 
         # Category-level directories are merged
         if self.is_category_dir:

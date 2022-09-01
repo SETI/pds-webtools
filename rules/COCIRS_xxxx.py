@@ -969,7 +969,15 @@ def test_associations_to_diagrams():
            40,
            'browse_full',
            'Browse Image (full)',
-           True): ['diagrams/COCIRS_5xxx/COCIRS_5408/BROWSE/TARGETS/IMG0408010000_FP1_full.jpg']}
+           True): ['diagrams/COCIRS_5xxx/COCIRS_5408/BROWSE/TARGETS/IMG0408010000_FP1_full.jpg'],
+          ('Cassini CIRS',
+           700,
+           'cocirs_documentation',
+           'Documentation',
+           False): ['documents/COCIRS_5xxx/FOV-Overview.pdf',
+                    'documents/COCIRS_5xxx/Cassini-CIRS-Final-Report.pdf',
+                    'documents/COCIRS_5xxx/CIRS-Users-Guide.pdf',
+                    'documents/COCIRS_5xxx/CIRS-Diagram-Interpretation-Guide.txt']}
         ),
         # COCIRS_0xxx
         ('volumes/COCIRS_0xxx/COCIRS_0406/DATA/CUBE/POINT_PERSPECTIVE/000IA_PRESOI001____RI____699_F4_038P.LBL',
@@ -1019,7 +1027,20 @@ def test_associations_to_diagrams():
           'supplemental_index',
           'Supplemental Index',
           False): ['metadata/COCIRS_0xxx/COCIRS_0406/COCIRS_0406_cube_point_supplemental_index.tab',
-                   'metadata/COCIRS_0xxx/COCIRS_0406/COCIRS_0406_cube_point_supplemental_index.lbl']}
+                   'metadata/COCIRS_0xxx/COCIRS_0406/COCIRS_0406_cube_point_supplemental_index.lbl'],
+         ('Cassini CIRS',
+          700,
+          'cocirs_documentation',
+          'Documentation',
+          False): ['documents/COCIRS_0xxx/Volume-SIS.pdf',
+                   'documents/COCIRS_0xxx/Spectral-Cube-SIS.pdf',
+                   'documents/COCIRS_0xxx/FOV-Overview.pdf',
+                   'documents/COCIRS_0xxx/Data-Product-SIS.pdf',
+                   'documents/COCIRS_0xxx/Chan-etal-2015.pdf',
+                   'documents/COCIRS_0xxx/Cassini-CIRS-Final-Report.pdf',
+                   'documents/COCIRS_0xxx/Calibration-Equations.pdf',
+                   'documents/COCIRS_0xxx/CIRS-Users-Guide.pdf',
+                   'documents/COCIRS_0xxx/CIRS-Interference.pdf']}
         )
     ]
 )
@@ -1061,14 +1082,12 @@ def test_opus_id_to_primary_logical_path():
             for pdsf_list in pdsf_lists:
                 product_pdsfiles += pdsf_list
 
-        # Filter out the metadata products and format files
+        # Filter out the metadata/documents products and format files
         product_pdsfiles = [pdsf for pdsf in product_pdsfiles
-                                 if pdsf.voltype_ != 'metadata/']
+                                 if pdsf.voltype_ != 'metadata/'
+                                 and pdsf.voltype_ != 'documents/']
         product_pdsfiles = [pdsf for pdsf in product_pdsfiles
                                  if pdsf.extension.lower() != '.fmt']
-        # Filter out the documents products
-        product_pdsfiles = [pdsf for pdsf in product_pdsfiles
-                                 if pdsf.voltype_ != 'documents/']
 
         # Gather the set of absolute paths
         opus_id_abspaths = set()

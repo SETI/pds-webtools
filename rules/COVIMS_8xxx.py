@@ -388,7 +388,13 @@ from .pytest_support import *
           'supplemental_index',
           'Supplemental Index',
           False): ['metadata/COVIMS_8xxx/COVIMS_8001/COVIMS_8001_supplemental_index.tab',
-                   'metadata/COVIMS_8xxx/COVIMS_8001/COVIMS_8001_supplemental_index.lbl']}
+                   'metadata/COVIMS_8xxx/COVIMS_8001/COVIMS_8001_supplemental_index.lbl'],
+         ('Cassini VIMS',
+          30,
+          'covims_documentation',
+          'Documentation',
+          False): ['documents/COVIMS_8xxx/VIMS-ring-occultations-summary.pdf',
+                   'documents/COVIMS_8xxx/Cassini-VIMS-Final-Report.pdf']}
         ),
     ]
 )
@@ -413,9 +419,10 @@ def test_opus_id_to_primary_logical_path():
             for pdsf_list in pdsf_lists:
                 product_pdsfiles += pdsf_list
 
-        # Filter out the metadata products and format files
+        # Filter out the metadata/documents products and format files
         product_pdsfiles = [pdsf for pdsf in product_pdsfiles
-                                 if pdsf.voltype_ != 'metadata/']
+                                 if pdsf.voltype_ != 'metadata/'
+                                 and pdsf.voltype_ != 'documents/']
         product_pdsfiles = [pdsf for pdsf in product_pdsfiles
                                  if pdsf.extension.lower() != '.fmt']
 

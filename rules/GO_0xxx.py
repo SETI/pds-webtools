@@ -833,7 +833,15 @@ from .pytest_support import *
            'rms_index',
            'RMS Node Augmented Index',
            False): ['metadata/GO_0xxx/GO_0017/GO_0017_index.tab',
-                    'metadata/GO_0xxx/GO_0017/GO_0017_index.lbl']}
+                    'metadata/GO_0xxx/GO_0017/GO_0017_index.lbl'],
+          ('Galileo SSI',
+           20,
+           'gossi_documentation',
+           'Documentation',
+           False): ['documents/GO_0xxx/VICAR-File-Format.pdf',
+                    'documents/GO_0xxx/Data-Product-SIS.pdf',
+                    'documents/GO_0xxx/Archive-SIS.pdf']}
+
         )
     ]
 )
@@ -1092,9 +1100,10 @@ def test_opus_id_to_primary_logical_path():
             for pdsf_list in pdsf_lists:
                 product_pdsfiles += pdsf_list
 
-        # Filter out the metadata products and format files
+        # Filter out the metadata/documents products and format files
         product_pdsfiles = [pdsf for pdsf in product_pdsfiles
-                                 if pdsf.voltype_ != 'metadata/']
+                                 if pdsf.voltype_ != 'metadata/'
+                                 and pdsf.voltype_ != 'documents/']
         product_pdsfiles = [pdsf for pdsf in product_pdsfiles
                                  if pdsf.extension.lower() != '.fmt']
 

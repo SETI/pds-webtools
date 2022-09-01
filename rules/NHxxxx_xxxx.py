@@ -711,7 +711,16 @@ def test_opus_products_count():
                    'volumes/NHxxLO_xxxx_v2/NHLALO_2001/data/20060224_000310/lor_0003103486_0x631_sci_1.fit',
                    'volumes/NHxxLO_xxxx_v2/NHLALO_2001/data/20060224_000310/lor_0003103486_0x631_sci_1.lbl',
                    'volumes/NHxxLO_xxxx_v1/NHLALO_2001/data/20060224_000310/lor_0003103486_0x631_sci_1.fit',
-                   'volumes/NHxxLO_xxxx_v1/NHLALO_2001/data/20060224_000310/lor_0003103486_0x631_sci_1.lbl']}
+                   'volumes/NHxxLO_xxxx_v1/NHLALO_2001/data/20060224_000310/lor_0003103486_0x631_sci_1.lbl'],
+          ('New Horizons LORRI',
+           300,
+           'nh_lorri_documentation',
+           'Documentation',
+           False): ['documents/NHxxLO_xxxx/Weaver-etal-2008-SSR.pdf',
+                    'documents/NHxxLO_xxxx/Morgan-etal-2005-SPIE.pdf',
+                    'documents/NHxxLO_xxxx/LORRI-True-Exposure-Times.pdf',
+                    'documents/NHxxLO_xxxx/FITS-Standard-4.0.pdf',
+                    'documents/NHxxLO_xxxx/Cheng-etal-2007-SSR.pdf']}
         )
     ]
 )
@@ -816,9 +825,10 @@ def test_opus_id_to_primary_logical_path():
             for pdsf_list in pdsf_lists:
                 product_pdsfiles += pdsf_list
 
-        # Filter out the metadata products and format files
+        # Filter out the metadata/documents products and format files
         product_pdsfiles = [pdsf for pdsf in product_pdsfiles
-                                 if pdsf.voltype_ != 'metadata/']
+                                 if pdsf.voltype_ != 'metadata/'
+                                 and pdsf.voltype_ != 'documents/']
         product_pdsfiles = [pdsf for pdsf in product_pdsfiles
                                  if pdsf.extension.lower() != '.fmt']
 

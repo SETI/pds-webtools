@@ -337,7 +337,23 @@ from .pytest_support import *
             'supplemental_index',
             'Supplemental Index',
             False): ['metadata/COUVIS_8xxx/COUVIS_8001/COUVIS_8001_supplemental_index.tab',
-                     'metadata/COUVIS_8xxx/COUVIS_8001/COUVIS_8001_supplemental_index.lbl']}
+                     'metadata/COUVIS_8xxx/COUVIS_8001/COUVIS_8001_supplemental_index.lbl'],
+           ('Cassini UVIS',
+            30,
+            'couvis_documentation',
+            'Documentation',
+            False): ['documents/COUVIS_8xxx/UVIS-Users-Guide.pdf',
+                     'documents/COUVIS_8xxx/UVIS-Users-Guide.docx',
+                     'documents/COUVIS_8xxx/Cassini-UVIS-Final-Report.pdf',
+                     'documents/COUVIS_8xxx/Atlas-Volume8-Rev246-to-Rev288.pdf',
+                     'documents/COUVIS_8xxx/Atlas-Volume7-Rev202-to-Rev245.pdf',
+                     'documents/COUVIS_8xxx/Atlas-Volume6-Rev124-to-Rev194.pdf',
+                     'documents/COUVIS_8xxx/Atlas-Volume5-Rev092-to-Rev117.pdf',
+                     'documents/COUVIS_8xxx/Atlas-Volume4-Rev060-to-Rev090.pdf',
+                     'documents/COUVIS_8xxx/Atlas-Volume3-Rev040-to-Rev058.pdf',
+                     'documents/COUVIS_8xxx/Atlas-Volume2-Rev031-to-Rev039.pdf',
+                     'documents/COUVIS_8xxx/Atlas-Volume1-RevOOA-to-Rev030.pdf']}
+
         )
     ]
 )
@@ -362,9 +378,10 @@ def test_opus_id_to_primary_logical_path():
             for pdsf_list in pdsf_lists:
                 product_pdsfiles += pdsf_list
 
-        # Filter out the metadata products and format files
+        # Filter out the metadata/documents products and format files
         product_pdsfiles = [pdsf for pdsf in product_pdsfiles
-                                 if pdsf.voltype_ != 'metadata/']
+                                 if pdsf.voltype_ != 'metadata/'
+                                 and pdsf.voltype_ != 'documents/']
         product_pdsfiles = [pdsf for pdsf in product_pdsfiles
                                  if pdsf.extension.lower() != '.fmt']
 

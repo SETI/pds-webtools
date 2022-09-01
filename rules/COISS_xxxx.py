@@ -501,7 +501,22 @@ from .pytest_support import *
            'rms_index',
            'RMS Node Augmented Index',
            False): ['metadata/COISS_1xxx/COISS_1001/COISS_1001_index.tab',
-                    'metadata/COISS_1xxx/COISS_1001/COISS_1001_index.lbl']}
+                    'metadata/COISS_1xxx/COISS_1001/COISS_1001_index.lbl'],
+          ('Cassini ISS',
+           140,
+           'coiss_documentation',
+           'Documentation',
+           False): ['documents/COISS_0xxx/VICAR-File-Format.pdf',
+                    'documents/COISS_0xxx/ISS-Users-Guide.pdf',
+                    'documents/COISS_0xxx/ISS-Users-Guide.docx',
+                    'documents/COISS_0xxx/Data-Product-SIS.txt',
+                    'documents/COISS_0xxx/Data-Product-SIS.pdf',
+                    'documents/COISS_0xxx/Cassini-ISS-Final-Report.pdf',
+                    'documents/COISS_0xxx/Calibration-Theoretical-Basis.pdf',
+                    'documents/COISS_0xxx/Calibration-Plan.pdf',
+                    'documents/COISS_0xxx/CISSCAL-Users-Guide.pdf',
+                    'documents/COISS_0xxx/Archive-SIS.txt',
+                    'documents/COISS_0xxx/Archive-SIS.pdf']}
         ),
     ]
 )
@@ -712,9 +727,10 @@ def test_opus_id_to_primary_logical_path():
             for pdsf_list in pdsf_lists:
                 product_pdsfiles += pdsf_list
 
-        # Filter out the metadata products and format files
+        # Filter out the metadata/documents products and format files
         product_pdsfiles = [pdsf for pdsf in product_pdsfiles
-                                 if pdsf.voltype_ != 'metadata/']
+                                 if pdsf.voltype_ != 'metadata/'
+                                 and pdsf.voltype_ != 'documents/']
         product_pdsfiles = [pdsf for pdsf in product_pdsfiles
                                  if pdsf.extension.lower() != '.fmt']
 

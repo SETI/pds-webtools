@@ -315,7 +315,14 @@ from .pytest_support import *
            'hstfiles_index',
            'HST Files Associations Index',
            False): ['metadata/HSTIx_xxxx/HSTI1_1559/HSTI1_1559_hstfiles.tab',
-                    'metadata/HSTIx_xxxx/HSTI1_1559/HSTI1_1559_hstfiles.lbl']}
+                    'metadata/HSTIx_xxxx/HSTI1_1559/HSTI1_1559_hstfiles.lbl'],
+          ('HST',
+           120,
+           'hst_documentation',
+           'Documentation',
+           False): ['documents/HSTIx_xxxx/WFC3-Instrument-Handbook-13.0.pdf',
+                    'documents/HSTIx_xxxx/WFC3-Data-Handbook-4.0.pdf',
+                    'documents/HSTIx_xxxx/FITS-Standard-4.0.pdf']}
         ),
     ]
 )
@@ -372,9 +379,10 @@ def test_opus_id_to_primary_logical_path():
             for pdsf_list in pdsf_lists:
                 product_pdsfiles += pdsf_list
 
-        # Filter out the metadata products and format files
+        # Filter out the metadata/documents products and format files
         product_pdsfiles = [pdsf for pdsf in product_pdsfiles
-                                 if pdsf.voltype_ != 'metadata/']
+                                 if pdsf.voltype_ != 'metadata/'
+                                 and pdsf.voltype_ != 'documents/']
         product_pdsfiles = [pdsf for pdsf in product_pdsfiles
                                  if pdsf.extension.lower() != '.fmt']
 

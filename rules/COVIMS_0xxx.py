@@ -471,7 +471,15 @@ def test_opus_products_count():
           'supplemental_index',
           'Supplemental Index',
           False): ['metadata/COVIMS_0xxx/COVIMS_0006/COVIMS_0006_supplemental_index.tab',
-           'metadata/COVIMS_0xxx/COVIMS_0006/COVIMS_0006_supplemental_index.lbl']}
+           'metadata/COVIMS_0xxx/COVIMS_0006/COVIMS_0006_supplemental_index.lbl'],
+         ('Cassini VIMS',
+          140,
+          'covims_documentation',
+          'Documentation',
+          False): ['documents/COVIMS_0xxx/VIMS-Preview-Interpretation-Guide.pdf',
+                   'documents/COVIMS_0xxx/Data-Product-SIS.txt',
+                   'documents/COVIMS_0xxx/Cassini-VIMS-Final-Report.pdf',
+                   'documents/COVIMS_0xxx/Archive-SIS.txt']}
         ),
     ]
 )
@@ -668,9 +676,10 @@ def test_opus_id_to_primary_logical_path():
             for pdsf_list in pdsf_lists:
                 product_pdsfiles += pdsf_list
 
-        # Filter out the metadata products and format files
+        # Filter out the metadata/documents products and format files
         product_pdsfiles = [pdsf for pdsf in product_pdsfiles
-                                 if pdsf.voltype_ != 'metadata/']
+                                 if pdsf.voltype_ != 'metadata/'
+                                 and pdsf.voltype_ != 'documents/']
         product_pdsfiles = [pdsf for pdsf in product_pdsfiles
                                  if pdsf.extension.lower() != '.fmt']
 
