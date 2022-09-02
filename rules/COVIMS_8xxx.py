@@ -178,7 +178,7 @@ opus_type = translator.TranslatorByRegex([
     (r'volumes/.*_TAU_01KM\.(TAB|LBL)', 0, ('Cassini VIMS', 10, 'covims_occ_01', 'Occultation Profile (1 km)',  True)),
     (r'volumes/.*_TAU_10KM\.(TAB|LBL)', 0, ('Cassini VIMS', 20, 'covims_occ_10', 'Occultation Profile (10 km)', True)),
     # Documentation
-    (r'documents/COVIMS_8xxx/.*',       0, ('Cassini VIMS', 30, 'covims_documentation', 'Documentation', False)),
+    (r'documents/COVIMS_8xxx/.*',       0, ('Cassini VIMS', 30, 'covims_occ_documentation', 'Documentation', False)),
 ])
 
 ####################################################################################################################################
@@ -391,7 +391,7 @@ from .pytest_support import *
                    'metadata/COVIMS_8xxx/COVIMS_8001/COVIMS_8001_supplemental_index.lbl'],
          ('Cassini VIMS',
           30,
-          'covims_documentation',
+          'covims_occ_documentation',
           'Documentation',
           False): ['documents/COVIMS_8xxx/VIMS-ring-occultations-summary.pdf',
                    'documents/COVIMS_8xxx/Cassini-VIMS-Final-Report.pdf']}

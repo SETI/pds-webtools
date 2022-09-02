@@ -378,7 +378,7 @@ opus_type = translator.TranslatorByRegex([
     (r'volumes/.*_(DSN_Elevation|TimeLine_Figure|TimeLine_Table|Summary|OccTrack_Geometry)\.(pdf|LBL)',
                                          0, ('Cassini RSS', 60, 'corss_occ_doc', 'Occultation Documentation', True)),
     # Documentation
-    (r'documents/CORSS_8xxx/.*',         0, ('Cassini RSS', 70, 'corss_documentation', 'Documentation',     False)),
+    (r'documents/CORSS_8xxx/.*',         0, ('Cassini RSS', 70, 'corss_occ_documentation', 'Documentation',     False)),
 ])
 
 ####################################################################################################################################
@@ -755,7 +755,7 @@ def test_associations():
                        'metadata/CORSS_8xxx/CORSS_8001/CORSS_8001_supplemental_index.lbl'],
              ('Cassini RSS',
               70,
-              'corss_documentation',
+              'corss_occ_documentation',
               'Documentation',
               False): ['documents/CORSS_8xxx/Cassini-RSS-Final-Report.pdf',
                        'documents/CORSS_8xxx/Archived-RSS-Ring-Profiles.pdf']}

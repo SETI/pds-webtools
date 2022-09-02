@@ -152,7 +152,7 @@ opus_type = translator.TranslatorByRegex([
     (r'volumes/.*_TAU_?01KM\.(TAB|LBL)', 0, ('Cassini UVIS', 10, 'couvis_occ_01', 'Occultation Profile (1 km)',  True)),
     (r'volumes/.*_TAU_?10KM\.(TAB|LBL)', 0, ('Cassini UVIS', 20, 'couvis_occ_10', 'Occultation Profile (10 km)', True)),
     # Documentation
-    (r'documents/COUVIS_8xxx/.*',        0, ('Cassini UVIS', 30, 'couvis_documentation', 'Documentation', False)),
+    (r'documents/COUVIS_8xxx/.*',        0, ('Cassini UVIS', 30, 'couvis_occ_documentation', 'Documentation', False)),
 ])
 
 ####################################################################################################################################
@@ -340,7 +340,7 @@ from .pytest_support import *
                      'metadata/COUVIS_8xxx/COUVIS_8001/COUVIS_8001_supplemental_index.lbl'],
            ('Cassini UVIS',
             30,
-            'couvis_documentation',
+            'couvis_occ_documentation',
             'Documentation',
             False): ['documents/COUVIS_8xxx/UVIS-Users-Guide.pdf',
                      'documents/COUVIS_8xxx/UVIS-Users-Guide.docx',
