@@ -79,8 +79,8 @@ associations_to_metadata = translator.TranslatorByRegex([
 ])
 
 associations_to_documents = translator.TranslatorByRegex([
-    (r'volumes/COUVIS_8xxx/COUVIS_0\d\d\d', 0,
-            r'documents/COUVIS_8xxx/*'),
+    (r'volumes/COUVIS_8xxx(|_[^/]+)/COUVIS_8\d\d\d',    0, r'documents/COUVIS_8xxx/*'),
+    (r'volumes/COUVIS_8xxx(|_[^/]+)/COUVIS_8\d\d\d/.+', 0, r'documents/COUVIS_8xxx'),
 ])
 
 ####################################################################################################################################
@@ -184,6 +184,7 @@ opus_products = translator.TranslatorByRegex([
              r'metadata/COUVIS_8xxx/\2/\2_profile_index.tab',
              r'metadata/COUVIS_8xxx/\2/\2_supplemental_index.lbl',
              r'metadata/COUVIS_8xxx/\2/\2_supplemental_index.tab',
+             r'documents/COUVIS_8xxx/*[!\.link][!\.zip]'
             ]),
 ])
 

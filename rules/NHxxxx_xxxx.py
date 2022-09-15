@@ -148,10 +148,7 @@ associations_to_volumes = translator.TranslatorByRegex([
              r'volumes/\1\2/\3_1\4/DATA\5',
              r'volumes/\1\2/\3_2\4/data\5',
             ]),
-    (r'documents/NHxxxx_xxxx.*', 0,
-            [r'volumes/NHxxLO_xxxx',
-             r'volumes/NHxxMV_xxxx'
-            ]),
+    (r'documents/(NHxx.._xxxx).*', 0, r'volumes/\1')
 ])
 
 associations_to_previews = translator.TranslatorByRegex([
@@ -187,10 +184,7 @@ associations_to_documents = translator.TranslatorByRegex([
              r'\1/document/ralph_ssr.pdf',
              r'\1/document/payload_ssr.pdf',
             ]),
-    (r'volumes/NH..LO_xxxx.*', 0,
-            r'documents/NHxxLO_xxxx/*'),
-    (r'volumes/NH..MV_xxxx.*', 0,
-            r'documents/NHxxMV_xxxx/*'),
+    (r'volumes/(NHxx.._xxxx).*', 0, r'documents/\1/*'),
 ])
 
 ####################################################################################################################################
@@ -298,6 +292,7 @@ opus_products = translator.TranslatorByRegex([
              r'metadata/\1/\3_1\5/\3_1\5_pluto_summary.lbl',
              r'metadata/\1/\3_1\5/\3_1\5_charon_summary.tab',
              r'metadata/\1/\3_1\5/\3_1\5_charon_summary.lbl',
+             r'documents/\1/*[!\.link][!\.zip]'
             ]),
 ])
 

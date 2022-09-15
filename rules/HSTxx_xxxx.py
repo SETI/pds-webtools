@@ -123,11 +123,7 @@ opus_type = translator.TranslatorByRegex([
     (r'volumes/.*_(X1D|SX1)\.JPG',       0, ('HST', 100, 'hst_1d_spectrum', '1-D Spectrum Preview',                       True)),
     (r'volumes/.*_(X2D|SX2)\.JPG',       0, ('HST', 110, 'hst_2d_spectrum', '2-D Spectrum Preview',                       True)),
     # Documentation
-    (r'documents/HSTIx_xxxx/.*',         0, ('HST', 120, 'hst_documentation', 'Documentation', False)),
-    (r'documents/HSTJx_xxxx/.*',         0, ('HST', 120, 'hst_documentation', 'Documentation', False)),
-    (r'documents/HSTNx_xxxx/.*',         0, ('HST', 120, 'hst_documentation', 'Documentation', False)),
-    (r'documents/HSTOx_xxxx/.*',         0, ('HST', 120, 'hst_documentation', 'Documentation', False)),
-    (r'documents/HSTUx_xxxx/.*',         0, ('HST', 120, 'hst_documentation', 'Documentation', False)),
+    (r'documents/HST\wx_xxxx/.*',         0, ('HST', 120, 'hst_documentation', 'Documentation', False)),
 ])
 
 ####################################################################################################################################
@@ -145,6 +141,7 @@ opus_products = translator.TranslatorByRegex([
              r'metadata/\1/\3/\3_index.tab',
              r'metadata/\1/\3/\3_hstfiles.lbl',
              r'metadata/\1/\3/\3_hstfiles.tab',
+             r'documents/\1/*[!\.link][!\.zip]'
             ])
 ])
 

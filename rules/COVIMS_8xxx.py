@@ -131,8 +131,10 @@ associations_to_metadata = translator.TranslatorByRegex([
 ])
 
 associations_to_documents = translator.TranslatorByRegex([
-        (r'volumes/COVIMS_8xxx.*', 0,
-                r'documents/COVIMS_8xxx/*'),
+    (r'volumes/COVIMS_8xxx/COVIMS_8\d\d\d', 0,
+            r'documents/COVIMS_8xxx/*'),
+    (r'volumes/COVIMS_8xxx/COVIMS_8\d\d\d/.+', 0,
+            r'documents/COVIMS_8xxx'),
 ])
 
 ####################################################################################################################################
@@ -226,6 +228,7 @@ opus_products = translator.TranslatorByRegex([
              r'metadata/COVIMS_8xxx/\2/\2_profile_index.tab',
              r'metadata/COVIMS_8xxx/\2/\2_supplemental_index.lbl',
              r'metadata/COVIMS_8xxx/\2/\2_supplemental_index.tab',
+             r'documents/COVIMS_8xxx/*[!\.link][!\.zip]'
             ]),
 ])
 

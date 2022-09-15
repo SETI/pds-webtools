@@ -420,6 +420,7 @@ opus_products = translator.TranslatorByRegex([
              r'metadata/CORSS_8xxx/\2/CORSS_8001_profile_index.tab',
              r'metadata/CORSS_8xxx/\2/CORSS_8001_supplemental_index.lbl',
              r'metadata/CORSS_8xxx/\2/CORSS_8001_supplemental_index.tab',
+             r'documents/CORSS_8xxx/*[!\.link][!\.zip]'
             ]),
 ])
 
