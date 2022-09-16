@@ -184,7 +184,6 @@ opus_products = translator.TranslatorByRegex([
              r'metadata/COUVIS_8xxx/\2/\2_profile_index.tab',
              r'metadata/COUVIS_8xxx/\2/\2_supplemental_index.lbl',
              r'metadata/COUVIS_8xxx/\2/\2_supplemental_index.tab',
-             r'documents/COUVIS_8xxx/*[!\.link][!\.zip]'
             ]),
 ])
 

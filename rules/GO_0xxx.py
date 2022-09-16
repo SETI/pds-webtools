@@ -522,7 +522,6 @@ opus_products = translator.TranslatorByRegex([
              r'previews/GO_0xxx/GO_0016/SL9/\1R_med.jpg',
              r'previews/GO_0xxx/GO_0016/SL9/\1R_small.jpg',
              r'previews/GO_0xxx/GO_0016/SL9/\1R_thumb.jpg',
-             r'documents/GO_0xxx/*[!\.link][!\.zip]'
             ]),
 
     # Known duplicates...

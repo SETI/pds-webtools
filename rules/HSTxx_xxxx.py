@@ -141,7 +141,6 @@ opus_products = translator.TranslatorByRegex([
              r'metadata/\1/\3/\3_index.tab',
              r'metadata/\1/\3/\3_hstfiles.lbl',
              r'metadata/\1/\3/\3_hstfiles.tab',
-             r'documents/\1/*[!\.link][!\.zip]'
             ])
 ])
 
