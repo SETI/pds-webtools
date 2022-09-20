@@ -1304,7 +1304,7 @@ class PdsFile(object):
                 except FileNotFoundError:
                     # If the shelf file is missing, try the actual file system
                     # For documentation, we have all files available but not the shelf
-                    # files, there we will check the actual file system for documents.
+                    # files, therefore we will check the actual file system for documents.
                     childnames = os.listdir(abspath)
                     return [c for c in childnames
                             if c != '.DS_Store' and not c.startswith('._')]
