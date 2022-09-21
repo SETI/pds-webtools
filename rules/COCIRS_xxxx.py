@@ -645,7 +645,7 @@ opus_products = translator.TranslatorByRegex([
              r'diagrams/\1/\3/BROWSE/TARGETS/IMG\4_\5_med.jpg',
              r'diagrams/\1/\3/BROWSE/TARGETS/IMG\4_\5_small.jpg',
              r'diagrams/\1/\3/BROWSE/TARGETS/IMG\4_\5_thumb.jpg',
-             r'documents/COCIRS_5xxx/*[!\.link][!\.zip]',
+             r'documents/COCIRS_5xxx/*.[!lz]*',
             ]),
 
     # CUBE (COCIRS_0xxx, COCIRS_1xxx)
@@ -662,7 +662,7 @@ opus_products = translator.TranslatorByRegex([
              r'metadata/\1/\2/\2_cube_#LOWER#\4_index.tab',
              r'metadata/\1/\2/\2_cube_#LOWER#\4_supplemental_index.lbl',
              r'metadata/\1/\2/\2_cube_#LOWER#\4_supplemental_index.tab',
-             r'documents/COCIRS_0xxx/*[!\.link][!\.zip]'
+             r'documents/COCIRS_0xxx/*.[!lz]*'
             ]),
 ])
 

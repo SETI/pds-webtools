@@ -501,7 +501,7 @@ opus_products = translator.TranslatorByRegex([
              r'previews/GO_0xxx/\1/\2_thumb.jpg',
              r'metadata/GO_0xxx/\1/\1_index.lbl',
              r'metadata/GO_0xxx/\1/\1_index.tab',
-             r'documents/GO_0xxx/*[!\.link][!\.zip]'
+             r'documents/GO_0xxx/*.[!lz]*'
             ]),
 
     # SL9 "graphics" file associations
@@ -512,7 +512,7 @@ opus_products = translator.TranslatorByRegex([
              r'previews/GO_0xxx/GO_0016/SL9/\1G_med.jpg',
              r'previews/GO_0xxx/GO_0016/SL9/\1G_small.jpg',
              r'previews/GO_0xxx/GO_0016/SL9/\1G_thumb.jpg',
-             r'documents/GO_0xxx/*[!\.link][!\.zip]'
+             r'documents/GO_0xxx/*.[!lz]*'
             ]),
 
     (r'.*volumes/GO_0xxx/GO_0016/SL9/(C\d{10})G\.(IMG|LBL)', 0,

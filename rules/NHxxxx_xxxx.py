@@ -711,7 +711,9 @@ def test_opus_products_count():
            'nh_lorri_documentation',
            'Documentation',
            False): ['documents/NHxxLO_xxxx/Weaver-etal-2008-SSR.pdf',
+                    'documents/NHxxLO_xxxx/NH-Boresight-FOVs.png',
                     'documents/NHxxLO_xxxx/Morgan-etal-2005-SPIE.pdf',
+                    'documents/NHxxLO_xxxx/LORRI-responsivity-plot.png',
                     'documents/NHxxLO_xxxx/LORRI-True-Exposure-Times.pdf',
                     'documents/NHxxLO_xxxx/FITS-Standard-4.0.pdf',
                     'documents/NHxxLO_xxxx/Cheng-etal-2007-SSR.pdf']}
