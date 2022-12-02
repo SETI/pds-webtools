@@ -8,7 +8,7 @@ from tests.helper import *
 
 try:
     PDS_HOLDINGS_DIR = os.environ['PDS_HOLDINGS_DIR']
-except KeyError:
+except KeyError: # pragma: no cover
     PDS_HOLDINGS_DIR = os.path.realpath('/Library/WebServer/Documents/holdings')
 
 PDS_PDSDATA_PATH = PDS_HOLDINGS_DIR[:PDS_HOLDINGS_DIR.index('holdings')]
@@ -728,9 +728,9 @@ class TestPdsFileWhiteBox:
     def test_associated_parallel2(self, input_path, expected):
         target_pdsfile = instantiate_target_pdsfile(input_path)
         res = target_pdsfile.associated_parallel(rank='previous')
-        if res:
+        if res: # pragma: no cover
             assert res.logical_path == expected
-        else:
+        else: # pragma: no cover
             assert res == expected
 
     @pytest.mark.parametrize(
@@ -745,9 +745,9 @@ class TestPdsFileWhiteBox:
     def test_associated_parallel3(self, input_path, expected):
         target_pdsfile = instantiate_target_pdsfile(input_path)
         res = target_pdsfile.associated_parallel(rank='next')
-        if res:
+        if res: # pragma: no cover
             assert res.logical_path == expected
-        else:
+        else: # pragma: no cover
             assert res == expected
 
     ############################################################################
@@ -805,9 +805,9 @@ class TestPdsFileWhiteBox:
         target_pdsfile = instantiate_target_pdsfile(input_path)
         target_associated_parallel = target_pdsfile.associated_parallel(
                                         rank=rank ,category=category)
-        if target_associated_parallel:
+        if target_associated_parallel: # pragma: no cover
             assert target_associated_parallel.logical_path == expected
-        else:
+        else: # pragma: no cover
             assert target_associated_parallel == expected
 
     @pytest.mark.parametrize(
@@ -817,14 +817,14 @@ class TestPdsFileWhiteBox:
             ('volumes', 999999, 'volumes', 'volumes')
         ]
     )
-    def test_associated_parallel2(self, input_path, rank, category, expected):
+    def test_associated_parallel2_volumes(self, input_path, rank, category, expected):
         target_pdsfile = instantiate_target_pdsfile(input_path)
         target_pdsfile.associated_parallel(rank=rank ,category=category)
         target_associated_parallel = target_pdsfile.associated_parallel(
                                         rank=rank ,category=category)
-        if target_associated_parallel:
+        if target_associated_parallel: # pragma: no cover
             assert target_associated_parallel.logical_path == expected
-        else:
+        else: # pragma: no cover
             assert target_associated_parallel == expected
 
     @pytest.mark.parametrize(
@@ -833,14 +833,14 @@ class TestPdsFileWhiteBox:
             ('volumes/COUVIS_0xxx', 'latest', 'volumes', 'volumes/COUVIS_0xxx'),
         ]
     )
-    def test_associated_parallel3(self, input_path, rank, category, expected):
+    def test_associated_parallel3_volumes(self, input_path, rank, category, expected):
         target_pdsfile = instantiate_target_pdsfile(input_path)
         target_pdsfile.associated_parallel(rank=None ,category=category)
         target_associated_parallel = target_pdsfile.associated_parallel(
                                         rank=rank ,category=category)
-        if target_associated_parallel:
+        if target_associated_parallel: # pragma: no cover
             assert target_associated_parallel.logical_path == expected
-        else:
+        else: # pragma: no cover
             assert target_associated_parallel == expected
 
     ############################################################################
