@@ -718,9 +718,9 @@ class TestPdsFileWhiteBox:
         'input_path,expected',
         [
             ('volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/FUV1999_007_16_57.DAT',
-             None),
+             'volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/FUV1999_007_16_57.DAT'),
             ('metadata/HSTUx_xxxx/HSTU0_5167/HSTU0_5167_index.tab',
-             None),
+             'metadata/HSTUx_xxxx_v1.1/HSTU0_5167/HSTU0_5167_index.tab'),
             ('volumes/COUVIS_0xxx/COUVIS_0009/DATA/D2004_274/EUV2004_274_01_39.DAT',
              'volumes/COUVIS_0xxx_v1/COUVIS_0009/DATA/D2004_274/EUV2004_274_01_39.DAT')
         ]
@@ -728,6 +728,7 @@ class TestPdsFileWhiteBox:
     def test_associated_parallel2(self, input_path, expected):
         target_pdsfile = instantiate_target_pdsfile(input_path)
         res = target_pdsfile.associated_parallel(rank='previous')
+        print(res)
         if res: # pragma: no cover
             assert res.logical_path == expected
         else: # pragma: no cover
@@ -737,7 +738,7 @@ class TestPdsFileWhiteBox:
         'input_path,expected',
         [
             ('volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/FUV1999_007_16_57.DAT',
-             None),
+             'volumes/COUVIS_0xxx/COUVIS_0001/DATA/D1999_007/FUV1999_007_16_57.DAT'),
             ('volumes/COUVIS_0xxx_v1/COUVIS_0009/DATA/D2004_274/EUV2004_274_01_39.DAT',
              'volumes/COUVIS_0xxx/COUVIS_0009/DATA/D2004_274/EUV2004_274_01_39.DAT')
         ]
