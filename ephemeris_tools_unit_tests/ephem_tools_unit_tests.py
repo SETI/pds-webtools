@@ -4,9 +4,6 @@ These tests represent two operations: the creation and storage of
 "golden copies", and the comparison of current documents against these golden
 copy counterparts. 
 
-The source files for the URL tests must be named 'viewer-unit-tests.txt', 
-'moon-tracker-unit-tests.txt', and 'ephemeris-generator-unit-tests.txt'.
-
 To correctly run this script, the structure is:
     
 run ephem_tools_unit_test.py --run-test/current-ephemeris <path to directory 
