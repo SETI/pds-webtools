@@ -32,14 +32,17 @@ import translator
 # Configuration
 ################################################################################
 
+#VOLTYPES = ['volumes', 'calibrated', 'diagrams', 'metadata', 'previews',
+#            'documents']
 VOLTYPES = ['volumes', 'calibrated', 'diagrams', 'metadata', 'previews',
-            'documents']
+            'documents', 'bundles'] 
 VIEWABLE_VOLTYPES = ['previews', 'diagrams']
 
 VIEWABLE_EXTS = set(['jpg', 'png', 'gif', 'tif', 'tiff', 'jpeg', 'jpeg_small'])
 DATAFILE_EXTS = set(['dat', 'img', 'cub', 'qub', 'fit', 'fits'])
 
-VOLSET_REGEX        = re.compile(r'^([A-Z][A-Z0-9x]{1,5}_[0-9x]{3}x)$')
+#VOLSET_REGEX        = re.compile(r'^([A-Z][A-Z0-9x]{1,5}_[0-9x]{3}x)$')
+VOLSET_REGEX        = re.compile(r'(^uranus_occs_earthbased)$') # Hard-code for the moment, but will need to generalise. Should rename variable as BUNDLESET_REGEX?
 VOLSET_REGEX_I      = re.compile(VOLSET_REGEX.pattern, re.I)
 VOLSET_PLUS_REGEX   = re.compile(VOLSET_REGEX.pattern[:-1] +
                         r'(_v[0-9]+\.[0-9]+\.[0-9]+|_v[0-9]+\.[0-9]+|_v[0-9]+|'+
@@ -54,7 +57,9 @@ VOLSET_PLUS_REGEX_I = re.compile(VOLSET_PLUS_REGEX.pattern, re.I)
 CATEGORY_REGEX      = re.compile(r'^(|checksums\-)(|archives\-)(\w+)$')
 CATEGORY_REGEX_I    = re.compile(CATEGORY_REGEX.pattern, re.I)
 
-VOLNAME_REGEX       = re.compile(r'^([A-Z][A-Z0-9]{1,5}_(?:[0-9]{4}))$')
+#VOLNAME_REGEX       = re.compile(r'^([A-Z][A-Z0-9]{1,5}_(?:[0-9]{4}))$')
+#VOLNAME_REGEX       = re.compile(r'^(uranus_occ_u0_kao_91cm)$') # Hard-code for the moment, but will need to generalise. Should rename as BUNDLENAME_REGEX?
+VOLNAME_REGEX       = re.compile(r'^(uranus_occ_u\d{0,4}._[a-z]*_(fos|\d{2,3}cm))$')
 VOLNAME_REGEX_I     = re.compile(VOLNAME_REGEX.pattern, re.I)
 VOLNAME_PLUS_REGEX  = re.compile(VOLNAME_REGEX.pattern[:-1] +
                                   r'(|_[a-z]+)(|_md5\.txt|\.tar\.gz)$')
@@ -3492,18 +3497,18 @@ class PdsFile(object):
         # Search for "holdings"
         parts_lc = [p.lower() for p in parts]
         try:
-            holdings_index = parts_lc.index('holdings')
+            #holdings_index = parts_lc.index('holdings')
+            pds4_holdings_index = parts_lc.index('pds4-holdings') # Change variable name to distinguish from PDS3
         except ValueError:
-            raise ValueError('"holdings" directory not found in: ' + abspath)
-
+            raise ValueError('"pds4-holdings" directory not found in: ' + abspath) 
         ### Pause the cache
         CACHE.pause()
         try:
             # Fill in this.disk_, the absolute path to the directory containing
             # subdirectory "holdings"
             this = PdsFile()
-            this.disk_ = drive_spec + '/'.join(parts[:holdings_index]) + '/'
-            this.root_ = this.disk_ + 'holdings/'
+            this.disk_ = drive_spec + '/'.join(parts[:pds4_holdings_index]) + '/' 
+            this.root_ = this.disk_ + 'pds4-holdings/' 
 
             # Get case right if necessary
             if fix_case:
@@ -3519,27 +3524,26 @@ class PdsFile(object):
             # named holdings, holding1, ... holdings9
 
             if len(LOCAL_PRELOADED) <= 1:   # There's only one holdings dir
-                this.html_root_ = '/holdings/'
+                this.html_root_ = '/pds4-holdings/' 
             else:                       # Find this holdings dir among preloaded
-                holdings_abspath = this.disk_ + 'holdings'
+                pds4_holdings_abspath = this.disk_ + 'pds4-holdings' 
                 try:
-                    k = LOCAL_PRELOADED.index(holdings_abspath)
+                    k = LOCAL_PRELOADED.index(pds4_holdings_abspath) 
                 except ValueError:
-                    LOGGER.warn('No URL: ' + holdings_abspath)
+                    LOGGER.warn('No URL: ' + pds4_holdings_abspath) 
                     this.html_root_ = '/'
 
                 else:       # "holdings", "holdings1", ... "holdings9"
                     if k:
-                        this.html_root_ = '/holdings' + str(k) + '/'
+                        this.html_root_ = '/pds4-holdings' + str(k) + '/' 
                     else:
-                        this.html_root_ = '/holdings/'
+                        this.html_root_ = '/pds4-holdings/' 
 
             this.logical_path = ''
-            this.abspath = this.disk_ + 'holdings'
-            this.basename = 'holdings'
-
+            this.abspath = this.disk_ + 'pds4-holdings' 
+            this.basename = 'pds4-holdings' 
             # Handle the rest of the tree using child()
-            for part in parts[holdings_index + 1:]:
+            for part in parts[pds4_holdings_index + 1:]: 
                 this = this.child(part, fix_case=fix_case, must_exist=must_exist,
                                         caching=caching, lifetime=lifetime)
 
@@ -5661,7 +5665,7 @@ def is_logical_path(path):
 def logical_path_from_abspath(abspath):
     """Logical path derived from an absolute path."""
 
-    parts = abspath.partition('/holdings/')
+    parts = abspath.partition('/pds4-holdings/') 
     if parts[1]:
         return parts[2]
 
