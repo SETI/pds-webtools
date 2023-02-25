@@ -35,7 +35,7 @@ import translator
 #VOLTYPES = ['volumes', 'calibrated', 'diagrams', 'metadata', 'previews',
 #            'documents']
 VOLTYPES = ['volumes', 'calibrated', 'diagrams', 'metadata', 'previews',
-            'documents', 'bundles'] 
+            'documents', 'bundles']
 VIEWABLE_VOLTYPES = ['previews', 'diagrams']
 
 VIEWABLE_EXTS = set(['jpg', 'png', 'gif', 'tif', 'tiff', 'jpeg', 'jpeg_small'])
@@ -3500,15 +3500,15 @@ class PdsFile(object):
             #holdings_index = parts_lc.index('holdings')
             pds4_holdings_index = parts_lc.index('pds4-holdings') # Change variable name to distinguish from PDS3
         except ValueError:
-            raise ValueError('"pds4-holdings" directory not found in: ' + abspath) 
+            raise ValueError('"pds4-holdings" directory not found in: ' + abspath)
         ### Pause the cache
         CACHE.pause()
         try:
             # Fill in this.disk_, the absolute path to the directory containing
             # subdirectory "holdings"
             this = PdsFile()
-            this.disk_ = drive_spec + '/'.join(parts[:pds4_holdings_index]) + '/' 
-            this.root_ = this.disk_ + 'pds4-holdings/' 
+            this.disk_ = drive_spec + '/'.join(parts[:pds4_holdings_index]) + '/'
+            this.root_ = this.disk_ + 'pds4-holdings/'
 
             # Get case right if necessary
             if fix_case:
@@ -3524,26 +3524,26 @@ class PdsFile(object):
             # named holdings, holding1, ... holdings9
 
             if len(LOCAL_PRELOADED) <= 1:   # There's only one holdings dir
-                this.html_root_ = '/pds4-holdings/' 
+                this.html_root_ = '/pds4-holdings/'
             else:                       # Find this holdings dir among preloaded
-                pds4_holdings_abspath = this.disk_ + 'pds4-holdings' 
+                pds4_holdings_abspath = this.disk_ + 'pds4-holdings'
                 try:
-                    k = LOCAL_PRELOADED.index(pds4_holdings_abspath) 
+                    k = LOCAL_PRELOADED.index(pds4_holdings_abspath)
                 except ValueError:
-                    LOGGER.warn('No URL: ' + pds4_holdings_abspath) 
+                    LOGGER.warn('No URL: ' + pds4_holdings_abspath)
                     this.html_root_ = '/'
 
                 else:       # "holdings", "holdings1", ... "holdings9"
                     if k:
-                        this.html_root_ = '/pds4-holdings' + str(k) + '/' 
+                        this.html_root_ = '/pds4-holdings' + str(k) + '/'
                     else:
-                        this.html_root_ = '/pds4-holdings/' 
+                        this.html_root_ = '/pds4-holdings/'
 
             this.logical_path = ''
-            this.abspath = this.disk_ + 'pds4-holdings' 
-            this.basename = 'pds4-holdings' 
+            this.abspath = this.disk_ + 'pds4-holdings'
+            this.basename = 'pds4-holdings'
             # Handle the rest of the tree using child()
-            for part in parts[pds4_holdings_index + 1:]: 
+            for part in parts[pds4_holdings_index + 1:]:
                 this = this.child(part, fix_case=fix_case, must_exist=must_exist,
                                         caching=caching, lifetime=lifetime)
 
@@ -5665,7 +5665,7 @@ def is_logical_path(path):
 def logical_path_from_abspath(abspath):
     """Logical path derived from an absolute path."""
 
-    parts = abspath.partition('/pds4-holdings/') 
+    parts = abspath.partition('/pds4-holdings/')
     if parts[1]:
         return parts[2]
 
