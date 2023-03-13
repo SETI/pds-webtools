@@ -2970,12 +2970,14 @@ class PdsFile(object):
     @property
     def is_volume_dir(self):
         """True if this is the root level directory of a volume."""
-        return (self.volname_ and not self.interior)
+        #return (self.volname_ and not self.interior)
+        return (self.volname_ and not self.interior or False) # MJTM: 'or False' account for bundle sets
 
     @property
     def is_volume_file(self):
         """True if this is a volume-level checksum or archive file."""
-        return (self.volname and not self.volname_)
+        #return (self.volname and not self.volname_)
+        return (self.volname and not self.volname_ or False) # MJTM: 'or False' account for bundle sets
 
     @property
     def is_volume(self):
