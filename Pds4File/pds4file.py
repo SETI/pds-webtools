@@ -35,7 +35,6 @@ PDS4_HOLDINGS = 'pds4-holdings'
 
 VOLTYPES = ['volumes', 'calibrated', 'diagrams', 'metadata', 'previews',
             'documents', 'bundles']
-
 VIEWABLE_VOLTYPES = ['previews', 'diagrams']
 
 VIEWABLE_EXTS = set(['jpg', 'png', 'gif', 'tif', 'tiff', 'jpeg', 'jpeg_small'])
@@ -44,14 +43,11 @@ DATAFILE_EXTS = set(['dat', 'img', 'cub', 'qub', 'fit', 'fits'])
 BUNDLESET_REGEX        = re.compile(r'(^uranus_occs_earthbased)$') # Hard-code for the moment, but will need to generalise
 BUNDLESET_REGEX_I      = re.compile(BUNDLESET_REGEX.pattern, re.I)
 BUNDLESET_PLUS_REGEX   = re.compile(BUNDLESET_REGEX.pattern[:-1] +
-
                         r'(_v[0-9]+\.[0-9]+\.[0-9]+|_v[0-9]+\.[0-9]+|_v[0-9]+|'+
                         r'_in_prep|_prelim|_peer_review|_lien_resolution|)' +
                         r'((|_calibrated|_diagrams|_metadata|_previews)' +
                         r'(|_md5\.txt|\.tar\.gz))$')
-
 BUNDLESET_PLUS_REGEX_I = re.compile(BUNDLESET_PLUS_REGEX.pattern, re.I)
-
 # Groups are (volset, version_suffix, other_suffix, extension)
 # Example: "COISS_0xxx_v1_calibrated_md5.txt" -> ("COISS_0xxx", "_v1",
 #                                                 "_calibrated", "_md5.txt")
@@ -64,7 +60,6 @@ BUNDLENAME_REGEX_I     = re.compile(BUNDLENAME_REGEX.pattern, re.I)
 BUNDLENAME_PLUS_REGEX  = re.compile(BUNDLENAME_REGEX.pattern[:-1] +
                                   r'(|_[a-z]+)(|_md5\.txt|\.tar\.gz)$')
 BUNDLENAME_PLUS_REGEX_I = re.compile(BUNDLENAME_PLUS_REGEX.pattern, re.I)
-
 # Groups are (volname, suffix, extension)
 # Example: "VGISS_5101_previews_md5.txt" -> ("VGISS_5101", "_previews",
 #                                            "_md5.txt")
@@ -73,7 +68,6 @@ BUNDLENAME_VERSION     = re.compile(BUNDLENAME_REGEX.pattern[:-1] +
                         r'(_v[0-9]+\.[0-9]+\.[0-9]+|_v[0-9]+\.[0-9]+|_v[0-9]+|'+
                         r'_in_prep|_prelim|_peer_review|_lien_resolution)$')
 BUNDLENAME_VERSION_I   = re.compile(BUNDLENAME_VERSION.pattern, re.I)
-
 # Example: "VGISS_5101_peer_review" -> ("VGISS_5101", "_peer_review")
 
 VIEWABLE_ANCHOR_REGEX = re.compile(r'(.*/\w+)_[a-z]+\.(jpg|png)')
