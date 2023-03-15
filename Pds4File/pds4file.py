@@ -785,15 +785,15 @@ class PdsFile(object):
         self.archives_    = ''      # Either 'archives-' or ''
         self.voltype_     = ''      # One of 'volumes', 'metadata', etc.
 
-        self.volset_      = ''      # Volset name + suffix + '/'
-        self.volset       = ''      # Volset name, suffix stripped
-        self.suffix       = ''      # Volset suffix alone
+        self.bundleset_      = ''   # Bundleset name + suffix + '/'
+        self.bundleset       = ''   # Bundleset name, suffix stripped
+        self.suffix       = ''      # Bundleset suffix alone
         self.version_message = ''
         self.version_rank = 0       # int; 'v1.2.3' -> 10203; 999999 for latest
         self.version_id   = ''      # E.g., 'v1.2.3'; version number of volume
 
-        self.volname_     = ''      # Volume name + '/'
-        self.volname      = ''      # Volume name alone
+        self.bundlename_     = ''   # Bundle name + '/'
+        self.bundlename      = ''   # Bundle name alone
 
         self.interior     = ''      # Path starting inside volume directory
 
@@ -883,14 +883,14 @@ class PdsFile(object):
             this.checksums_      = self.checksums_
             this.archives_       = self.archives_
             this.voltype_        = self.voltype_
-            this.volset_         = self.volset_
-            this.volset          = self.volset
+            this.bundleset_      = self.bundleset_
+            this.bundleset       = self.bundleset
             this.suffix          = self.suffix
             this.version_message = self.version_message
             this.version_rank    = self.version_rank
             this.version_id      = self.version_id
-            this.volname_        = self.volname_
-            this.volname         = self.volname
+            this.bundlename_     = self.bundlename_
+            this.bundlename      = self.bundlename
             this.interior        = self.interior
 
         return this
@@ -2968,37 +2968,37 @@ class PdsFile(object):
     ### typing them wrong.
 
     @property
-    def is_volume_dir(self):
-        """True if this is the root level directory of a volume."""
-        #return (self.volname_ and not self.interior)
-        return (self.volname_ and not self.interior or False) # MJTM: 'or False' account for bundle sets
+    def is_bundle_dir(self):
+        """True if this is the root level directory of a bundle."""
+        return (self.bundlename_ and not self.interior) # Note that a bundle set will return an empty string '' rather than False
+        #return (self.volname_ and not self.interior or False) # MJTM: 'or False' account for bundle sets
 
     @property
-    def is_volume_file(self):
-        """True if this is a volume-level checksum or archive file."""
-        #return (self.volname and not self.volname_)
-        return (self.volname and not self.volname_ or False) # MJTM: 'or False' account for bundle sets
+    def is_bundle_file(self):
+        """True if this is a bundle-level checksum or archive file."""
+        return (self.bundlename and not self.bundlename_) # Note that a bundle set will return an empty string '' rather than False
+        #return (self.volname and not self.volname_ or False) # MJTM: 'or False' account for bundle sets
 
     @property
-    def is_volume(self):
+    def is_bundle(self):
         """True if this is a volume-level file, be it a directory or a
         checksum or archive file."""
-        return self.is_volume_dir or self.is_volume_file
+        return self.is_bundle_dir or self.is_bundle_file
 
     @property
-    def is_volset_dir(self):
+    def is_bundleset_dir(self):
         """True if this is the root level directory of a volset."""
-        return (self.volset and not self.volname and self.isdir)
+        return (self.bundleset and not self.bundlename and self.isdir)
 
     @property
-    def is_volset_file(self):
+    def is_bundleset_file(self):
         """True if this is a volset-level checksum or AAREADME file."""
-        return (self.volset and not self.volname and not self.isdir)
+        return (self.bundleset and not self.bundlename and not self.isdir)
 
     @property
-    def is_volset(self):
-        """True if this is a volset-level directory or file."""
-        return (self.volset and not self.volname)
+    def is_bundleset(self):
+        """True if this is a bundleset-level directory or file."""
+        return (self.bundleset and not self.bundlename)
 
     @property
     def is_category_dir(self):
@@ -3246,12 +3246,12 @@ class PdsFile(object):
                 child_abspath = None
 
             # Select the correct subclass for the child...
-            if self.volset:
-                class_key = self.volset
+            if self.bundleset:
+                class_key = self.bundleset
             elif self.category_:
                 matchobj = BUNDLESET_PLUS_REGEX_I.match(basename)
                 if matchobj is None:
-                    raise ValueError('Illegal volume set directory "%s": %s' %
+                    raise ValueError('Illegal bundle set directory "%s": %s' %
                                      (basename, self.logical_path))
                 class_key = matchobj.group(1)
             else:
@@ -3266,52 +3266,52 @@ class PdsFile(object):
             this.abspath = child_abspath    # might be None, for now
             this.basename = basename
 
-            if self.interior:               # if parent is inside a volume
+            if self.interior:               # if parent is inside a bundle
                 this.interior = _clean_join(self.interior, basename)
                 return this._complete(must_exist, caching, lifetime)
 
-            if self.volname_:               # if parent is a volume
+            if self.bundlename_:               # if parent is a bundle
                 this.interior = basename
                 return this._complete(must_exist, caching, lifetime)
 
-            if self.volset_:                # if parent is a volset
+            if self.bundleset_:                # if parent is a bundleset
 
                 # Handle documents directory
                 if self.is_documents:
-                    this.volname_ = ''
+                    this.bundlename_ = ''
                     this.interior = basename
                     return this._complete(must_exist, caching, lifetime)
 
                 # Handle volume name
                 matchobj = BUNDLENAME_PLUS_REGEX_I.match(basename)
                 if matchobj:
-                    this.volname_ = basename + '/'
-                    this.volname  = matchobj.group(1)
+                    this.bundlename_ = basename + '/'
+                    this.bundlename  = matchobj.group(1)
 
                     if self.checksums_ or self.archives_:
-                        this.volname_ = ''
+                        this.bundlename_ = ''
                         this.interior = basename
 
                 if self.checksums_ or self.archives_:
-                    this.volname_ = ''
+                    this.bundlename_ = ''
                     this.interior = basename
 
                 return this._complete(must_exist, caching, lifetime)
 
             if self.category_:
 
-                # Handle volume set and suffix
+                # Handle bundle set and suffix
                 matchobj = BUNDLESET_PLUS_REGEX_I.match(basename)
                 if matchobj is None:
-                    raise ValueError('Illegal volume set directory "%s": %s' %
+                    raise ValueError('Illegal bundle set directory "%s": %s' %
                                      (basename, this.logical_path))
 
-                this.volset_ = basename + '/'
-                this.volset  = matchobj.group(1)
+                this.bundleset_ = basename + '/'
+                this.bundleset  = matchobj.group(1)
                 this.suffix  = matchobj.group(2)
 
                 if matchobj.group(3):
-                    this.volset_ = ''
+                    this.bundleset_ = ''
                     this.interior = basename
                     parts = this.suffix.split('_')
                     if parts[-1] == this.voltype_[:-1]:
