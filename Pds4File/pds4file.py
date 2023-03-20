@@ -1499,9 +1499,9 @@ class PdsFile(object):
         """volname or volname/interior."""
 
         if self.interior:
-            return self.volname_ + self.interior
+            return self.bundlename_ + self.interior
         else:
-            return self.volname
+            return self.bundlename
 
     @property
     def absolute_or_logical_path(self):
@@ -1939,9 +1939,9 @@ class PdsFile(object):
 
         if self._volume_info_filled is None:
 
-            base_key = self.volset + self.suffix
-            if self.volname:
-                base_key += '/' + self.volname
+            base_key = self.bundleset + self.suffix
+            if self.bundlename:
+                base_key += '/' + self.bundlename
 
             # Try lookup with and without voltype
             base_key = base_key.lower()
@@ -2424,7 +2424,7 @@ class PdsFile(object):
             return self._viewset_filled
 
         # Don't look for PdsViewSets at volume root; saves time
-        if (self.exists and self.volname_ and
+        if (self.exists and self.bundlename_ and
             not self.archives_ and not self.checksums_ and self.interior):
                 self._viewset_filled = self.viewset_lookup('default')
 
@@ -2608,12 +2608,12 @@ class PdsFile(object):
                 self._version_ranks_filled = []
 
             else:
-                if self.volname:
-                    key = self.volname.lower()
+                if self.bundlename:
+                    key = self.bundlename.lower()
                     self._version_ranks_filled = ranks[key]
 
-                elif self.volset:
-                    key = self.volset.lower()
+                elif self.bundleset:
+                    key = self.bundleset.lower()
                     self._version_ranks_filled = ranks[key]
 
                 else:
@@ -2981,18 +2981,18 @@ class PdsFile(object):
 
     @property
     def is_bundle(self):
-        """True if this is a volume-level file, be it a directory or a
+        """True if this is a bundle-level file, be it a directory or a
         checksum or archive file."""
         return self.is_bundle_dir or self.is_bundle_file
 
     @property
     def is_bundleset_dir(self):
-        """True if this is the root level directory of a volset."""
+        """True if this is the root level directory of a bundleset."""
         return (self.bundleset and not self.bundlename and self.isdir)
 
     @property
     def is_bundleset_file(self):
-        """True if this is a volset-level checksum or AAREADME file."""
+        """True if this is a bundleset-level checksum or AAREADME file."""
         return (self.bundleset and not self.bundlename and not self.isdir)
 
     @property
@@ -3002,8 +3002,8 @@ class PdsFile(object):
 
     @property
     def is_category_dir(self):
-        """True if this is a category-level directory (i.e., above volset)."""
-        return (self.volset == '')
+        """True if this is a category-level directory (i.e., above bundleset)."""
+        return (self.bundleset == '')
 
     def volume_abspath(self, category=None):
         """The absolute path to the volume file or directory associated with
@@ -3013,7 +3013,7 @@ class PdsFile(object):
         version. The specified file is not required to exist.
         """
 
-        if not self.volname:
+        if not self.bundlename:
             return ''
 
         if category:
@@ -3044,8 +3044,8 @@ class PdsFile(object):
             insert = ''
             ext = ''
 
-        return (self.root_ + category_ + self.volset + suffix + '/' +
-                self.volname + insert + ext)
+        return (self.root_ + category_ + self.bundleset + suffix + '/' +
+                self.bundlename + insert + ext)
 
     def volset_abspath(self, category=None):
         """The absolute path to a volset file or directory associated with this
@@ -3055,7 +3055,7 @@ class PdsFile(object):
         The specified file is not required to exist.
         """
 
-        if not self.volset:
+        if not self.bundleset:
             return None
 
         if category:
@@ -3078,7 +3078,7 @@ class PdsFile(object):
         else:
             ext = ''
 
-        return (self.root_ + category_ + self.volset + suffix + ext)
+        return (self.root_ + category_ + self.bundleset + suffix + ext)
 
     ############################################################################
     # Support for alternative constructors
@@ -3145,12 +3145,12 @@ class PdsFile(object):
         if not LOCAL_PRELOADED:     # we don't track ranks without a preload
             return
 
-        if self.volset and not self.volname:
-            key = self.volset
-        elif self.volname and not self.volname_:
-            key = self.volname
-        elif self.volname_ and not self.interior:
-            key = self.volname
+        if self.bundleset and not self.bundlename:
+            key = self.bundleset
+        elif self.bundlename and not self.bundlename_:
+            key = self.bundlename
+        elif self.bundlename_ and not self.interior:
+            key = self.bundlename
         else:
             return
 
@@ -4350,14 +4350,14 @@ class PdsFile(object):
 
         if self.archives_:
             abspath = ''.join([self.root_, 'checksums-', self.category_,
-                               self.volset, self.suffix, suffix, '_md5.txt'])
+                               self.bundleset, self.suffix, suffix, '_md5.txt'])
             lskip = (len(self.root_) + len('checksums_') + len(self.category_))
 
-        elif self.volname:
+        elif self.bundlename:
             abspath = ''.join([self.root_, 'checksums-', self.category_,
-                               self.volset_, self.volname, suffix, '_md5.txt'])
+                               self.bundleset_, self.bundlename, suffix, '_md5.txt'])
             lskip = (len(self.root_) + len('checksums_') + len(self.category_) +
-                     len(self.volset_))
+                     len(self.bundleset_))
 
         else:
             raise ValueError('Missing volume name for checksum file: ' +
@@ -4393,13 +4393,13 @@ class PdsFile(object):
 
         if self.archives_:
             dirpath = ''.join([self.root_, self.archives_, self.voltype_,
-                               self.volset, self.suffix])
+                               self.bundleset, self.suffix])
             prefix_ = ''.join([self.root_, self.archives_, self.voltype_,
-                               self.volset, self.suffix, '/'])
+                               self.bundleset, self.suffix, '/'])
         else:
             dirpath = ''.join([self.root_, self.archives_, self.voltype_,
-                               self.volset_, self.volname])
-            prefix_ = ''.join([self.root_, self.voltype_, self.volset_])
+                               self.bundleset_, self.bundlename])
+            prefix_ = ''.join([self.root_, self.voltype_, self.bundleset_])
 
         return (dirpath, prefix_)
 
@@ -4425,13 +4425,13 @@ class PdsFile(object):
         else:
             suffix = '_' + self.voltype_[:-1]
 
-        if not self.volname:
+        if not self.bundlename:
             raise ValueError('Archives require volume names: ' +
                               self.logical_path)
 
         abspath = ''.join([self.root_, 'archives-', self.category_,
-                           self.volset_, self.volname, suffix, '.tar.gz'])
-        lskip = len(self.root_) + len(self.category_) + len(self.volset_)
+                           self.bundleset_, self.bundlename, suffix, '.tar.gz'])
+        lskip = len(self.root_) + len(self.category_) + len(self.bundleset_)
 
         return (abspath, lskip)
 
@@ -4459,9 +4459,9 @@ class PdsFile(object):
         """Absolute path to the directory associated with this archive path."""
 
         dirpath = ''.join([self.root_, self.voltype_,
-                           self.volset_, self.volname])
+                           self.bundleset_, self.bundlename])
 
-        parent = ''.join([self.root_, self.voltype_, self.volset_])
+        parent = ''.join([self.root_, self.voltype_, self.bundleset_])
 
         return (dirpath, parent)
 
@@ -4506,31 +4506,31 @@ class PdsFile(object):
         (dir_prefix, file_suffix) = SHELF_PATH_INFO[shelf_type]
 
         if self.archives_:
-            if not self.volset_:
+            if not self.bundleset_:
                 raise ValueError('Archive shelves require volume sets: ' +
                                  self.logical_path)
 
             abspath = ''.join([self.root_, dir_prefix,
-                               self.category_, self.volset, self.suffix,
+                               self.category_, self.bundleset, self.suffix,
                                file_suffix, '.pickle'])
             lskip = (len(self.root_) + len(self.category_) +
-                     len(self.volset_))
+                     len(self.bundleset_))
 
         else:
-            if not self.volname_ and not volname:
+            if not self.bundlename_ and not volname:
                 raise ValueError('Non-archive shelves require volume names: ' +
                                  self.logical_path)
 
             if volname:
                 this_volname = volname.rstrip('/')
             else:
-                this_volname = self.volname
+                this_volname = self.bundlename
 
             abspath = ''.join([self.root_, dir_prefix,
-                               self.category_, self.volset_, this_volname,
+                               self.category_, self.bundleset_, this_volname,
                                file_suffix, '.pickle'])
             lskip = (len(self.root_) + len(self.category_) +
-                     len(self.volset_) + len(this_volname) + 1)
+                     len(self.bundleset_) + len(this_volname) + 1)
 
         return (abspath, lskip)
 
@@ -4731,7 +4731,7 @@ class PdsFile(object):
             return True
 
         # Other files have shelves from the volname level on down
-        if self.volname:
+        if self.bundlename:
             return True
 
         # This leaves volset-level files and their AAREADMEs
@@ -4775,7 +4775,7 @@ class PdsFile(object):
         if dir:
             parts += [dir.rstrip('/'), '/']
 
-        parts += [self.category_, self.volset_, self.volname]
+        parts += [self.category_, self.bundleset_, self.bundlename]
 
         if suffix:
             parts += ['_', suffix.lstrip('_')]  # exactly one "_" before suffix
@@ -4812,7 +4812,7 @@ class PdsFile(object):
         if dir:
             parts += [dir.rstrip('/'), '/']
 
-        parts += [self.category_, self.volset, self.suffix]
+        parts += [self.category_, self.bundleset, self.suffix]
 
         if suffix:
             parts += ['_', suffix.lstrip('_')]  # exactly one "_" before suffix
@@ -5489,7 +5489,7 @@ class PdsFile(object):
             rankstr = ''
 
         # Handle a volset-level parallel
-        if not self.volname:
+        if not self.bundlename:
             parallel = self.volset_pdsfile(category, rank)
             return _cache_and_return(parallel)
 
