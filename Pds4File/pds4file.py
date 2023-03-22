@@ -5537,7 +5537,7 @@ PdsFile.SUBCLASSES['default'] = PdsFile
 ################################################################################
 
 try:
-    from rules import *     # Data set-specific rules are implemented as
+    from pds4_rules import *     # Data set-specific rules are implemented as
                             # subclasses of PdsFile
 except AttributeError:
     pass                    # This occurs when running pytests on individual
