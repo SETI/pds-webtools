@@ -301,15 +301,16 @@ opus_products = translator.TranslatorByRegex([
 #opus_id = translator.TranslatorByRegex([
 #    (r'urn:nasa:pds:(uranus_occ_u\d{0,4}_[a-z]*_(fos|\d{2,3}cm)):.*:(\d{3,4}nm_.*)', 0, r'\1-\3'),
 #])
-opus_id = translator.TranslatorByRegex([
-    (r'urn:nasa:pds:(.+):\w+:(.+)', 0, r'\1-\2'),
-])
+
+#opus_id = translator.TranslatorByRegex([
+#    (r'urn:nasa:pds:(.+):\w+:(.+)', 0, r'\1-\2'),
+#])
 
 
 # Based on filepath
-#opus_id = translator.TranslatorByRegex([
-#    (r'.*/uranus_occs_earthbased/(uranus_occ_u\d{0,4}_[a-z]*_(fos|\d{2,3}cm))/.*/.*/u\d{0,4}_[a-z]*_(fos|\d{2,3}cm)_(\d{3,4}nm_.*).[a-z]{3}', 0, r'\1-\4'),
-#])
+opus_id = translator.TranslatorByRegex([
+    (r'.*/uranus_occs_earthbased/(uranus_occ_u\d{0,4}_[a-z]*_(fos|\d{2,3}cm))/.*/.*/u\d{0,4}_[a-z]*_(fos|\d{2,3}cm)_(\d{3,4}nm_.*).[a-z]{3}', 0, r'\1-\4'),
+])
 
 
 ####################################################################################################################################
