@@ -308,9 +308,15 @@ opus_products = translator.TranslatorByRegex([
 
 
 # Based on filepath
+#opus_id = translator.TranslatorByRegex([
+#    (r'.*/uranus_occs_earthbased/(uranus_occ_u\d{0,4}_[a-z]*_(fos|\d{2,3}cm))/.*/.*/u\d{0,4}_[a-z]*_(fos|\d{2,3}cm)_(\d{3,4}nm_.*).[a-z]{3}', 0, r'\1-\4'),
+#])
+
+# OPUS ID is bundle name
 opus_id = translator.TranslatorByRegex([
-    (r'.*/uranus_occs_earthbased/(uranus_occ_u\d{0,4}_[a-z]*_(fos|\d{2,3}cm))/.*/.*/u\d{0,4}_[a-z]*_(fos|\d{2,3}cm)_(\d{3,4}nm_.*).[a-z]{3}', 0, r'\1-\4'),
+    (r'.*/uranus_occs_earthbased/(uranus_occ_u\d{0,4}_[a-z]*_(fos|\d{2,3}cm))/.*/.*/u\d{0,4}_[a-z]*_(fos|\d{2,3}cm)_(\d{3,4}nm_.*).[a-z]{3}', 0, r'\1'),
 ])
+
 
 
 ####################################################################################################################################
