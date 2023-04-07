@@ -89,8 +89,8 @@ class TestPds4FileBlackBox:
     @pytest.mark.parametrize(
         'input_path,expected',
         [
-            #('/uranus_occs_earthbased/uranus_occ_u0_kao_91cm',
-            # True), # This test fails with `ValueError: Illegal bundle set directory "": bundles`, because of match failure with BUNDLE_SET_PLUS_REGEX_I on line 3254 of pds4file.py
+            ('uranus_occs_earthbased/uranus_occ_u0_kao_91cm',
+             True), # This test fails with `ValueError: Illegal bundle set directory "": bundles`, because of match failure with BUNDLE_SET_PLUS_REGEX_I on line 3254 of pds4file.py
             ('uranus_occs_earthbased/uranus_occ_u0_kao_91cm/browse',
              False),
             ('uranus_occs_earthbased/uranus_occ_u0_kao_91cm/xml_schema/collection_xml_schema.csv',
