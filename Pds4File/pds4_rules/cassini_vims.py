@@ -296,30 +296,12 @@ opus_products = translator.TranslatorByRegex([
 #    (r'.*/COISS_[12]xxx.*/([NW][0-9]{10})_[0-9]+.*', 0, r'co-iss-#LOWER#\1'),
 #])
 
-# Based on filepath
-#opus_id = translator.TranslatorByRegex([
-#    (r'.*/uranus_occs_earthbased/(uranus_occ_u\d{0,4}_[a-z]*_(fos|\d{2,3}cm))/.*/.*/u\d{0,4}_[a-z]*_(fos|\d{2,3}cm)_(\d{3,4}nm_.*).[a-z]{3}', 0, r'\1-\4'),
-#])
 
-# OPUS ID is bundle name
-#opus_id = translator.TranslatorByRegex([
-#    (r'.*/uranus_occs_earthbased/(uranus_occ_u\d{0,4}_[a-z]*_(fos|\d{2,3}cm))/.*/.*/u\d{0,4}_[a-z]*_(fos|\d{2,3}cm)_(\d{3,4}nm_.*).[a-z]{3}', 0, r'\1'),
-#])
-
-#opus_id = translator.TranslatorByRegex([
-#    (r'.*/cassini/cassini_([a-z]{3,4})_cruise/.*/\d{3}xxxxxxx/(\d{10}[n|w]).[a-z]{3}', 0, r'co-\1-\2'),
-#])
-
-#opus_id = translator.TranslatorByRegex([
-#    (r'.*/cassini/cassini_(vims)_cruise/.*/\d{3}xxxxxxx/\d{5}xxxxx/(\d{10}_xxx/\d{10}_\d{3}.[a-z]{3}|\d{10}.[a-z]{3})', 0, r'co-\1-v'),
-#])
 opus_id = translator.TranslatorByRegex([
-    (r'.*/cassini/cassini_iss_cruise/data_raw/\d{3}xxxxxxx/\d{5}xxxxx/(\d{10}[n|w]).[a-z]{3}', 0, r'co-iss-\1'),
-])
+    (r'.*/cassini_vims/cassini_vims\w*/data_raw/\d{3}xxxxxxx/\d{5}xxxxx/\d{10}_xxx/(\d{10}_\d{3}).[a-z]{3}|.*/cassini_vims/cassini_vims\w*/data_raw/\d{3}xxxxxxx/\d{5}xxxxx/(\d{10}).[a-z]{3}', 0, r'co-vims-v\1\2_vis'),
+]) # Hard-code in "_vis" for the moment, but could be "_ir". Sort this out later. 
 
-#opus_id = translator.TranslatorByRegex([
-#    (r'.*/cassini/cassini_([a-z]{3,4})_cruise/data_raw/\d{3}xxxxxxx/13089xxxxx/(\d{10}[n|w]).[a-z]{3}', 0, r'co-\1-\2'),
-#])
+
 ####################################################################################################################################
 # OPUS_ID_TO_PRIMARY_LOGICAL_PATH
 ####################################################################################################################################

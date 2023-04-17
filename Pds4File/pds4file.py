@@ -41,7 +41,7 @@ VIEWABLE_EXTS = set(['jpg', 'png', 'gif', 'tif', 'tiff', 'jpeg', 'jpeg_small'])
 DATAFILE_EXTS = set(['dat', 'img', 'cub', 'qub', 'fit', 'fits'])
 
 #BUNDLESET_REGEX        = re.compile(r'(^uranus_occs_earthbased)$') # Hard-code for the moment, but will need to generalise
-BUNDLESET_REGEX        = re.compile(r'^(uranus\_occs\_earthbased|^cassini)$') # Use new "cassini" bundleset to hold cassini_iss_cruise, etc bundles
+BUNDLESET_REGEX        = re.compile(r'^(uranus\_occs\_earthbased|^cassini_iss|^cassini_vims)$') # Use new "cassini" bundleset to hold cassini_iss_cruise, etc bundles
 BUNDLESET_REGEX_I      = re.compile(BUNDLESET_REGEX.pattern, re.I)
 BUNDLESET_PLUS_REGEX   = re.compile(BUNDLESET_REGEX.pattern[:-1] +
                         r'(_v[0-9]+\.[0-9]+\.[0-9]+|_v[0-9]+\.[0-9]+|_v[0-9]+|'+

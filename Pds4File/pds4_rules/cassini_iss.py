@@ -297,7 +297,7 @@ opus_products = translator.TranslatorByRegex([
 #])
 
 opus_id = translator.TranslatorByRegex([
-     (r'.*/cassini/cassini_iss_cruise/data_raw/\d{3}xxxxxxx/\d{5}xxxxx/(\d{10})(n|w)\.[a-z]{3}', 0, r'co-iss-\2\1')
+     (r'.*/cassini_iss/cassini_iss\w*/data_raw/\d{3}xxxxxxx/\d{5}xxxxx/(\d{10})(n|w).[a-z]{3}', 0, r'co-iss-\2\1')
 ])
 
 #opus_id = translator.TranslatorByRegex([
