@@ -292,17 +292,9 @@ opus_products = translator.TranslatorByRegex([
 # OPUS_ID
 ####################################################################################################################################
 
-#opus_id = translator.TranslatorByRegex([
-#    (r'.*/COISS_[12]xxx.*/([NW][0-9]{10})_[0-9]+.*', 0, r'co-iss-#LOWER#\1'),
-#])
-
 opus_id = translator.TranslatorByRegex([
      (r'.*/cassini_iss/cassini_iss\w*/data_raw/\d{3}xxxxxxx/\d{5}xxxxx/(\d{10})(n|w).[a-z]{3}', 0, r'co-iss-\2\1')
 ])
-
-#opus_id = translator.TranslatorByRegex([
-#    (r'.*/cassini_iss_cruise/.*/\d{10}(n|w)\.[a-z]{3}', 0, r'co-iss\1'),
-#])
 
 ####################################################################################################################################
 # OPUS_ID_TO_PRIMARY_LOGICAL_PATH
