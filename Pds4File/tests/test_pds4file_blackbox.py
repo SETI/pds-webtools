@@ -29,6 +29,12 @@ class TestPds4FileBlackBox:
              'co-iss-n1308947880'),
             ('cassini_iss/cassini_iss_cruise/data_raw/130xxxxxxx/13089xxxxx/1308947440w.img',
              'co-iss-w1308947440'),
+            ('cassini_iss/cassini_iss_cruise/data_raw/130xxxxxxx/13089xxxxx/1308947440w.img',
+             'co-iss-w1308947440'),
+            ('cassini_iss/cassini_iss_cruise/browse_raw/130xxxxxxx/13089xxxxx/1308947440w-full.png',
+             'co-iss-w1308947440'),
+            ('cassini_iss/cassini_iss_cruise/browse_raw/130xxxxxxx/13089xxxxx/1308947880n-full.xml',
+             'co-iss-n1308947880'),
             ('cassini_vims/cassini_vims_cruise/data_raw/130xxxxxxx/13089xxxxx/1308946681_xxx/1308946681_002.qub',
              'co-vims-v1308946681_002'),
             ('cassini_vims/cassini_vims_cruise/data_raw/130xxxxxxx/13089xxxxx/1308947235.qub',
@@ -39,7 +45,15 @@ class TestPds4FileBlackBox:
              'co-vims-v1308947715'),
             ('cassini_vims/cassini_vims_cruise/data_raw/130xxxxxxx/13089xxxxx/1308947926_xxx/1308947926_008.qub',
              'co-vims-v1308947926_008'),
-    ]
+            ('cassini_vims/cassini_vims_cruise/browse_raw/130xxxxxxx/13089xxxxx/1308947235-full.png',
+             'co-vims-v1308947235'),
+            ('cassini_vims/cassini_vims_cruise/browse_raw/130xxxxxxx/13089xxxxx/1308947079_xxx/1308947079_001-full.xml',
+             'co-vims-v1308947079_001'),
+            ('cassini_vims/cassini_vims_cruise/browse_raw/130xxxxxxx/13089xxxxx/1308947009_xxx/1308947009_002-full.png',
+             'co-vims-v1308947009_002'),
+            ('cassini_vims/cassini_vims_cruise/browse_raw/130xxxxxxx/13089xxxxx/1308947715-full.png',
+             'co-vims-v1308947715'),
+        ]
     )
     def test_opus_id(self, input_path, expected):
         target_pdsfile = instantiate_target_pdsfile(input_path)

@@ -293,7 +293,7 @@ opus_products = translator.TranslatorByRegex([
 ####################################################################################################################################
 
 opus_id = translator.TranslatorByRegex([
-    (r'.*/cassini_vims/cassini_vims\w*/data_raw/\d{3}xxxxxxx/\d{5}xxxxx/\d{10}_xxx/(\d{10}_\d{3}).[a-z]{3}|.*/cassini_vims/cassini_vims\w*/data_raw/\d{3}xxxxxxx/\d{5}xxxxx/(\d{10}).[a-z]{3}', 0, r'co-vims-v\1\2'),
+    (r'.*/cassini_vims/cassini_vims\w*/[a-z]*_raw/\d{3}xxxxxxx/\d{5}xxxxx/\d{10}_xxx/(\d{10}_\d{3}).*[a-z]{3}|.*/cassini_vims/cassini_vims\w*/[a-z]*_raw/\d{3}xxxxxxx/\d{5}xxxxx/(\d{10}).*[a-z]{3}', 0, r'co-vims-v\1\2'),
 ]) # Suffix "_vis", "_ir" handled elsewhere in code. 
 
 
