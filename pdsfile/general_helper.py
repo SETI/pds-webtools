@@ -392,26 +392,3 @@ def selected_path_from_path(path, cls, abspaths=True):
             return path
         else:
             return logical_path_from_abspath(path, cls)
-
-##########################################################################################
-# PdsLogger support
-##########################################################################################
-def set_logger(cls, logger=None):
-    """Set the PdsLogger.
-
-    Keyword arguments:
-        logger -- the pdslogger (default None)
-        cls    -- the class with its attribute being updated
-    """
-    if not logger:
-        logger = pdslogger.NullLogger()
-
-    cls.LOGGER = logger
-
-def set_easylogger(cls):
-    """Log all messages directly to stdout.
-
-    Keyword arguments:
-        cls -- the class calling the other methods inside the function
-    """
-    set_logger(cls, pdslogger.EasyLogger())

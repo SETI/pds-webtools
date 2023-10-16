@@ -8,8 +8,7 @@ import os
 import pdsfile.pds3file as pds3file
 import pdsfile.pds4file as pds4file
 from pdsfile.general_helper import (PDS4_HOLDINGS_DIR,
-                                    PDS_HOLDINGS_DIR,
-                                    set_logger)
+                                    PDS_HOLDINGS_DIR)
 import pdslogger
 import pytest
 
@@ -21,8 +20,8 @@ def pytest_addoption(parser):
 
 def turn_on_logger(filename):
     LOGGER = pdslogger.PdsLogger(filename)
-    set_logger(pds3file.Pds3File, LOGGER)
-    set_logger(pds4file.Pds4File, LOGGER)
+    pds3file.Pds3File.set_logger(LOGGER)
+    pds4file.Pds4File.set_logger(LOGGER)
 
 @pytest.fixture(scope='session', autouse=True)
 def setup(request):
