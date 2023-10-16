@@ -8,7 +8,7 @@ import pdscache
 
 from pdsfile import PdsFile
 from . import rules
-from pdsfile.preload_and_cache import (cache_categoriey_merged_dirs,
+from pdsfile.preload_and_cache import (cache_category_merged_dirs,
                                        cache_lifetime_for_class)
 
 class Pds3File(PdsFile):
@@ -145,4 +145,4 @@ except AttributeError:
                             # rule subclasses, where pdsfile can be imported
                             # recursively.
 
-cache_categoriey_merged_dirs(Pds3File)
+cache_category_merged_dirs(Pds3File)

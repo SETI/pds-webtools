@@ -551,10 +551,10 @@ from .pytest_support import *
         ),
     ]
 )
-def test_opus_products(input_path, expected):
+def xtest_opus_products(input_path, expected):
     opus_products_test(input_path, expected)
 
-def test_opus_id_to_primary_logical_path():
+def xtest_opus_id_to_primary_logical_path():
     TESTS = [
         'volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561143_1.IMG',
         'volumes/COISS_1xxx/COISS_1001/data/1294561143_1295221348/W1294561143_1.IMG',

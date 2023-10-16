@@ -29,7 +29,7 @@ from .general_helper import (PATH_EXISTS_CACHE_SIZE,
                              logical_path_from_abspath,
                              needs_glob,
                              repair_case)
-from .preload_and_cache import (cache_categoriey_merged_dirs,
+from .preload_and_cache import (cache_category_merged_dirs,
                                 cache_lifetime_for_class,
                                 preload_for_class,
                                 require_shelves_for_class,
@@ -5427,4 +5427,4 @@ PdsFile.SUBCLASSES['default'] = PdsFile
 # This is needed in cases where preload() is never called. Each call to
 # preload() replaces these.
 ##########################################################################################
-cache_categoriey_merged_dirs(PdsFile)
+cache_category_merged_dirs(PdsFile)

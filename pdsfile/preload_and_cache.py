@@ -307,7 +307,7 @@ def load_volume_info(holdings, cls):
 
     cls.LOGGER.info('Volume info loaded', volinfo_path)
 
-def cache_categoriey_merged_dirs(cls):
+def cache_category_merged_dirs(cls):
     for category in cls.CATEGORY_LIST:
         if category not in cls.CACHE:
             cls.CACHE.set(category, cls.new_merged_dir(category), lifetime=0)
