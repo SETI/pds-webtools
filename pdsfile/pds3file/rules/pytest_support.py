@@ -3,15 +3,15 @@
 ##########################################################################################
 
 import pdsfile.pds3file as pds3file
-from pdsfile.general_helper import (PDS_HOLDINGS_DIR,
-                                    instantiate_target_pdsfile_for_class,
-                                    get_pdsfiles_for_class,
+from pdsfile.general_helper import (get_pdsfiles_for_class,
                                     get_pdsgroups_for_class,
+                                    instantiate_target_pdsfile_for_class,
                                     opus_products_test_for_class,
-                                    versions_test_for_class,
+                                    PDS_HOLDINGS_DIR,
                                     translate_first_for_class,
                                     translate_all_for_class,
-                                    unmatched_patterns_for_class)
+                                    unmatched_patterns_for_class,
+                                    versions_test_for_class)
 import translator
 import re
 import os

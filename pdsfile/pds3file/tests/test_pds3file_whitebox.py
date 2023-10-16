@@ -11,8 +11,8 @@ import pdsgroup
 import pytest
 import re
 
-from .helper import (instantiate_target_pdsfile,
-                     get_pdsfiles)
+from .helper import (get_pdsfiles,
+                     instantiate_target_pdsfile)
 
 PDS_PDSDATA_PATH = PDS_HOLDINGS_DIR[:PDS_HOLDINGS_DIR.index('holdings')]
 

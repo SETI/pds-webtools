@@ -497,7 +497,7 @@ SPLIT_RULES = translator.TranslatorByRegex([
 OPUS_TYPE = translator.TranslatorByRegex([
 
     # Previews
-    (r'test/.*\_thumb\..*', 0, ('browse', 10, 'browse_thumb',  'Browse Image (thumbnail)', False)),
+    (r'test/.*\_thumb\..*',     0, ('browse', 10, 'browse_thumb',  'Browse Image (thumbnail)', False)),
     (r'previews/.*\_thumb\..*', 0, ('browse', 10, 'browse_thumb',  'Browse Image (thumbnail)', False)),
     (r'previews/.*\_small\..*', 0, ('browse', 20, 'browse_small',  'Browse Image (small)',     False)),
     (r'previews/.*\_med\..*',   0, ('browse', 30, 'browse_medium', 'Browse Image (medium)',    False)),

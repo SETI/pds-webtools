@@ -5,18 +5,18 @@ import pdsgroup
 import pdsgrouptable
 import pdsviewable
 import pdsfile.pds3file.rules as rules
-from pdsfile.general_helper import (PDS_HOLDINGS_DIR,
-                                    is_logical_path,
+from pdsfile.general_helper import (is_logical_path,
                                     logical_path_from_abspath,
+                                    PDS_HOLDINGS_DIR,
                                     repair_case,
                                     selected_path_from_path)
 import pytest
 import re
 import sys
 
-from .helper import (instantiate_target_pdsfile,
-                     get_pdsfiles,
-                     get_pdsgroups)
+from .helper import (get_pdsfiles,
+                     get_pdsgroups,
+                     instantiate_target_pdsfile)
 
 PDS_PDSDATA_PATH = PDS_HOLDINGS_DIR[:PDS_HOLDINGS_DIR.index('holdings')]
 
