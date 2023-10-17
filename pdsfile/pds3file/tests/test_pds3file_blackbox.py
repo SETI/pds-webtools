@@ -1,8 +1,7 @@
 import pdsfile.pds3file as pds3file
 import pdsviewable
 import pdsfile.pds3file.rules as rules
-from pdsfile import (is_logical_path,
-                     logical_path_from_abspath,
+from pdsfile import (logical_path_from_abspath,
                      repair_case,
                      selected_path_from_path)
 from pdsfile.general_helper import PDS_HOLDINGS_DIR
@@ -1907,7 +1906,7 @@ class TestPds3FileHelperBlackBox:
         ]
     )
     def test_is_logical_path(self, input_path, expected):
-        res = is_logical_path(path=input_path)
+        res = pds3file.Pds3File.is_logical_path(path=input_path)
         assert res == expected
 
     @pytest.mark.parametrize(
