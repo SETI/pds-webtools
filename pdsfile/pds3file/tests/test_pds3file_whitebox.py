@@ -23,7 +23,7 @@ class TestPdsFileWhiteBox:
     ############################################################################
     # Test for properties
     ############################################################################
-    # Can only be tested with pds3file.use_shelves_only(False) to make sure
+    # Can only be tested with pds3file.Pds3File.use_shelves_only(False) to make sure
     # child.abspath is None for this path
     @pytest.mark.parametrize(
         'input_path,expected',
