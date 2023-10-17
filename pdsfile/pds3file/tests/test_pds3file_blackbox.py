@@ -1,11 +1,12 @@
 import pdsfile.pds3file as pds3file
 import pdsviewable
 import pdsfile.pds3file.rules as rules
-from pdsfile.general_helper import (is_logical_path,
-                                    logical_path_from_abspath,
-                                    PDS_HOLDINGS_DIR,
-                                    repair_case,
-                                    selected_path_from_path)
+from pdsfile import (is_logical_path,
+                     logical_path_from_abspath,
+                     repair_case,
+                     selected_path_from_path)
+from pdsfile.general_helper import PDS_HOLDINGS_DIR
+
 import pytest
 import re
 

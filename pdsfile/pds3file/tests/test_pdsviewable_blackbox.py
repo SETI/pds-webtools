@@ -3,9 +3,6 @@
 # Blackbox tests for pdsviewable
 ##########################################################################################
 
-import os
-import pdsfile.pds3file as pds3file
-from pdsfile.general_helper import PDS_HOLDINGS_DIR
 import pdsviewable
 import pytest
 
