@@ -4,7 +4,7 @@
 #
 # Syntax:
 #   shelf-consistency-check.py [--verbose] shelf_root [shelf_root ...]
-#
+# 
 # Confirm that every info shelf file has a corresponding directory in holdings/.
 ################################################################################
 

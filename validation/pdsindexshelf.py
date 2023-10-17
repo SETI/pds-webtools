@@ -4,7 +4,7 @@
 #
 # Syntax:
 #   pdsindexshelf.py --task index_path.tab [index_path.tab ...]
-#
+# 
 # Enter the --help option to see more information.
 ################################################################################
 

@@ -686,7 +686,7 @@ else:
 
     # Report missing volumes
     for key in missing_keys:
-        # Determine if this volset/volname has ever appeared in any of the
+        # Determine if this volset/volname has ever appeared in any of the 
         # holdings directory trees
         holdings_for_key = set()
         for log_path in logs_for_volset_volname[key]:
@@ -815,3 +815,4 @@ else:
 #     sys.exit(status)
     sys.exit(0)         # In batch mode, don't cancel the launchdaemon.
                         # Does this help??
+
