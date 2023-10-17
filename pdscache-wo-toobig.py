@@ -1013,3 +1013,4 @@ class MemcachedCache(PdsCache):
         finally:
             self.resume()
             self.flush()
+

@@ -909,7 +909,7 @@ class MemcachedCache(PdsCache):
         if key in self.toobig_dict:
             del self.toobig_dict[key]
             deleted = True
-
+ 
         if key in self.local_lifetime_by_key:
             del self.local_value_by_key[key]
             deleted = True
@@ -1042,3 +1042,5 @@ class MemcachedCache(PdsCache):
                                      'to internal cache', k)
                     self.toobig_dict[k] = v[0]
                     del self.permanent_values[k]
+
+
