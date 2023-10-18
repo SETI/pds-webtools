@@ -5,8 +5,6 @@
 ##########################################################################################
 
 import os
-# import pdsfile.pds3file as pds3file
-# import pdsfile.pds4file as pds4file
 from pdsfile import (Pds3File,
                      Pds4File)
 from pdsfile.general_helper import (PDS4_HOLDINGS_DIR,
