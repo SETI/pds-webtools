@@ -3,7 +3,7 @@
 ##########################################################################################
 
 import pdsfile.pds3file as pds3file
-from pdsfile import abspath_for_logical_path
+from pdsfile.pdsfile import abspath_for_logical_path
 import translator
 import re
 

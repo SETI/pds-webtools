@@ -6,7 +6,7 @@
 import pdslogger
 import pdscache
 
-from pdsfile import PdsFile
+from pdsfile.pdsfile import PdsFile
 from . import rules
 from pdsfile.preload_and_cache import cache_lifetime_for_class
 

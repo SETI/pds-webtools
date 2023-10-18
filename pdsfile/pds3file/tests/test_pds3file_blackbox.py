@@ -1,9 +1,9 @@
 import pdsfile.pds3file as pds3file
 import pdsviewable
 import pdsfile.pds3file.rules as rules
-from pdsfile import (logical_path_from_abspath,
-                     repair_case,
-                     selected_path_from_path)
+from pdsfile.pdsfile import (logical_path_from_abspath,
+                             repair_case,
+                             selected_path_from_path)
 from pdsfile.general_helper import PDS_HOLDINGS_DIR
 
 import pytest
