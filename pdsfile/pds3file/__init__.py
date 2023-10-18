@@ -100,6 +100,30 @@ class Pds3File(PdsFile):
             return ('Pds3File.' + type(self).__name__ + '("' +
                     self.abspath + '")')
 
+    ######################################################################################
+    # PdsLogger support
+    ######################################################################################
+    @classmethod
+    def set_logger(cls, self, logger=None):
+        """Set the PdsLogger.
+
+        Keyword arguments:
+            logger -- the pdslogger (default None)
+            cls    -- the class with its attribute being updated
+        """
+        if not logger:
+            logger = pdslogger.NullLogger()
+
+        cls.LOGGER = logger
+
+    @classmethod
+    def set_easylogger(cls, self):
+        """Log all messages directly to stdout.
+
+        Keyword arguments:
+            cls -- the class calling the other methods inside the function
+        """
+        cls.set_logger(pdslogger.EasyLogger())
 
 
 ##########################################################################################
