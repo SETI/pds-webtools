@@ -104,7 +104,7 @@ class Pds3File(PdsFile):
     # PdsLogger support
     ######################################################################################
     @classmethod
-    def set_logger(cls, self, logger=None):
+    def set_logger(cls, logger=None):
         """Set the PdsLogger.
 
         Keyword arguments:
@@ -117,7 +117,7 @@ class Pds3File(PdsFile):
         cls.LOGGER = logger
 
     @classmethod
-    def set_easylogger(cls, self):
+    def set_easylogger(cls):
         """Log all messages directly to stdout.
 
         Keyword arguments:
