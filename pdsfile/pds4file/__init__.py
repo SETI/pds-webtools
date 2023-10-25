@@ -72,6 +72,32 @@ class Pds4File(PdsFile):
     def __init__(self):
         super().__init__()
 
+    @classmethod
+    def use_shelves_only(cls, status=True):
+        """Call before preload(). Status=True to identify files based on their
+        presence in the infoshelf files first. Search the file system only if a
+        shelf is missing.
+
+        Keyword arguments:
+            cls    -- the class with its attribute being updated
+            status -- value for the class attribute (default True)
+        """
+
+        cls.SHELVES_ONLY = status
+
+    @classmethod
+    def require_shelves(cls, status=True):
+        """Call before preload(). Status=True to raise exceptions when shelf files
+        are missing or incomplete. Otherwise, missing shelf info is only logged as a
+        warning instead.
+
+        Keyword arguments:
+            cls    -- the class with its attribute being updated
+            status -- value for the class attribute (default True)
+        """
+
+        cls.SHELVES_REQUIRED = status
+
     # Override functions
     def __repr__(self):
         if self.abspath is None:
