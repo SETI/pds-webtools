@@ -10,3 +10,4 @@ pytest
 psutil
 ipython
 coverage
+rms-pdstable
