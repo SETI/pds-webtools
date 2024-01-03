@@ -5588,7 +5588,7 @@ def _clean_abspath(path):
 def _clean_glob(pattern, force_case_sensitive=False):
     results = glob.glob(pattern)
     if os.sep == '\\':
-        results = [x.replace('\\', '/') for x in matches]
+        results = [x.replace('\\', '/') for x in results]
 
     if force_case_sensitive and FS_IS_CASE_INSENSITIVE:
         filtered_results = []
