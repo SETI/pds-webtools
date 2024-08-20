@@ -1653,7 +1653,7 @@ class PdsFile(object):
                 # This supports the temporary situation where the indexshelf
                 # file is being created.
                 if ('/metadata/' in self.abspath
-                    and self.abspath.lower().endswith('.tab')
+                    and self.abspath.lower().endswith('.tab')):
                     return True     # this value is not cached
 
                 self._is_index = False
