@@ -89,6 +89,8 @@ DESCRIPTION_AND_ICON = translator.TranslatorByRegex([
     (r'metadata/.*999.*_neptune_summary\.tab', 0, ('Cumulative list of observed geometry on Neptune', 'INDEX')),
     (r'metadata/.*999.*_pluto_summary\.tab',   0, ('Cumulative list of observed geometry on Pluto',   'INDEX')),
     (r'metadata/.*999.*_charon_summary\.tab',  0, ('Cumulative list of observed geometry on Charon',  'INDEX')),
+    (r'metadata/.*999.*_body_summary\.tab',    0, ('Cumulative observed geometry on planetary bodies','INDEX')),
+    (r'metadata/.*999.*_sky_summary\.tab',     0, ('Cumulative observed sky coordinate geometry',     'INDEX')),
 
     (r'metadata/.*_index\.tab',           0, ('Product index with RMS Node updates',   'INDEX')),
     (r'metadata/.*_inventory\.(csv|tab)', 0, ('List of observed bodies by product',    'INDEX')),
@@ -100,6 +102,8 @@ DESCRIPTION_AND_ICON = translator.TranslatorByRegex([
     (r'metadata/.*_neptune_summary\.tab', 0, ('Index of observed geometry on Neptune', 'INDEX')),
     (r'metadata/.*_pluto_summary\.tab',   0, ('Index of observed geometry on Pluto',   'INDEX')),
     (r'metadata/.*_charon_summary\.tab',  0, ('Index of observed geometry on Charon',  'INDEX')),
+    (r'metadata/.*_body_summary\.tab',    0, ('Index of observed geometry on planetary bodies','INDEX')),
+    (r'metadata/.*_sky_summary\.tab',     0, ('Index of observed sky coordinate geometry',     'INDEX')),
 
     # Previews
     (r'previews/.*_thumb\.(jpg|png)',     0, ('Thumbnail preview image',        'BROWSE')),
