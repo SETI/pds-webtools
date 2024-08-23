@@ -481,7 +481,7 @@ for nines in ('99', '999', '9_9999'):
         rf'metadata/\1/\g<2>{nines}/\g<2>{nines}\3.\4',
         (rf'cat [d]metadata/\1/\2{questions}/\2{questions}\3.\4 '
          rf'> [d]metadata/\1/\g<2>{nines}/\g<2>{nines}\3.\4'),
-        suite=name, newer=False, exceptions=['.*sl9_index\.tab'])
+        suite=name, newer=False, exceptions=[r'.*sl9_index\.tab'])
 
 _ = PdsDependency(
     'Cumulative version of every metadata table',
